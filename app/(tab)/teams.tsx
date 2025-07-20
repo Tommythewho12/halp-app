@@ -1,19 +1,29 @@
-import TeamsListViewer from '@/components/TeamsListViewer';
+import { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 
-export default function Teams() {
-  const staticTeams = [
-    { name: 'PTSV H3' },
-    { name: 'PTSV H4' },
-    { name: 'PTSV D1' },
-  ]
+import http from '@/http-common';
+import TeamsListViewer from '@/components/TeamsListViewer';
+import { useAuth } from '@/services/AuthContext';
 
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>
-        Teams
-      </Text>
-      <TeamsListViewer teams={staticTeams} />
-    </View>
-  );
+export default function Teams() {
+    const { accessToken } = useAuth();
+    const [teams, setTeams] = useState([]);
+    
+    useEffect(() => {
+        http.get(`auth/teams`, {headers: {Authorization: `Bearer ` + accessToken}})
+        .then(response => {
+            setTeams(response.data);
+        }).catch(e => {
+            console.error(e);
+        });
+    }, []);
+
+    return (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>
+            Teams
+        </Text>
+        <TeamsListViewer teams={teams} />
+        </View>
+    );
 }
