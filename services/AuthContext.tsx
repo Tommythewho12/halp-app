@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, use, useEffect, useState } from 'react';
 import { isExpired } from 'react-jwt';
 import * as SecureStore from 'expo-secure-store';
 
@@ -46,21 +46,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const loadTokens = async () => {
         let accessToken = await SecureStore.getItemAsync(ACCESS_TOKEN);
         let refreshToken = await SecureStore.getItemAsync(REFRESH_TOKEN);
-        console.debug('accessToken loaded from secure store: ', accessToken);
-        console.debug('refreshToken loaded from secure store: ', refreshToken);
-        if (accessToken != null && isExpired(accessToken)) {
-            console.debug('access token is expired');
-            accessToken = null;
-            if (refreshToken != null && !isExpired(refreshToken)) {
-                accessToken = await refreshAccessToken(refreshToken);
-            } else {
-                refreshToken = null;
-            }
-            console.debug("setting accessToken", accessToken);
-            await setTokens({ accessToken, refreshToken });
+        console.debug('accessToken loaded from secure store:', accessToken);
+        console.debug('refreshToken loaded from secure store:', refreshToken);
+
+        if (!accessToken || accessToken.length == 0) {
+            console.debug('access token is empty');
         } else {
-            console.debug('access token valid')
-            setTokensState({ accessToken, refreshToken });
+            if (isExpired(accessToken)) {
+                console.debug('access token is expired');
+                if (refreshToken != null && refreshToken.length > 0 && !isExpired(refreshToken)) {
+                    accessToken = await refreshAccessToken(refreshToken);
+                    setTokens({ accessToken, refreshToken });
+                }
+            } else {
+                console.debug('access token still valid');
+                setTokensState({ accessToken, refreshToken });
+            }
         }
         setLoading(false);
     };
@@ -92,4 +93,4 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => use(AuthContext);

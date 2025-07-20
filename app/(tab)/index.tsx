@@ -10,17 +10,6 @@ export default function Index() {
   const { accessToken } = useAuth();
   const [events, setEvents] = useState([]);
 
-  /*useEffect(() => {
-    ConnectionService.getEvents()
-      .then(response => {
-        console.debug('events API responded; setting events');
-        setEvents(response.data);
-      })
-      .catch(() => {
-        console.debug('events API responded; setting events');
-      });
-  }, []);*/
-
   useEffect(() => {
     http.get(`auth/events`, {headers: {Authorization: `Bearer ` + accessToken}})
       .then(response => {
