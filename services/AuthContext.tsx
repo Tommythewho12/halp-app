@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
+import { isExpired } from 'react-jwt';
 import * as SecureStore from 'expo-secure-store';
 
 const ACCESS_TOKEN = 'accessToken';
@@ -41,8 +42,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     const loadTokens = async () => {
-        const accessToken = await SecureStore.getItemAsync(ACCESS_TOKEN);
+        let accessToken = await SecureStore.getItemAsync(ACCESS_TOKEN);
         const refreshToken = await SecureStore.getItemAsync(REFRESH_TOKEN);
+        if (accessToken != null && isExpired(accessToken)) {
+            console.debug('access token is expired');
+            // TODO request new Token
+            accessToken = null;
+        }
         setTokensState({ accessToken, refreshToken });
         setLoading(false);
     };

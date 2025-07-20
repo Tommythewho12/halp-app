@@ -1,14 +1,12 @@
-import { Redirect, Tabs } from "expo-router";
+import { Tabs } from "expo-router";
 
 import Ionicons from '@expo/vector-icons/Ionicons';
-
-import { secureStore, getSecureValueSync } from '../../services/secure-store.service';
 import { useAuth } from "@/services/AuthContext";
-
-const isLoggedIn = getSecureValueSync('access') != null;
 
 export default function TabLayout() {
   const { accessToken } = useAuth();
+
+  
 
   return (
     <Tabs>
