@@ -2,6 +2,8 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { isExpired } from 'react-jwt';
 import * as SecureStore from 'expo-secure-store';
 
+import http from "../http-common";
+
 const ACCESS_TOKEN = 'accessToken';
 const REFRESH_TOKEN = 'refreshToken';
 
@@ -43,14 +45,40 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const loadTokens = async () => {
         let accessToken = await SecureStore.getItemAsync(ACCESS_TOKEN);
-        const refreshToken = await SecureStore.getItemAsync(REFRESH_TOKEN);
+        let refreshToken = await SecureStore.getItemAsync(REFRESH_TOKEN);
+        console.debug('accessToken loaded from secure store: ', accessToken);
+        console.debug('refreshToken loaded from secure store: ', refreshToken);
         if (accessToken != null && isExpired(accessToken)) {
             console.debug('access token is expired');
-            // TODO request new Token
             accessToken = null;
+            if (refreshToken != null && !isExpired(refreshToken)) {
+                accessToken = await refreshAccessToken(refreshToken);
+            } else {
+                refreshToken = null;
+            }
+            console.debug("setting accessToken", accessToken);
+            await setTokens({ accessToken, refreshToken });
+        } else {
+            console.debug('access token valid')
+            setTokensState({ accessToken, refreshToken });
         }
-        setTokensState({ accessToken, refreshToken });
         setLoading(false);
+    };
+
+    const refreshAccessToken = async (refreshToken:string) => {
+        let accessToken = null;
+        await http.post(`refresh-token`, {
+            headers: {
+                Cookie: "refreshToken=" + refreshToken
+            }})
+            .then(res => {
+                accessToken = res.data.accessToken;;
+                console.debug('new access token via refresh', accessToken);
+            })
+            .catch(e => {
+                console.error('failed to refresh access token');
+            });
+        return accessToken;
     };
 
     useEffect(() => {

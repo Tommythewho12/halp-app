@@ -22,7 +22,6 @@ export default function Index() {
   }, []);*/
 
   useEffect(() => {
-    console.log('accessToken: ', accessToken);
     http.get(`auth/events`, {headers: {Authorization: `Bearer ` + accessToken}})
       .then(response => {
         setEvents(response.data);

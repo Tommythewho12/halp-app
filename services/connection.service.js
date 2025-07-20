@@ -38,7 +38,7 @@ class ConnectionService {
             .catch(e => {
                 return false;
             });
-    }
+    };
 
     // logout() {}
 
@@ -46,12 +46,12 @@ class ConnectionService {
         console.debug('attempting fetch events');
         const access = getAccess();
         return http.get(`auth/events`, {headers: {Authorization: `Bearer ${access}`}});
-    }
+    };
 
     getEvents() {
         console.log(this.accessToken);
         return http.get(`auth/events`, {headers: {Authorization: `Bearer ` + this.accessToken}});
-    }
+    };
 }
 
 export default new ConnectionService();
