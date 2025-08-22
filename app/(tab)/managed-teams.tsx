@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { Text, View, Pressable } from 'react-native';
 import { useState } from 'react';
 
@@ -7,6 +7,8 @@ import { clearTokens } from '../../services/secure-store.service';
 import { useAuth } from '@/services/AuthContext';
 
 export default function Index() {
+  const searchParams = useLocalSearchParams();
+
   const { setTokens } = useAuth();
   const [text, setText] = useState("no data retrieved yet!");
 
@@ -18,7 +20,8 @@ export default function Index() {
       .catch(e => {
         console.log(e);
         setText(e.message);
-      })
+      });
+    console.log('#+#+# searchParams: ', searchParams);
   }
 
   const handleLogout = () => {
@@ -34,7 +37,7 @@ export default function Index() {
         <Text>Test</Text>
       </Pressable>
       <Text>{text}</Text>
-      <Pressable 
+      <Pressable
         onPress={handleLogout}
       >
         <Text>Logout</Text>

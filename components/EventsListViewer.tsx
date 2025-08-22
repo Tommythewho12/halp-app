@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import { FlatList, Pressable, StyleSheet, Text, View, Alert } from 'react-native';
 
 type EventsList = {
@@ -5,23 +6,26 @@ type EventsList = {
 }
 
 type Event = {
-    id: number;
+    id: string;
     name: string;
     start_datetime: string;
     description: string;
     team_id: number
 };
 
-export default function EventsListViewer( {events}: EventsList ) {
+export default function EventsListViewer({ events }: EventsList) {
+    const router = useRouter();
     const handlePress = (event: Event) => {
-        Alert.alert('Event selected', `${event.name}`);
+        // Alert.alert('Event selected', `${event.name}, id:${event.id}`);
+        console.info(`######pressed button event id: ${event.id}`);
+        router.navigate({ pathname: '/(tab)/events/[event]', params: { id: event.id, event: event.id } });
     }
 
     return (
         <View style={styles.container}>
             <FlatList
                 data={events}
-                renderItem={({item}) => 
+                renderItem={({ item }) =>
                     <Pressable
                         style={({ pressed }) => [
                             styles.eventItem,

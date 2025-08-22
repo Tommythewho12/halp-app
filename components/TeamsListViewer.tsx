@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { FlatList, Pressable, StyleSheet, Text, View, Alert } from 'react-native';
 
 type TeamsList = {
@@ -8,16 +9,18 @@ type Team = {
     name: string;
 };
 
-export default function TeamsListViewer( {teams}: TeamsList ) {
+export default function TeamsListViewer({ teams }: TeamsList) {
     const handlePress = (teams: Team) => {
-        Alert.alert('Event selected', `${teams.name}`);
+        // Alert.alert('Event selected', `${teams.name}`);
+        // router.navigate({ pathname: '/(tab)/managed-teams', params: { test: 'aösfdlj' } });
+        router.navigate({ pathname: '/(tab)/teams/[team]', params: { id: '1', team: '1' } });
     }
 
     return (
         <View style={styles.container}>
             <FlatList
                 data={teams}
-                renderItem={({item}) => 
+                renderItem={({ item }) =>
                     <Pressable
                         style={({ pressed }) => [
                             styles.eventItem,

@@ -5,6 +5,7 @@ import { Text, View } from 'react-native';
 import http from '@/http-common';
 import { useAuth } from '@/services/AuthContext';
 
+// events, but has to be named index
 export default function Index() {
     const { accessToken } = useAuth();
     const [events, setEvents] = useState([]);
