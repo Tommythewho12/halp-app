@@ -6,21 +6,22 @@ import { Text, View } from 'react-native';
 
 export default function Team() {
     const searchParams = useLocalSearchParams();
+    const teamId = searchParams.id;
     const { accessToken } = useAuth();
-    const [team, setTeam] = useState({ teamId: null, teamName: null, adminName: null });
+    const [team, setTeam] = useState({ teamId: teamId, teamName: null, adminName: null });
 
     useEffect(() => {
-        var teamId = searchParams.id;
         if (teamId == null) {
             throw new Error("no teamId was provided for team view");
         }
+        console.debug(`## prepare statement against /auth/teams/${teamId}`);
         http.get(`auth/teams/${teamId}`, { headers: { Authorization: `Bearer ` + accessToken } })
             .then(response => {
-                console.log(`## request against /auth/teams/${teamId}`);
+                console.debug(`## sent request against /auth/teams/${teamId}`);
                 setTeam(response.data);
             })
             .catch(e => { console.error(e) });
-    }, []);
+    }, [teamId]);
 
     return (
         <View>

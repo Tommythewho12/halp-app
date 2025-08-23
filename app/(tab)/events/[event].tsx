@@ -10,20 +10,20 @@ import { useLocalSearchParams } from "expo-router";
 
 export default function Event() {
     const searchParams = useLocalSearchParams();
+    const eventId = searchParams.id;
     const { accessToken } = useAuth();
-    const [event, setEvent] = useState({ id: null, name: null, start_datetime: null, description: null, team_id: null });
+    const [event, setEvent] = useState({ id: eventId, name: null, start_datetime: null, description: null, team_id: null });
 
     useEffect(() => {
-        console.log(`## effect in event`);
-        var eventId = searchParams.id;
         if (eventId == null) {
-            throw new Error("no eventId was provided for team view");
+            throw new Error("no eventId was provided for event view");
         }
-        console.log(`## request against /auth/events/${eventId}`);
+        console.debug(`## prepare statement against /auth/events/${eventId}`);
         http.get(`auth/events/${eventId}`, { headers: { Authorization: `Bearer ` + accessToken } }).then(response => {
+            console.debug(`## sent request against /auth/events/${eventId}`);
             setEvent(response.data);
         }).catch(e => { console.error(e) });
-    }, []);
+    }, [eventId]);
 
     return (
         <View>
