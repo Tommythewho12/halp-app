@@ -11,12 +11,13 @@ export default function Index() {
     const [events, setEvents] = useState([]);
 
     useEffect(() => {
-        http.get(`auth/events`, {headers: {Authorization: `Bearer ` + accessToken}})
-        .then(response => {
-            setEvents(response.data);
-        }).catch(e => {
-            console.error(e);
-        });
+        // http.get(`auth/events`, {headers: {Authorization: `Bearer ` + accessToken}})
+        http.get(`auth/events`)
+            .then(response => {
+                setEvents(response.data);
+            }).catch(e => {
+                console.error(e);
+            });
     }, []);
 
     return (

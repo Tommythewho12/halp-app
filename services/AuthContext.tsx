@@ -7,6 +7,8 @@ import http from "../http-common";
 const ACCESS_TOKEN = 'accessToken';
 const REFRESH_TOKEN = 'refreshToken';
 
+let currentAccessToken: string | null = null;
+
 interface AuthTokens {
     accessToken: string | null;
     refreshToken: string | null;
@@ -20,9 +22,11 @@ interface AuthContextType extends AuthTokens {
 const AuthContext = createContext<AuthContextType>({
     accessToken: null,
     refreshToken: null,
-    setTokens: () => {},
+    setTokens: () => { },
     isLoading: true,
 });
+
+export const getAccessToken = () => currentAccessToken;
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [tokens, setTokensState] = useState<AuthTokens>({
@@ -36,10 +40,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             await SecureStore.setItemAsync(ACCESS_TOKEN, tokens.accessToken || '');
             await SecureStore.setItemAsync(REFRESH_TOKEN, tokens.refreshToken || '');
             setTokensState(tokens);
+            currentAccessToken = tokens.accessToken;
         } else {
             await SecureStore.deleteItemAsync(ACCESS_TOKEN);
             await SecureStore.deleteItemAsync(REFRESH_TOKEN);
             setTokensState({ accessToken: null, refreshToken: null });
+            currentAccessToken = null;
         }
     };
 
@@ -61,17 +67,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             } else {
                 console.debug('access token still valid');
                 setTokensState({ accessToken, refreshToken });
+                currentAccessToken = accessToken;
             }
         }
         setLoading(false);
     };
 
-    const refreshAccessToken = async (refreshToken:string) => {
+    const refreshAccessToken = async (refreshToken: string) => {
         let accessToken = null;
         await http.post(`refresh-token`, {
             headers: {
                 Cookie: "refreshToken=" + refreshToken
-            }})
+            }
+        })
             .then(res => {
                 accessToken = res.data.accessToken;;
                 console.debug('new access token via refresh', accessToken);

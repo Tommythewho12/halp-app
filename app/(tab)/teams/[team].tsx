@@ -15,12 +15,14 @@ export default function Team() {
             throw new Error("no teamId was provided for team view");
         }
         console.debug(`## prepare statement against /auth/teams/${teamId}`);
-        http.get(`auth/teams/${teamId}`, { headers: { Authorization: `Bearer ` + accessToken } })
+        // http.get(`auth/teams/${teamId}`, { headers: { Authorization: `Bearer ` + accessToken } })
+        http.get(`auth/teams/${teamId}`)
             .then(response => {
                 console.debug(`## sent request against /auth/teams/${teamId}`);
                 setTeam(response.data);
             })
             .catch(e => { console.error(e) });
+
     }, [teamId]);
 
     return (
