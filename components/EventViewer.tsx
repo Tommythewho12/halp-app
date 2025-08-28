@@ -3,10 +3,11 @@ import { Button, StyleSheet, Text, View } from 'react-native';
 type Event = {
     id: string | string[] | null;
     name: string | null;
-    start_datetime: string | null;
+    startDatetime: string | null;
     description: string | null;
-    team_id: number | null,
-    isUserVolunteer: boolean,
+    teamId: number | null,
+    isSubscribed: boolean,
+    isAssigned: boolean,
     handleVolunteer: () => void
 };
 
@@ -15,10 +16,9 @@ export default function EventViewer(event: Event) {
     return (
         <View>
             <Text>{event.name}</Text>
-            <Text>{event.start_datetime}</Text>
+            <Text>{event.startDatetime}</Text>
             <Text>{event.description}</Text>
-            {event.isUserVolunteer && <Text>You are volunteering!</Text>}
-            <Button title="Un-/Subscribe" onPress={event.handleVolunteer} />
+            {event.isSubscribed ? <Text>You are volunteering!</Text> : <Button title="Un-/Subscribe" onPress={event.handleVolunteer} />}
         </View>
     );
 };

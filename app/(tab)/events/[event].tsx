@@ -12,18 +12,19 @@ export default function Event() {
     const searchParams = useLocalSearchParams();
     const eventId = searchParams.id;
     const { accessToken } = useAuth();
-    const [event, setEvent] = useState({ id: eventId, name: null, start_datetime: null, description: null, team_id: null, isUserSubscribed: false });
+    const [event, setEvent] = useState({ id: eventId, name: null, start_datetime: null, description: null, team_id: null, is_subscribed: false, is_assigned: false });
 
     const handleVolunteer = () => {
         console.debug("Access Token: ", accessToken);
         // http.post(`auth/events/${event.id}/volunteers`, "data", { headers: { Authorization: `Bearer ` + accessToken } })
         http.post(`auth/events/${event.id}/volunteers`)
             .then(response => {
-                setEvent({ ...event, isUserSubscribed: true });
+                setEvent({ ...event, is_subscribed: true });
             })
             .catch(e => { console.error(e) });
     }
 
+    // TODO take data from parent instead of making another call
     useEffect(() => {
         if (eventId == null) {
             throw new Error("no eventId was provided for event view");
@@ -39,8 +40,15 @@ export default function Event() {
 
     return (
         <View>
-            <Text>Hier passieren Sachen</Text>
-            <EventViewer id={event.id} name={event.name} start_datetime={event.start_datetime} description={event.description} team_id={event.team_id} isUserVolunteer={false} handleVolunteer={handleVolunteer} />
+            <EventViewer
+                id={event.id}
+                name={event.name}
+                startDatetime={event.start_datetime}
+                description={event.description}
+                teamId={event.team_id}
+                isSubscribed={event.is_subscribed}
+                handleVolunteer={handleVolunteer}
+                isAssigned={event.is_assigned} />
         </View>
     )
 }

@@ -10,7 +10,9 @@ type Event = {
     name: string;
     start_datetime: string;
     description: string;
-    team_id: number
+    team_id: number,
+    is_subscribed: boolean,
+    is_assigned: boolean
 };
 
 export default function EventsListViewer({ events }: EventsList) {
@@ -18,6 +20,7 @@ export default function EventsListViewer({ events }: EventsList) {
     const handlePress = (event: Event) => {
         // Alert.alert('Event selected', `${event.name}, id:${event.id}`);
         console.info(`######pressed button event id: ${event.id}`);
+        // TODO remove one or the other
         router.navigate({ pathname: '/(tab)/events/[event]', params: { id: event.id, event: event.id } });
     }
 
@@ -38,6 +41,8 @@ export default function EventsListViewer({ events }: EventsList) {
                         </Text>
                         <Text>{item.start_datetime}</Text>
                         <Text>{item.description}</Text>
+                        <Text>{item.is_subscribed ? "subscribed" : "not subscribed"}</Text>
+                        <Text>{item.is_assigned ? "assigned" : "not assigned"}</Text>
                     </Pressable>
                 }
             />
