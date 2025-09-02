@@ -1,25 +1,21 @@
 import { Button, StyleSheet, Text, View } from 'react-native';
 
-type Event = {
+type Team = {
     id: string | string[] | null,
     name: string | null,
-    startDatetime: string | null,
-    description: string | null,
-    teamId: number | null,
     isSubscribed: boolean,
-    isAssigned: boolean,
-    handleVolunteer: () => void,
-    handleUnvolunteer: () => void
+    isAdmin: boolean,
+    handleSubscribe: () => void,
+    handleUnsubscribe: () => void
 };
 
-export default function EventViewer(event: Event) {
+export default function TeamViewer(team: Team) {
 
     return (
         <View>
-            <Text>{event.name}</Text>
-            <Text>{event.startDatetime}</Text>
-            <Text>{event.description}</Text>
-            {event.isSubscribed ? <Button title="Withdraw from event!" onPress={event.handleUnvolunteer} /> : <Button title="Sign up as a volunteer" onPress={event.handleVolunteer} />}
+            <Text>{team.name}</Text>
+            {team.isSubscribed ? <Button title="Unsubscribe from team!" onPress={team.handleUnsubscribe} /> : <Button title="Subscribe to team" onPress={team.handleSubscribe} />}
+            {team.isAdmin && <Text>You are the admin of this team!</Text>}
         </View>
     );
 };

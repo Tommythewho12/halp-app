@@ -6,14 +6,14 @@ type TeamsList = {
 }
 
 type Team = {
+    id: string;
     name: string;
+    is_subscribed: boolean;
 };
 
 export default function TeamsListViewer({ teams }: TeamsList) {
-    const handlePress = (teams: Team) => {
-        // Alert.alert('Event selected', `${teams.name}`);
-        // router.navigate({ pathname: '/(tab)/managed-teams', params: { test: 'aösfdlj' } });
-        router.navigate({ pathname: '/(tab)/teams/[team]', params: { id: '1', team: '1' } });
+    const handlePress = (teamId: string) => {
+        router.navigate({ pathname: '/(tab)/teams/[team]', params: { team: teamId } });
     }
 
     return (
@@ -26,11 +26,12 @@ export default function TeamsListViewer({ teams }: TeamsList) {
                             styles.eventItem,
                             pressed && styles.pressedItem,
                         ]}
-                        onPress={() => handlePress(item)}
+                        onPress={() => handlePress(item.id)}
                     >
                         <Text style={styles.item}>
-                            {item.name}
+                            {item.name} (id:{item.id})
                         </Text>
+                        {item.is_subscribed && <Text>Supporting</Text>}
                     </Pressable>
                 }
             />

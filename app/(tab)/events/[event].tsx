@@ -1,8 +1,6 @@
-import { Button } from "@react-navigation/elements";
 import { Text, View } from "react-native";
 
 import http from '@/http-common';
-import { useAuth } from '@/services/AuthContext';
 
 import EventViewer from "@/components/EventViewer";
 import { useEffect, useState } from "react";
@@ -10,16 +8,21 @@ import { useLocalSearchParams } from "expo-router";
 
 export default function Event() {
     const searchParams = useLocalSearchParams();
-    const eventId = searchParams.id;
-    const { accessToken } = useAuth();
+    const eventId = searchParams.event;
     const [event, setEvent] = useState({ id: eventId, name: null, start_datetime: null, description: null, team_id: null, is_subscribed: false, is_assigned: false });
 
     const handleVolunteer = () => {
-        console.debug("Access Token: ", accessToken);
-        // http.post(`auth/events/${event.id}/volunteers`, "data", { headers: { Authorization: `Bearer ` + accessToken } })
         http.post(`auth/events/${event.id}/volunteers`)
             .then(response => {
                 setEvent({ ...event, is_subscribed: true });
+            })
+            .catch(e => { console.error(e) });
+    }
+
+    const handleUnvolunteer = () => {
+        http.delete(`auth/events/${event.id}/volunteers`)
+            .then(response => {
+                setEvent({ ...event, is_subscribed: false });
             })
             .catch(e => { console.error(e) });
     }
@@ -30,7 +33,6 @@ export default function Event() {
             throw new Error("no eventId was provided for event view");
         }
         console.debug(`## prepare statement against /auth/events/${eventId}`);
-        // http.get(`auth/events/${eventId}`, { headers: { Authorization: `Bearer ` + accessToken } })
         http.get(`auth/events/${eventId}`)
             .then(response => {
                 console.debug(`## sent request against /auth/events/${eventId}`);
@@ -48,6 +50,7 @@ export default function Event() {
                 teamId={event.team_id}
                 isSubscribed={event.is_subscribed}
                 handleVolunteer={handleVolunteer}
+                handleUnvolunteer={handleUnvolunteer}
                 isAssigned={event.is_assigned} />
         </View>
     )

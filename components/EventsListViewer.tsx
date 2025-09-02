@@ -17,12 +17,11 @@ type Event = {
 
 export default function EventsListViewer({ events }: EventsList) {
     const router = useRouter();
-    const handlePress = (event: Event) => {
-        // Alert.alert('Event selected', `${event.name}, id:${event.id}`);
-        console.info(`######pressed button event id: ${event.id}`);
-        // TODO remove one or the other
-        router.navigate({ pathname: '/(tab)/events/[event]', params: { id: event.id, event: event.id } });
+    const handlePress = (eventId: string) => {
+        router.navigate({ pathname: '/(tab)/events/[event]', params: { event: eventId } });
     }
+
+    // TODO pull up un-/volunteering handler here to update this view
 
     return (
         <View style={styles.container}>
@@ -34,7 +33,7 @@ export default function EventsListViewer({ events }: EventsList) {
                             styles.eventItem,
                             pressed && styles.pressedItem,
                         ]}
-                        onPress={() => handlePress(item)}
+                        onPress={() => handlePress(item.id)}
                     >
                         <Text style={styles.item}>
                             {item.name}

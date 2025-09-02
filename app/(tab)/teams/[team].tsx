@@ -1,24 +1,38 @@
-import { useAuth } from '@/services/AuthContext';
+import TeamViewer from '@/components/TeamViewer';
 import http from '@/http-common';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
 
 export default function Team() {
     const searchParams = useLocalSearchParams();
-    const teamId = searchParams.id;
-    const { accessToken } = useAuth();
-    const [team, setTeam] = useState({ teamId: teamId, teamName: null, adminName: null });
+    const teamId = searchParams.team;
+    const [team, setTeam] = useState({ id: teamId, name: '', admin_name: '', is_subscribed: false, isUserAdmin: false, subscribers: [] });
+
+    const handleSubscribe = () => {
+        http.post(`auth/teams/${team.id}/subscribers`)
+            .then(response => {
+                // TODO update subscription status
+                // setTeam({ ...team, is_subscribed: true });
+            })
+            .catch(e => { console.error(e) });
+    }
+
+    const handleUnsubscribe = () => {
+        http.delete(`auth/teams/${team.id}/subscribers`)
+            .then(response => {
+                // TODO update subscription status
+                // setTeam({ ...team, is_subscribed: false });
+            })
+            .catch(e => { console.error(e) });
+    }
 
     useEffect(() => {
         if (teamId == null) {
             throw new Error("no teamId was provided for team view");
         }
-        console.debug(`## prepare statement against /auth/teams/${teamId}`);
-        // http.get(`auth/teams/${teamId}`, { headers: { Authorization: `Bearer ` + accessToken } })
         http.get(`auth/teams/${teamId}`)
             .then(response => {
-                console.debug(`## sent request against /auth/teams/${teamId}`);
+                console.debug(`## GET /auth/teams/${teamId}`);
                 setTeam(response.data);
             })
             .catch(e => { console.error(e) });
@@ -26,11 +40,12 @@ export default function Team() {
     }, [teamId]);
 
     return (
-        <View>
-            <Text>Welcome to the team view</Text>
-            <Text>Id: {team.teamId}</Text>
-            <Text>Name: {team.teamName}</Text>
-            <Text>Admin: {team.adminName}</Text>
-        </View>
+        <TeamViewer
+            id={team.id}
+            name={team.name}
+            isSubscribed={team.is_subscribed}
+            isAdmin={team.isUserAdmin}
+            handleSubscribe={handleSubscribe}
+            handleUnsubscribe={handleUnsubscribe} />
     )
 }
