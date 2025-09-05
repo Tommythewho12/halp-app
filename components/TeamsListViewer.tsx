@@ -31,7 +31,7 @@ export default function TeamsListViewer({ teams }: TeamsList) {
                         <Text style={styles.item}>
                             {item.name} (id:{item.id})
                         </Text>
-                        {item.is_subscribed && <Text>Supporting</Text>}
+                        {item.is_subscribed ? <Text>Supporting</Text> : null}
                     </Pressable>
                 }
             />
