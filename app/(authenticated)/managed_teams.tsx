@@ -6,7 +6,7 @@ import TestService from '../../services/test.service';
 import { clearTokens } from '../../services/secure-store.service';
 import { useAuth } from '@/services/AuthContext';
 
-export default function Index() {
+export default function Managed_Teams() {
   const searchParams = useLocalSearchParams();
 
   const { setTokens } = useAuth();

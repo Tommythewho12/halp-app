@@ -41,6 +41,14 @@ export default function Layout() {
                     }}
                 />
                 <Drawer.Screen
+                    name='settings'
+                    options={{
+                        title: 'Settings',
+                        drawerLabel: 'Settings'
+                    }}
+                />
+
+                <Drawer.Screen
                     name='teams'
                     options={{
                         drawerItemStyle: { display: 'none' }

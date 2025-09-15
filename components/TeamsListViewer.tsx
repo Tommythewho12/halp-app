@@ -13,7 +13,7 @@ type Team = {
 
 export default function TeamsListViewer({ teams }: TeamsList) {
     const handlePress = (teamId: string) => {
-        router.navigate({ pathname: '/(tab)/teams/[team]', params: { team: teamId } });
+        router.navigate({ pathname: '/(authenticated)/teams/[team]', params: { team: teamId } });
     }
 
     return (

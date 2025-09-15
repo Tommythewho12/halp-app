@@ -18,7 +18,7 @@ type Event = {
 export default function EventsListViewer({ events }: EventsList) {
     const router = useRouter();
     const handlePress = (eventId: string) => {
-        router.navigate({ pathname: '/(tab)/events/[event]', params: { event: eventId } });
+        router.navigate({ pathname: '/(authenticated)/events/[event]', params: { event: eventId } });
     }
 
     // TODO pull up un-/volunteering handler here to update this view

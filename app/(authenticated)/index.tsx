@@ -9,7 +9,11 @@ export default function Index() {
     const [events, setEvents] = useState([]);
 
     useEffect(() => {
-        http.get(`auth/events`)
+        http.get(`auth/events`, {
+            params: {
+                as: 'volunteer'
+            }
+        })
             .then(response => {
                 setEvents(response.data);
             }).catch(e => {
