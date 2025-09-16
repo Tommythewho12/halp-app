@@ -20,10 +20,10 @@ export default function Layout() {
                     }}
                 />
                 <Drawer.Screen
-                    name='subbed_teams'
+                    name='all_teams'
                     options={{
-                        title: 'Subbed Teams',
-                        drawerLabel: 'Subbed Teams'
+                        title: 'All Teams',
+                        drawerLabel: 'All Teams'
                     }}
                 />
                 <Drawer.Screen
@@ -31,13 +31,6 @@ export default function Layout() {
                     options={{
                         title: 'My Teams',
                         drawerLabel: 'My Teams'
-                    }}
-                />
-                <Drawer.Screen
-                    name='all_teams'
-                    options={{
-                        title: 'All Teams',
-                        drawerLabel: 'All Teams'
                     }}
                 />
                 <Drawer.Screen

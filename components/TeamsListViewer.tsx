@@ -1,17 +1,8 @@
 import { router } from 'expo-router';
 import { FlatList, Pressable, StyleSheet, Text, View, Alert } from 'react-native';
+import { Team } from '@/types';
 
-type TeamsList = {
-    teams: Team[];
-}
-
-type Team = {
-    id: string;
-    name: string;
-    is_subscribed: boolean;
-};
-
-export default function TeamsListViewer({ teams }: TeamsList) {
+export default function TeamsListViewer({ teams }: { teams: Team[] }) {
     const handlePress = (teamId: string) => {
         router.navigate({ pathname: '/(authenticated)/teams/[team]', params: { team: teamId } });
     }

@@ -1,47 +1,35 @@
-import { router, useLocalSearchParams } from 'expo-router';
 import { Text, View, Pressable } from 'react-native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import TestService from '../../services/test.service';
-import { clearTokens } from '../../services/secure-store.service';
-import { useAuth } from '@/services/AuthContext';
+import http from '@/http-common';
+import TeamsListViewer from '@/components/TeamsListViewer';
+import { Team } from '@/types';
 
 export default function Managed_Teams() {
-  const searchParams = useLocalSearchParams();
+    const [teams, setTeams] = useState<Team[]>([]);
 
-  const { setTokens } = useAuth();
-  const [text, setText] = useState("no data retrieved yet!");
+    useEffect(() => {
+        http.get<Team[]>(`auth/teams`, { params: { as: 'admin' } })
+            .then(response => {
+                setTeams(response.data);
+            }).catch(e => {
+                console.error(e);
+            });
+    }, []);
 
-  const handlePress = () => {
-    TestService.get()
-      .then(response => {
-        setText(response.data);
-      })
-      .catch(e => {
-        console.log(e);
-        setText(e.message);
-      });
-    console.log('#+#+# searchParams: ', searchParams);
-  }
+    const handlePress = () => {
 
-  const handleLogout = () => {
-    setTokens({ accessToken: null, refreshToken: null });
-    router.replace('/login');
-  }
+    }
 
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Pressable
-        onPress={() => handlePress()}
-      >
-        <Text>Test</Text>
-      </Pressable>
-      <Text>{text}</Text>
-      <Pressable
-        onPress={handleLogout}
-      >
-        <Text>Logout</Text>
-      </Pressable>
-    </View>
-  );
+    return (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Pressable
+                onPress={handlePress}
+            >
+                <Text>Create new Team</Text>
+            </Pressable>
+            <Text>My managed Teams</Text>
+            <TeamsListViewer teams={teams} />
+        </View>
+    );
 }
