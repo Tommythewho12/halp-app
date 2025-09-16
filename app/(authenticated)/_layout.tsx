@@ -2,11 +2,12 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Drawer } from 'expo-router/drawer';
 
 export default function Layout() {
+    // TODO remove display none at bottom
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
             <Drawer>
                 <Drawer.Screen
-                    name='index'
+                    name='events'
                     options={{
                         title: 'My Events',
                         drawerLabel: 'My Events'
@@ -20,7 +21,7 @@ export default function Layout() {
                     }}
                 />
                 <Drawer.Screen
-                    name='all_teams'
+                    name='teams'
                     options={{
                         title: 'All Teams',
                         drawerLabel: 'All Teams'
@@ -29,8 +30,8 @@ export default function Layout() {
                 <Drawer.Screen
                     name='managed_teams'
                     options={{
-                        title: 'My Teams',
-                        drawerLabel: 'My Teams'
+                        title: 'My Managed Teams',
+                        drawerLabel: 'My Managed Teams'
                     }}
                 />
                 <Drawer.Screen
@@ -42,18 +43,11 @@ export default function Layout() {
                 />
 
                 <Drawer.Screen
-                    name='teams'
+                    name='managed'
                     options={{
                         drawerItemStyle: { display: 'none' }
                     }}
-                />
-                <Drawer.Screen
-                    name='events'
-                    options={{
-                        drawerItemStyle: { display: 'none' }
-                    }}
-                />
-            </Drawer>
+                />            </Drawer>
         </GestureHandlerRootView>
     );
 }

@@ -1,9 +1,8 @@
-import { Tabs, Stack } from "expo-router";
+import { Stack } from "expo-router";
 
-import Ionicons from '@expo/vector-icons/Ionicons';
 import { useAuth } from "@/services/AuthContext";
 
-export default function TabLayout() {
+export default function TeamsLayout() {
     const { accessToken, isLoading } = useAuth();
 
     if (isLoading) {
@@ -11,31 +10,19 @@ export default function TabLayout() {
     }
 
     return (
-        <Tabs screenOptions={{ headerShown: false }}>
-            <Tabs.Screen
-                name="all_teams"
+        <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen
+                name='index'
                 options={{
-                    title: "Alle Teams",
-                    tabBarIcon: ({ color, focused }) => (
-                        <Ionicons size={28} name={focused ? "calendar" : "calendar-outline"} color={color} />
-                    ),
+                    title: 'All Teams'
                 }}
             />
-            <Tabs.Screen
-                name="subbed_teams"
+            <Stack.Screen
+                name='[team]'
                 options={{
-                    title: "Subbed Teams",
-                    tabBarIcon: ({ color, focused }) => (
-                        <Ionicons size={28} name={focused ? "people" : "people-outline"} color={color} />
-                    ),
+                    title: 'event%'
                 }}
             />
-            <Tabs.Screen
-                name="[team]"
-                options={{
-                    href: null
-                }}
-            />
-        </Tabs>
+        </Stack>
     );
 }

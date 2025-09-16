@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
 import http from '@/http-common';
 import EventsListViewer from '@/components/EventsListViewer';
 
 // events, but has to be named index
-export default function Index() {
+export default function Events() {
     const [events, setEvents] = useState([]);
 
     useEffect(() => {

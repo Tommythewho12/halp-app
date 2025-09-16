@@ -1,9 +1,8 @@
-import { Tabs, Stack } from "expo-router";
+import { Stack } from "expo-router";
 
-import Ionicons from '@expo/vector-icons/Ionicons';
 import { useAuth } from "@/services/AuthContext";
 
-export default function TabLayout() {
+export default function EventsLayout() {
     const { accessToken, isLoading } = useAuth();
 
     if (isLoading) {
@@ -11,31 +10,25 @@ export default function TabLayout() {
     }
 
     return (
-        <Tabs screenOptions={{ headerShown: false }}>
-            <Tabs.Screen
-                name="events/inquiring"
+        <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen
+                name='index'
                 options={{
-                    title: "My Events",
-                    tabBarIcon: ({ color, focused }) => (
-                        <Ionicons size={28} name={focused ? "calendar" : "calendar-outline"} color={color} />
-                    ),
+                    title: 'My Events'
                 }}
             />
-            <Tabs.Screen
-                name="events/index"
+            <Stack.Screen
+                name='[event]'
                 options={{
-                    title: "New Events",
-                    tabBarIcon: ({ color, focused }) => (
-                        <Ionicons size={28} name={focused ? "people" : "people-outline"} color={color} />
-                    ),
+                    title: 'event%'
                 }}
             />
-            <Tabs.Screen
-                name="[event]"
+            <Stack.Screen
+                name="new"
                 options={{
-                    href: null
+                    title: 'Create new Event'
                 }}
             />
-        </Tabs>
+        </Stack>
     );
 }

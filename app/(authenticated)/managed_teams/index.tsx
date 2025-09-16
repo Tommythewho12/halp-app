@@ -4,8 +4,10 @@ import { useEffect, useState } from 'react';
 import http from '@/http-common';
 import TeamsListViewer from '@/components/TeamsListViewer';
 import { Team } from '@/types';
+import { useRouter } from 'expo-router';
 
-export default function Managed_Teams() {
+export default function ManagedTeams() {
+    const router = useRouter();
     const [teams, setTeams] = useState<Team[]>([]);
 
     useEffect(() => {
@@ -18,7 +20,7 @@ export default function Managed_Teams() {
     }, []);
 
     const handlePress = () => {
-
+        router.navigate({ pathname: '/(authenticated)/managed_teams/new' });
     }
 
     return (
