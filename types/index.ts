@@ -1,6 +1,7 @@
 
 export interface Team {
-    id: string;
-    name: string;
-    is_subscribed: boolean;
+    id: string | undefined,
+    name: string,
+    is_admin: boolean,
+    is_subscribed: boolean,
 };

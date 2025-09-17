@@ -1,9 +1,9 @@
 import { Stack } from "expo-router";
 
-import { useAuth } from "@/services/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function TeamsLayout() {
-    const { accessToken, isLoading } = useAuth();
+    const { isLoading } = useAuth();
 
     if (isLoading) {
         // TODO loading or splash screen

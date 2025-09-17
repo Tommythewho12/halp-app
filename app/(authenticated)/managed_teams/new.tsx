@@ -1,21 +1,29 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, View, Button } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 
-// TODO pass function to create new team to this view
+import { useTeams } from '@/contexts/TeamsContext';
+
 export default function NewTeam() {
     const router = useRouter();
+    const { addTeam } = useTeams();
     const [name, setName] = useState('');
 
     const handleCreateTeam = () => {
-        // call method passed in constructor
+        // TODO rest call
+        addTeam({
+            id: undefined,
+            name: name,
+            is_admin: true,
+            is_subscribed: false
+        });
         router.back();
     }
 
     return (
-        <View>
-            <Text>Some Text</Text>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Text>Team Name</Text>
 
             <TextInput
                 placeholder='Name'
@@ -24,9 +32,7 @@ export default function NewTeam() {
                 onChangeText={setName}
             />
 
-            <TouchableOpacity onPress={handleCreateTeam}>
-                <Text>Create</Text>
-            </TouchableOpacity>
+            <Button onPress={handleCreateTeam} title='Create' />
         </View>
     )
 }

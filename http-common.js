@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getAccessToken } from "./services/AuthContext";
+import { getAccessToken } from "./contexts/AuthContext";
 
 // export default axios.create({
 //     // baseURL: "http://94.114.43.121:81/api",

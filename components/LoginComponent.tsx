@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { useAuth } from '@/services/AuthContext';
+import { useAuth } from '@/contexts/AuthContext';
 import http from '@/http-common';
 
 export const LoginComponent = () => {
@@ -32,21 +32,21 @@ export const LoginComponent = () => {
             })
             .finally(() => setLocalLoading(false))
         if (accessToken) {
-            router.replace('/');
+            router.replace('/(authenticated)/events');
         }
     };
 
     if (isLoading || isLocalLoading) {
         return <Text>Loading...</Text>
     }
-    
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>
                 Login
             </Text>
 
-            <TextInput 
+            <TextInput
                 style={styles.input}
                 placeholder='Email'
                 placeholderTextColor="#888"
@@ -75,38 +75,38 @@ export const LoginComponent = () => {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 24,
-    backgroundColor: '#f9fafc',
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: '600',
-    textAlign: 'center',
-    marginBottom: 32,
-  },
-  input: {
-    backgroundColor: '#fff',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 10,
-    marginBottom: 16,
-    fontSize: 16,
-    borderWidth: 1,
-    borderColor: '#ddd',
-  },
-  button: {
-    backgroundColor: '#4f46e5',
-    paddingVertical: 14,
-    borderRadius: 10,
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: '500',
-  }
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        paddingHorizontal: 24,
+        backgroundColor: '#f9fafc',
+    },
+    title: {
+        fontSize: 32,
+        fontWeight: '600',
+        textAlign: 'center',
+        marginBottom: 32,
+    },
+    input: {
+        backgroundColor: '#fff',
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+        borderRadius: 10,
+        marginBottom: 16,
+        fontSize: 16,
+        borderWidth: 1,
+        borderColor: '#ddd',
+    },
+    button: {
+        backgroundColor: '#4f46e5',
+        paddingVertical: 14,
+        borderRadius: 10,
+        alignItems: 'center',
+        marginTop: 8,
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: '500',
+    }
 });

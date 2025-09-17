@@ -3,7 +3,12 @@ import { FlatList, Pressable, StyleSheet, Text, View, Alert } from 'react-native
 import { Team } from '@/types';
 
 export default function TeamsListViewer({ teams }: { teams: Team[] }) {
-    const handlePress = (teamId: string) => {
+    const handlePress = (teamId: string | undefined) => {
+        if (teamId === undefined) {
+            // TODO throw Exception?
+            console.error('team does not have an ID and cannot be navigated to')
+            return;
+        }
         router.navigate({ pathname: '/(authenticated)/teams/[team]', params: { team: teamId } });
     }
 

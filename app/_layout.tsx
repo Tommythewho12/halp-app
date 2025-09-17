@@ -1,7 +1,6 @@
 import { SplashScreen, Stack } from "expo-router";
-import { Button } from "react-native";
 
-import { AuthProvider, useAuth } from "@/services/AuthContext";
+import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 
 export default function RootLayout() {
     return (

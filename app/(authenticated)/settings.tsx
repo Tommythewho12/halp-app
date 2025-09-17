@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { View, Button } from 'react-native';
-import { useAuth } from '@/services/AuthContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function Settings() {
     const { setTokens } = useAuth();
