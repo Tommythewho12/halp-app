@@ -16,6 +16,6 @@ export interface ManagedEvent {
     team_id: string,
     name: string,
     description: string | null,
-    startDateTime: string,
+    start_dateTime: string,
     complete: boolean,
 }

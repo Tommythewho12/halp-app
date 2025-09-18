@@ -5,21 +5,15 @@ export default function ManagedTeamsLayout() {
         <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen
                 name='index'
-                options={{
-                    title: 'My Managed Teams'
-                }}
             />
             <Stack.Screen
                 name='new'
-                options={{
-                    title: 'Create new Team'
-                }}
             />
             <Stack.Screen
-                name='[id]'
-                options={{
-                    title: 'My Managed Team'
-                }}
+                name='[team_id]/index'
+            />
+            <Stack.Screen
+                name='[team_id]/managed_events/[event_id]/index'
             />
         </Stack>
     );

@@ -6,15 +6,15 @@ import { ManagedTeam } from '@/types';
 export default function ManagedTeamViewer(team: ManagedTeam) {
 
     const handleOpenManagedEvent = (eventId: string) => {
-        router.navigate({ pathname: '/(authenticated)/managed_teams/[id]/managed_events/[id]', params: { id: eventId } });
+        router.navigate({ pathname: `/(authenticated)/managed_teams/[team_id]/managed_events/[event_id]`, params: { team_id: team.id, event_id: eventId } });
     };
 
     const handleCreateNewManagedEvent = () => {
-        router.navigate({ pathname: '/(authenticated)/managed_teams/new' });
+        router.navigate({ pathname: `/(authenticated)/managed_teams/new` });
     };
 
     return (
-        <View>
+        <View style={styles.container}>
             <Text>Team Name</Text>
             <Text>{team.name}</Text>
             <Text>Events</Text>
@@ -24,8 +24,16 @@ export default function ManagedTeamViewer(team: ManagedTeam) {
             <FlatList
                 data={team.events}
                 renderItem={({ item }) =>
-                    <Pressable onPress={() => handleOpenManagedEvent(item.id)}>
-                        <Text>{item.name}</Text>
+                    <Pressable
+                        style={({ pressed }) => [
+                            styles.eventItem,
+                            pressed && styles.pressedItem,
+                        ]}
+                        onPress={() => handleOpenManagedEvent(item.id)}
+                    >
+                        <Text style={styles.item}>
+                            {item.name}
+                        </Text>
                     </Pressable>
                 }
             />

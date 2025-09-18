@@ -9,7 +9,7 @@ export default function ManagedTeamsListViewer({ teams }: { teams: Team[] }) {
             console.error('team does not have an ID and cannot be navigated to')
             return;
         }
-        router.navigate({ pathname: '/(authenticated)/managed_teams/[id]', params: { id: teamId } });
+        router.navigate({ pathname: '/(authenticated)/managed_teams/[team_id]', params: { team_id: teamId } });
     }
 
     return (
