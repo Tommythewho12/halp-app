@@ -2,7 +2,7 @@ import { createContext, use, useEffect, useState } from 'react';
 import { isExpired } from 'react-jwt';
 import * as SecureStore from 'expo-secure-store';
 
-import http from "../http-common";
+import http from '@/services/http-common';
 
 const ACCESS_TOKEN = 'accessToken';
 const REFRESH_TOKEN = 'refreshToken';

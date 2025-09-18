@@ -1,4 +1,4 @@
-import http from "../http-common";
+import http from '@/services/http-common';
 
 import { storeAccess, getAccess, storeRefresh, getRefresh } from './secure-store.service';
 import { useAuth } from "./AuthContext";
@@ -32,7 +32,7 @@ class ConnectionService {
                     console.debug("refreshToken", refreshToken);
                     storeRefresh(refreshToken);
                 }
-                
+
                 return true;
             })
             .catch(e => {
@@ -45,12 +45,12 @@ class ConnectionService {
     getEventsCopy() {
         console.debug('attempting fetch events');
         const access = getAccess();
-        return http.get(`auth/events`, {headers: {Authorization: `Bearer ${access}`}});
+        return http.get(`auth/events`, { headers: { Authorization: `Bearer ${access}` } });
     };
 
     getEvents() {
         console.log(this.accessToken);
-        return http.get(`auth/events`, {headers: {Authorization: `Bearer ` + this.accessToken}});
+        return http.get(`auth/events`, { headers: { Authorization: `Bearer ` + this.accessToken } });
     };
 }
 

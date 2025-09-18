@@ -1,4 +1,4 @@
-import { Text, View, Pressable } from 'react-native';
+import { Text, View, Pressable, Button } from 'react-native';
 
 import TeamsListViewer from '@/components/TeamsListViewer';
 import { useRouter } from 'expo-router';
@@ -14,12 +14,10 @@ export default function ManagedTeams() {
 
     return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Pressable
-                onPress={handlePressCreateNew}
-            >
-                <Text>Create new Team</Text>
-            </Pressable>
-            <Text>My managed Teams</Text>
+            <Button
+                title='Create new Team'
+                onPress={handlePressCreateNew} />
+
             <TeamsListViewer teams={teams} />
         </View>
     );

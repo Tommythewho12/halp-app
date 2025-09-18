@@ -1,8 +1,9 @@
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+
+import http from '@/services/http-common';
 import { useAuth } from '@/contexts/AuthContext';
-import http from '@/http-common';
 
 export const LoginComponent = () => {
     const { accessToken, refreshToken, setTokens, isLoading } = useAuth();

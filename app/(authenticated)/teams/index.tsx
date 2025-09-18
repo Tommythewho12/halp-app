@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 
-import http from '@/http-common';
+import http from '@/services/http-common';
 import TeamsListViewer from '@/components/TeamsListViewer';
 import { Team } from '@/types';
 

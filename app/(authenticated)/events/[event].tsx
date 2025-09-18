@@ -1,6 +1,6 @@
 import { Text, View } from "react-native";
 
-import http from '@/http-common';
+import http from '@/services/http-common';
 
 import EventViewer from "@/components/EventViewer";
 import { useEffect, useState } from "react";

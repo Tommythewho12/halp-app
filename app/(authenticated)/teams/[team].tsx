@@ -1,7 +1,8 @@
-import TeamViewer from '@/components/TeamViewer';
-import http from '@/http-common';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
+
+import http from '@/services/http-common';
+import TeamViewer from '@/components/TeamViewer';
 
 export default function Team() {
     const searchParams = useLocalSearchParams();

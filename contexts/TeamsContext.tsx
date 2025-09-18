@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-import http from '@/http-common';
+import http from '@/services/http-common';
 import { Team } from '@/types';
 
 type TeamsContextType = {

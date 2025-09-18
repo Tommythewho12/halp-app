@@ -1,15 +1,5 @@
 import axios from "axios";
-import { getAccessToken } from "./contexts/AuthContext";
-
-// export default axios.create({
-//     // baseURL: "http://94.114.43.121:81/api",
-//     baseURL: "http://192.168.0.73:3000/",
-//     headers: {
-//         common: {
-//             "Content-type": "application/json"
-//         }
-//     }
-// });
+import { getAccessToken } from '@/contexts/AuthContext';
 
 const http = axios.create({
     baseURL: "http://192.168.0.73:3000/",

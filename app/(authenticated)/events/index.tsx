@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 
-import http from '@/http-common';
+import http from '@/services/http-common';
 import EventsListViewer from '@/components/EventsListViewer';
 
 // events, but has to be named index
