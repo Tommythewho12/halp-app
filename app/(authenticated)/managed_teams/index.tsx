@@ -1,6 +1,6 @@
 import { Text, View, Pressable, Button } from 'react-native';
 
-import TeamsListViewer from '@/components/TeamsListViewer';
+import ManagedTeamsListViewer from '@/components/TeamsListViewer';
 import { useRouter } from 'expo-router';
 import { useTeams } from '@/contexts/TeamsContext';
 
@@ -18,7 +18,7 @@ export default function ManagedTeams() {
                 title='Create new Team'
                 onPress={handlePressCreateNew} />
 
-            <TeamsListViewer teams={teams} />
+            <ManagedTeamsListViewer teams={teams} />
         </View>
     );
 }

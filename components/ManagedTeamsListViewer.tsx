@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { FlatList, Pressable, StyleSheet, Text, View, Alert } from 'react-native';
 import { Team } from '@/types';
 
-export default function TeamsListViewer({ teams }: { teams: Team[] }) {
+export default function ManagedTeamsListViewer({ teams }: { teams: Team[] }) {
     const handlePress = (teamId: string | undefined) => {
         if (teamId === undefined) {
             // TODO throw Exception?
@@ -25,9 +25,8 @@ export default function TeamsListViewer({ teams }: { teams: Team[] }) {
                         onPress={() => handlePress(item.id)}
                     >
                         <Text style={styles.item}>
-                            {item.name} (id:{item.id})
+                            {item.name}
                         </Text>
-                        {item.is_subscribed ? <Text>Supporting</Text> : null}
                     </Pressable>
                 }
             />

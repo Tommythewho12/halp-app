@@ -6,7 +6,7 @@ import { TextInput } from 'react-native-gesture-handler';
 import http from '@/services/http-common';
 import { useTeams } from '@/contexts/TeamsContext';
 
-export default function NewTeam() {
+export default function NewManagedTeam() {
     const router = useRouter();
     const { addTeam } = useTeams();
     const [name, setName] = useState('');
