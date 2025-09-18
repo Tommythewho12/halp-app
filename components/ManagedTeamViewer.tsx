@@ -6,7 +6,7 @@ import { ManagedTeam } from '@/types';
 export default function ManagedTeamViewer(team: ManagedTeam) {
 
     const handleOpenManagedEvent = (eventId: string) => {
-        router.navigate({ pathname: '/(authenticated)/managed_events/[id]', params: { id: eventId } });
+        router.navigate({ pathname: '/(authenticated)/managed_teams/[id]/managed_events/[id]', params: { id: eventId } });
     };
 
     const handleCreateNewManagedEvent = () => {
