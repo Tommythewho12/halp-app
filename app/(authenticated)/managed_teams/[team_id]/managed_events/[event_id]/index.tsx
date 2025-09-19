@@ -9,6 +9,7 @@ export default function ManagedEventViewer() {
     const { events } = useEvents();
 
     const event = event_id ? events.find((e) => e.id == event_id) : undefined;
+    console.log(event);
 
     return (
         <View>
@@ -18,7 +19,7 @@ export default function ManagedEventViewer() {
                     team_id={event.team_id}
                     name={event.name}
                     description={event.description}
-                    start_dateTime={event.start_dateTime}
+                    start_datetime={event.start_datetime}
                     complete={event.complete}
                 /> :
                 <Text>Sumting went wong!</Text>

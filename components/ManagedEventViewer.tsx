@@ -13,7 +13,7 @@ export default function ManagedEventViewerr(event: ManagedEvent) {
             <Text>Description</Text>
             <Text>{event.description}</Text>
             <Text>Start Date Time</Text>
-            <Text>{event.start_dateTime}</Text>
+            <Text>{event.start_datetime}</Text>
             <Text>Completed?</Text>
             {event.complete ? <Text>Completed!</Text> : <Text>Still in worrk</Text>}
         </View>

@@ -10,7 +10,7 @@ export default function ManagedTeamViewer(team: ManagedTeam) {
     };
 
     const handleCreateNewManagedEvent = () => {
-        router.navigate({ pathname: `/(authenticated)/managed_teams/new` });
+        router.navigate({ pathname: `/(authenticated)/managed_teams/[team_id]/managed_events/new`, params: { team_id: team.id } });
     };
 
     return (
