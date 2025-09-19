@@ -16,7 +16,8 @@ export default function NewManagedEvent() {
     const [startDatetime, setStartDatetime] = useState<Date>(new Date());
     const [show, setShow] = useState(false);
     const [mode, setMode] = useState('date');
-    const [cleaners, setCleaners] = useState('0');
+    const [scorers, setScorers] = useState('0');
+    const [officials, setOfficials] = useState('0');
 
     const handleCreateTeam = async () => {
         await http.post(`/auth/teams/${team_id}/events`,
@@ -25,7 +26,8 @@ export default function NewManagedEvent() {
                 dateTime: startDatetime.toString(),
                 description: description,
                 jobs: {
-                    cleaner: Number.parseInt(cleaners)
+                    scorer: Number.parseInt(scorers),
+                    official: Number.parseInt(officials)
                 }
             })
             .then(response => {
@@ -103,12 +105,19 @@ export default function NewManagedEvent() {
                 onChange={handleDatetimeChange} />
             )}
 
-            <Text>Cleaners</Text>
+            <Text>Scorer</Text>
             <TextInput
                 placeholder='0'
                 keyboardType='number-pad'
-                value={cleaners}
-                onChangeText={(v) => setCleaners(sanitizeNumberInput(v))}
+                value={scorers}
+                onChangeText={(v) => setScorers(sanitizeNumberInput(v))}
+            />
+            <Text>Officials</Text>
+            <TextInput
+                placeholder='0'
+                keyboardType='number-pad'
+                value={officials}
+                onChangeText={(v) => setOfficials(sanitizeNumberInput(v))}
             />
 
             <Button onPress={handleCreateTeam} title='Create' />

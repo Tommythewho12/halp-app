@@ -15,12 +15,16 @@ export default function ManagedEventViewer() {
         <View>
             {event ?
                 <ManagedEventViewerr
-                    id={event.id}
-                    team_id={event.team_id}
-                    name={event.name}
-                    description={event.description}
-                    start_datetime={event.start_datetime}
-                    complete={event.complete}
+                    event={{
+                        id: event.id,
+                        team_id: event.team_id,
+                        name: event.name,
+                        description: event.description,
+                        start_datetime: event.start_datetime,
+                        complete: event.complete,
+                    }}
+                    scorers={[]}
+                    officials={[]}
                 /> :
                 <Text>Sumting went wong!</Text>
             }

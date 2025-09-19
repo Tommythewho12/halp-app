@@ -2,7 +2,13 @@ import { Text, View } from 'react-native';
 
 import { ManagedEvent } from '@/types';
 
-export default function ManagedEventViewerr(event: ManagedEvent) {
+type ManagedEventViewerProps = {
+    event: ManagedEvent;
+    scorers: string[];
+    officials: string[];
+};
+
+export default function ManagedEventViewerr({ event, scorers, officials }: ManagedEventViewerProps) {
 
     return (
         <View>
