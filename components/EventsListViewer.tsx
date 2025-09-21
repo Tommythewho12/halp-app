@@ -1,10 +1,6 @@
 import { useRouter } from 'expo-router';
 import { FlatList, Pressable, StyleSheet, Text, View, Alert } from 'react-native';
 
-type EventsList = {
-    events: Event[];
-}
-
 type Event = {
     id: string;
     name: string;
@@ -15,7 +11,7 @@ type Event = {
     is_assigned: boolean
 };
 
-export default function EventsListViewer({ events }: EventsList) {
+export default function EventsListViewer({ events }: { events: Event[] }) {
     const router = useRouter();
     const handlePress = (eventId: string) => {
         router.navigate({ pathname: '/(authenticated)/events/[event]', params: { event: eventId } });

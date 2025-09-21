@@ -18,4 +18,26 @@ export interface ManagedEvent {
     description: string | null,
     start_datetime: string,
     complete: boolean,
-}
+};
+
+export interface DetailedManagedEvent {
+    id: string,
+    team_id: string,
+    name: string,
+    description: string | null,
+    start_datetime: string,
+    complete: boolean,
+    volunteers: Volunteer[]
+    jobs: Job[]
+};
+
+export interface Volunteer {
+    id: string,
+    display_name: string
+};
+
+export interface Job {
+    id: string,
+    type: string,
+    user_id: string
+};
