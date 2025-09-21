@@ -22,13 +22,13 @@ export default function ManagedEventViewerr({ event }: { event: DetailedManagedE
             <Text>Jobs</Text>
             {event.jobs &&
                 event.jobs.map(j => (
-                    <Text id={j.id}>{j.type}</Text>
+                    <Text key={j.id}>{j.type}</Text>
                 ))
             }
             <Text>Volunteers</Text>
             {event.volunteers &&
                 event.volunteers.map(v =>
-                    <Text id={v.id}>{v.display_name}</Text>
+                    <Text key={v.id}>{v.display_name}</Text>
                 )
             }
         </View>

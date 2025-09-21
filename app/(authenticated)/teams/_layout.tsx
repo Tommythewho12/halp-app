@@ -18,7 +18,7 @@ export default function TeamsLayout() {
                 }}
             />
             <Stack.Screen
-                name='[team]'
+                name='[team_id]'
                 options={{
                     title: 'event%'
                 }}

@@ -5,9 +5,8 @@ import http from '@/services/http-common';
 import TeamViewer from '@/components/TeamViewer';
 
 export default function Team() {
-    const searchParams = useLocalSearchParams();
-    const teamId = searchParams.team;
-    const [team, setTeam] = useState({ id: teamId, name: '', admin_name: '', is_subscribed: false, isUserAdmin: false, subscribers: [] });
+    const { team_id } = useLocalSearchParams();
+    const [team, setTeam] = useState({ id: team_id, name: '', admin_name: '', is_subscribed: false, isUserAdmin: false, subscribers: [] });
 
     const handleSubscribe = () => {
         http.post(`auth/teams/${team.id}/subscribers`)
@@ -28,17 +27,17 @@ export default function Team() {
     }
 
     useEffect(() => {
-        if (teamId == null) {
-            throw new Error("no teamId was provided for team view");
+        if (team_id == null) {
+            throw new Error("no team_id was provided for team view");
         }
-        http.get(`auth/teams/${teamId}`)
+        http.get(`auth/teams/${team_id}`)
             .then(response => {
-                console.debug(`## GET /auth/teams/${teamId}`);
+                console.debug(`## GET /auth/teams/${team_id}`);
                 setTeam(response.data);
             })
             .catch(e => { console.error(e) });
 
-    }, [teamId]);
+    }, [team_id]);
 
     return (
         <TeamViewer

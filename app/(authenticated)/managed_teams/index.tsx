@@ -1,6 +1,6 @@
 import { Text, View, Pressable, Button } from 'react-native';
 
-import ManagedTeamsListViewer from '@/components/TeamsListViewer';
+import ManagedTeamsListViewer from '@/components/ManagedTeamsListViewer';
 import { useRouter } from 'expo-router';
 import { useTeams } from '@/contexts/TeamsContext';
 

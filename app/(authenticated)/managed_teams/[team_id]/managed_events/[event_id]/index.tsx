@@ -15,7 +15,6 @@ export default function ManagedEventViewer() {
         if (typeof (event_id) === 'string' && typeof (team_id) === 'string') {
             http.get(`auth/teams/${team_id}/events/${event_id}`)
                 .then(response => {
-                    console.debug("##debug", response.data);
                     setEvent(response.data);
                 })
                 .catch(e => {
