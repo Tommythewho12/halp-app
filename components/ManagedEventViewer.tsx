@@ -1,8 +1,12 @@
-import { Text, View } from 'react-native';
+import { Button, Pressable, Text, View } from 'react-native';
 
 import { DetailedManagedEvent, ManagedEvent } from '@/types';
+import VolunteerPicker from './VolunteerPicker';
+import { useState } from 'react';
 
 export default function ManagedEventViewerr({ event }: { event: DetailedManagedEvent }) {
+    const [modalVisible, setModalVisible] = useState<boolean>(false);
+
     const getDisplayName = (userId: string) => {
         return event.volunteers.find(u => u.id === userId)?.display_name;
     };
@@ -17,7 +21,7 @@ export default function ManagedEventViewerr({ event }: { event: DetailedManagedE
             <Text>{event.description}</Text>
             <Text>Start Date Time</Text>
             <Text>{event.start_datetime}</Text>
-            <Text>Completed?</Text>
+            <Text>Completed</Text>
             {event.complete ? <Text>Completed!</Text> : <Text>Incomplete</Text>}
             <Text>Jobs</Text>
             {event.jobs &&
@@ -31,6 +35,10 @@ export default function ManagedEventViewerr({ event }: { event: DetailedManagedE
                     <Text key={v.id}>{v.display_name}</Text>
                 )
             }
+            <VolunteerPicker modalVisible={modalVisible} setModalVisible={setModalVisible} />
+            <Pressable onPress={() => setModalVisible(true)}>
+                <Text>WHADDUP</Text>
+            </Pressable>
         </View>
     );
 };

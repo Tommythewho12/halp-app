@@ -35,7 +35,6 @@ export default function Event() {
         console.debug(`## prepare statement against /auth/events/${eventId}`);
         http.get(`auth/events/${eventId}`)
             .then(response => {
-                console.debug(`## sent request against /auth/events/${eventId}`);
                 setEvent(response.data);
             }).catch(e => { console.error(e) });
     }, [eventId]);
