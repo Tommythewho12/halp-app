@@ -1,9 +1,19 @@
-import { useState } from "react";
 import { FlatList, Modal, Pressable, Text, View } from "react-native";
 
-export default function VolunteerPicker({ modalVisible, setModalVisible }: { modalVisible: boolean, setModalVisible: React.Dispatch<React.SetStateAction<boolean>> }) {
+import { Volunteer } from "@/types";
 
-    const testList = ['Peter', 'Ralph'];
+export default function VolunteerPicker(
+    {
+        modalVisible,
+        setModalVisible,
+        assignVolunteerToJob,
+        volunteers
+    }: {
+        modalVisible: boolean,
+        setModalVisible: React.Dispatch<React.SetStateAction<boolean>>,
+        assignVolunteerToJob: (userId: string | null) => void,
+        volunteers: Volunteer[]
+    }) {
 
     return (
         <View>
@@ -11,15 +21,22 @@ export default function VolunteerPicker({ modalVisible, setModalVisible }: { mod
                 animationType="slide"
                 transparent={false}
                 visible={modalVisible}
-                onRequestClose={() => setModalVisible(false)}>
+                onRequestClose={() => {
+                    console.debug('onRequestClose in VolunteerPicker triggered');
+                    assignVolunteerToJob(null);
+                    setModalVisible(false);
+                }}>
                 <View>
                     <Text>Select a volunteer</Text>
                     <FlatList
-                        data={testList}
+                        data={volunteers}
                         renderItem={({ item }) =>
                             <Pressable
-                                onPress={() => setModalVisible(false)}>
-                                <Text>{item}</Text>
+                                onPress={() => {
+                                    assignVolunteerToJob(item.id);
+                                    setModalVisible(false);
+                                }}>
+                                <Text>{item.display_name}</Text>
                             </Pressable>
                         }>
                     </FlatList>

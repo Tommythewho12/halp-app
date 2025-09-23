@@ -39,5 +39,5 @@ export interface Volunteer {
 export interface Job {
     id: string,
     type: string,
-    user_id: string
+    user_id: string | null
 };
