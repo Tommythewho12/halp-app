@@ -3,6 +3,7 @@ import http from '@/services/http-common';
 import { storeAccess, getAccess, storeRefresh, getRefresh } from './secure-store.service';
 import { useAuth } from "./AuthContext";
 
+// TODO collect all REST calls here!
 class ConnectionService {
     accessToken = useAuth();
 
