@@ -11,14 +11,28 @@ const http = axios.create({
 });
 
 http.interceptors.request.use(
-    (config) => {
-        const token = getAccessToken();
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
+    async (config) => {
+        if (config.url && config.url.startsWith('auth')) {
+            const token = await getAccessToken();
+            if (token)
+                config.headers.Authorization = `Bearer ${token}`;
         }
         return config;
     },
-    (error) => Promise.reject(error)
+    (error) => {
+        console.error(error);
+        return Promise.reject(error);
+    }
 );
+
+http.interceptors.response.use(undefined, async (error) => {
+    console.debug('error server response', error);
+    if (error.response?.status === 401) {
+        console.warn('unauthorized access signaled by server');
+        // using 'return' retries to fire the original request
+        // return http(error.config);
+    }
+    throw error;
+});
 
 export default http;

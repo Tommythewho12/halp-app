@@ -1,5 +1,6 @@
 import { router } from 'expo-router';
 import { FlatList, Pressable, StyleSheet, Text, View, Alert } from 'react-native';
+
 import { Team } from '@/types';
 
 export default function ManagedTeamsListViewer({ teams }: { teams: Team[] }) {

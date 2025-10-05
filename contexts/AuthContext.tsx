@@ -8,6 +8,7 @@ const ACCESS_TOKEN = 'accessToken';
 const REFRESH_TOKEN = 'refreshToken';
 
 let currentAccessToken: string | null = null;
+let currentRefreshToken: string | null = null;
 
 interface AuthTokens {
     accessToken: string | null;
@@ -26,7 +27,44 @@ const AuthContext = createContext<AuthContextType>({
     isLoading: true,
 });
 
-export const getAccessToken = () => currentAccessToken;
+export const getAccessToken = async (): Promise<string | null> => {
+    if (!currentAccessToken)
+        return null;
+
+    if (!isExpired(currentAccessToken))
+        return currentAccessToken;
+
+    console.debug('access token expired; attempting refresh...');
+    if (currentRefreshToken && !isExpired(currentRefreshToken)) {
+        const newAccessToken = await refreshAccessToken(currentRefreshToken);
+        if (newAccessToken) {
+            currentAccessToken = newAccessToken;
+            // await suggested for setItemAsync by AI
+            SecureStore.setItemAsync(ACCESS_TOKEN, newAccessToken);
+            console.debug('access token refreshed successfully');
+            return newAccessToken;
+        }
+    }
+
+    console.error('unable to refresh access token');
+    return null;
+};
+
+const refreshAccessToken = async (refreshToken: string): Promise<string | null> => {
+    try {
+        const res = await http.post(`refresh-token`, {}, {
+            headers: {
+                Cookie: 'refreshToken=' + refreshToken,
+            },
+        });
+        const accessToken = res.data.accessToken;
+        console.debug('new access token: ', accessToken);
+        return accessToken;
+    } catch (e) {
+        console.error('failed to refresh access token', e);
+        return null;
+    }
+};
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [tokens, setTokensState] = useState<AuthTokens>({
@@ -41,11 +79,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             await SecureStore.setItemAsync(REFRESH_TOKEN, tokens.refreshToken || '');
             setTokensState(tokens);
             currentAccessToken = tokens.accessToken;
+            currentRefreshToken = tokens.refreshToken;
         } else {
             await SecureStore.deleteItemAsync(ACCESS_TOKEN);
             await SecureStore.deleteItemAsync(REFRESH_TOKEN);
             setTokensState({ accessToken: null, refreshToken: null });
             currentAccessToken = null;
+            currentRefreshToken = null;
         }
     };
 
@@ -62,32 +102,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 console.debug('access token is expired');
                 if (refreshToken != null && refreshToken.length > 0 && !isExpired(refreshToken)) {
                     accessToken = await refreshAccessToken(refreshToken);
-                    setTokens({ accessToken, refreshToken });
+                    await setTokens({ accessToken, refreshToken });
+                    console.debug('tokens: ', accessToken, refreshToken);
                 }
             } else {
                 console.debug('access token still valid');
                 setTokensState({ accessToken, refreshToken });
                 currentAccessToken = accessToken;
+                currentRefreshToken = refreshToken;
             }
         }
         setLoading(false);
-    };
-
-    const refreshAccessToken = async (refreshToken: string) => {
-        let accessToken = null;
-        await http.post(`refresh-token`, {
-            headers: {
-                Cookie: "refreshToken=" + refreshToken
-            }
-        })
-            .then(res => {
-                accessToken = res.data.accessToken;;
-                console.debug('new access token via refresh', accessToken);
-            })
-            .catch(e => {
-                console.error('failed to refresh access token');
-            });
-        return accessToken;
     };
 
     useEffect(() => {
