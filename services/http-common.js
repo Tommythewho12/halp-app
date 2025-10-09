@@ -14,8 +14,9 @@ http.interceptors.request.use(
     async (config) => {
         if (config.url && config.url.startsWith('auth')) {
             const token = await getAccessToken();
-            if (token)
+            if (token) {
                 config.headers.Authorization = `Bearer ${token}`;
+            }
         }
         return config;
     },

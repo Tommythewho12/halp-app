@@ -16,7 +16,7 @@ export interface ManagedEvent {
     team_id: string,
     name: string,
     description: string | null,
-    start_datetime: string,
+    start_datetime: Date,
     complete: boolean,
 };
 
@@ -25,7 +25,7 @@ export interface DetailedManagedEvent {
     team_id: string,
     name: string,
     description: string | null,
-    start_datetime: string,
+    start_datetime: Date,
     complete: boolean,
     volunteers: Volunteer[]
     jobs: Job[]
@@ -41,3 +41,14 @@ export interface Job {
     type: string,
     user_id: string | null
 };
+
+// DTOs
+export interface EventListItemDto {
+    id: string;
+    name: string;
+    start_datetime: number;
+    description: string;
+    team_id: number,
+    is_subscribed: boolean,
+    is_assigned: boolean
+}

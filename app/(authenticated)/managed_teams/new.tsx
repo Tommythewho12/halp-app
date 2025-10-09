@@ -1,10 +1,11 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Text, View, Button } from 'react-native';
+import { Text, Button } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import http from '@/services/http-common';
 import { useTeams } from '@/contexts/TeamsContext';
+import http from '@/services/http-common';
 
 export default function NewManagedTeam() {
     const router = useRouter();
@@ -12,7 +13,7 @@ export default function NewManagedTeam() {
     const [name, setName] = useState('');
 
     const handleCreateTeam = async () => {
-        await http.post(`/auth/teams`, { teamName: name })
+        await http.post(`auth/teams`, { teamName: name })
             .then(response => {
                 addTeam({
                     id: response.data.id,
@@ -27,7 +28,7 @@ export default function NewManagedTeam() {
     }
 
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <Text>Team Name</Text>
 
             <TextInput
@@ -38,6 +39,6 @@ export default function NewManagedTeam() {
             />
 
             <Button onPress={handleCreateTeam} title='Create' />
-        </View>
+        </SafeAreaView>
     )
 }

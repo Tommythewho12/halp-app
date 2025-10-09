@@ -5,7 +5,7 @@ import http from '@/services/http-common';
 import EventsListViewer from '@/components/EventsListViewer';
 
 // events, but has to be named index
-export default function Index() {
+export default function Events_notSubscribed() {
     const [events, setEvents] = useState([]);
 
     useEffect(() => {

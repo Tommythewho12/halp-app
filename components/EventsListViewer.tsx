@@ -1,28 +1,30 @@
 import { useRouter } from 'expo-router';
 import { FlatList, Pressable, StyleSheet, Text, View, Alert } from 'react-native';
 
-type Event = {
-    id: string;
-    name: string;
-    start_datetime: string;
-    description: string;
-    team_id: number,
-    is_subscribed: boolean,
-    is_assigned: boolean
-};
+import { EventListItemDto } from '@/types';
+import { useState } from 'react';
 
-export default function EventsListViewer({ events }: { events: Event[] }) {
+export default function EventsListViewer({ events }: { events: EventListItemDto[] }) {
     const router = useRouter();
     const handlePress = (eventId: string) => {
         router.navigate({ pathname: '/(authenticated)/events/[event]', params: { event: eventId } });
     }
 
+    const orderByDatetimeDesc = (events: EventListItemDto[]) => {
+        const newOrder = events.sort((a, b) => a.start_datetime.valueOf() - b.start_datetime.valueOf());
+        return newOrder;
+    };
+
+    const [eventz, setEventz] = useState(orderByDatetimeDesc(events));
+
     // TODO pull up un-/volunteering handler here to update this view
+
 
     return (
         <View style={styles.container}>
             <FlatList
                 data={events}
+
                 renderItem={({ item }) =>
                     <Pressable
                         style={({ pressed }) => [
@@ -34,6 +36,7 @@ export default function EventsListViewer({ events }: { events: Event[] }) {
                         <Text style={styles.item}>
                             {item.name}
                         </Text>
+                        <Text>{new Date(item.start_datetime).toLocaleString()}</Text>
                         <Text>{item.start_datetime}</Text>
                         <Text>{item.description}</Text>
                         <Text>{item.is_subscribed ? "subscribed" : "not subscribed"}</Text>

@@ -20,7 +20,7 @@ export default function ManagedEventViewerr(
     const assignVolunteerToJob = (userId: string | null) => {
         if (jobId) {
             handleVolunteerAssignment(userId, jobId);
-            http.patch(`/auth/teams/${event.team_id}/events/${event.id}/jobs/${jobId}`, { volunteerId: userId })
+            http.patch(`auth/teams/${event.team_id}/events/${event.id}/jobs/${jobId}`, { volunteerId: userId })
                 .then(response => {
                     console.debug('reassignment done')
                 })
@@ -46,7 +46,7 @@ export default function ManagedEventViewerr(
             <Text>Description</Text>
             <Text>{event.description}</Text>
             <Text>Start Date Time</Text>
-            <Text>{event.start_datetime}</Text>
+            <Text>{event.start_datetime.toString()}</Text>
             <Text>Completed</Text>
             {event.complete ? <Text>Completed!</Text> : <Text>Incomplete</Text>}
             <Text>Jobs</Text>

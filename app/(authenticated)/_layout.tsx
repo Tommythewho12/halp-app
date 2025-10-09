@@ -46,7 +46,6 @@ export default function Layout() {
                                 drawerLabel: 'Settings'
                             }}
                         />
-
                     </Drawer>
                 </GestureHandlerRootView>
             </EventsProvider>

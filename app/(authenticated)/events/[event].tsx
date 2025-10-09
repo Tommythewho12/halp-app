@@ -32,9 +32,9 @@ export default function Event() {
         if (eventId == null) {
             throw new Error("no eventId was provided for event view");
         }
-        console.debug(`## prepare statement against /auth/events/${eventId}`);
         http.get(`auth/events/${eventId}`)
             .then(response => {
+                console.debug("received event object: ", response.data);
                 setEvent(response.data);
             }).catch(e => { console.error(e) });
     }, [eventId]);

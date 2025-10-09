@@ -6,6 +6,7 @@ import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/dat
 
 import http from '@/services/http-common';
 import { useEvents } from '@/contexts/EventsContext';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function NewManagedEvent() {
     const { team_id } = useLocalSearchParams<{ team_id?: string }>();
@@ -20,10 +21,10 @@ export default function NewManagedEvent() {
     const [officials, setOfficials] = useState('0');
 
     const handleCreateTeam = async () => {
-        await http.post(`/auth/teams/${team_id}/events`,
+        await http.post(`auth/teams/${team_id}/events`,
             {
                 eventName: name,
-                dateTime: startDatetime.toString(),
+                dateTime: startDatetime.valueOf(),
                 description: description,
                 jobs: {
                     scorer: Number.parseInt(scorers),
@@ -38,7 +39,7 @@ export default function NewManagedEvent() {
                     team_id: team_id,
                     name: name,
                     description: description,
-                    start_datetime: startDatetime.toString(),
+                    start_datetime: startDatetime,
                     complete: false
                 });
             }).catch(e => {
@@ -70,7 +71,7 @@ export default function NewManagedEvent() {
     };
 
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <Text>Event Name</Text>
             <TextInput
                 placeholder='Event Name'
@@ -121,6 +122,6 @@ export default function NewManagedEvent() {
             />
 
             <Button onPress={handleCreateTeam} title='Create' />
-        </View>
+        </SafeAreaView>
     )
 }

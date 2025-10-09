@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import http from '@/services/http-common';
 import EventsListViewer from '@/components/EventsListViewer';
@@ -11,10 +12,11 @@ export default function Events() {
     useEffect(() => {
         http.get(`auth/events`, {
             params: {
-                as: 'volunteer'
+                as: 'subscriber'
             }
         })
             .then(response => {
+                console.debug("received events object: ", response.data);
                 setEvents(response.data);
             }).catch(e => {
                 console.error(e);
@@ -22,8 +24,8 @@ export default function Events() {
     }, []);
 
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <EventsListViewer events={events} />
-        </View>
+        </SafeAreaView>
     );
 }
