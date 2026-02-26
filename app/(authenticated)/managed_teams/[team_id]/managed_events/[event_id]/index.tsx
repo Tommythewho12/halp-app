@@ -4,11 +4,11 @@ import { useEffect, useState } from 'react';
 
 import http from '@/services/http-common';
 import ManagedEventViewerr from '@/components/ManagedEventViewer';
-import { DetailedManagedEvent } from '@/types';
+import { DetailedManagedEventDto, DetailedManagedEvent } from '@/types';
 
 export default function ManagedEventViewer() {
     const { team_id, event_id } = useLocalSearchParams<{ team_id?: string, event_id?: string }>();
-    const [event, setEvent] = useState<DetailedManagedEvent | null>(null);
+    const [event, setEvent] = useState<DetailedManagedEventDto | null>(null);
 
     const handleVolunteerAssignment = (newUserId: string | null, jobId: string) => {
         if (event) {
@@ -36,6 +36,13 @@ export default function ManagedEventViewer() {
         }
     };
 
+    const convertDto = (object: DetailedManagedEventDto): DetailedManagedEvent => {
+        return {
+            ...object,
+            start_datetime: new Date(object.start_datetime * 1000)
+        };
+    }
+
     useEffect(() => {
         if (typeof (event_id) === 'string' && typeof (team_id) === 'string') {
             http.get(`auth/teams/${team_id}/events/${event_id}`)
@@ -52,7 +59,7 @@ export default function ManagedEventViewer() {
         <View>
             {event ?
                 <ManagedEventViewerr
-                    event={event}
+                    event={convertDto(event)}
                     handleVolunteerAssignment={handleVolunteerAssignment}
                 /> :
                 <Text>Sumting went wong!</Text>

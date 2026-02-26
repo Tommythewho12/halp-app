@@ -1,6 +1,8 @@
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, Text, View, StyleSheet } from 'react-native';
 import { useState } from 'react';
 
+import styles from '../assets/styles'
+import { LabelValue } from '@/components/basic/Containers'
 import http from '@/services/http-common';
 import { DetailedManagedEvent, } from '@/types';
 import VolunteerPicker from './VolunteerPicker';
@@ -38,15 +40,14 @@ export default function ManagedEventViewerr(
     };
 
     return (
-        <View>
-            <Text>Event Name</Text>
-            <Text>{event.name}</Text>
+        <View style={{ backgroundColor: 'gray', flexDirection: 'column' }}>
+            <Text style={styles.h1}>{event.name}</Text>
             <Text>Team Id</Text>
             <Text>{event.team_id}</Text>
             <Text>Description</Text>
             <Text>{event.description}</Text>
-            <Text>Start Date Time</Text>
-            <Text>{event.start_datetime.toString()}</Text>
+            <LabelValue label="Datum" value={event.start_datetime.toLocaleDateString()} />
+            <LabelValue label="Uhrzeit" value={event.start_datetime.toLocaleTimeString()} />
             <Text>Completed</Text>
             {event.complete ? <Text>Completed!</Text> : <Text>Incomplete</Text>}
             <Text>Jobs</Text>
@@ -78,3 +79,12 @@ export default function ManagedEventViewerr(
         </View>
     );
 };
+
+const localStyles = StyleSheet.create({
+    labelValue: {
+        flexDirection: 'row'
+    },
+    labelValue_label: {
+
+    }
+})

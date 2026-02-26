@@ -20,6 +20,17 @@ export interface ManagedEvent {
     complete: boolean,
 };
 
+export interface DetailedManagedEventDto {
+    id: string,
+    team_id: string,
+    name: string,
+    description: string | null,
+    start_datetime: number,
+    complete: boolean,
+    volunteers: Volunteer[]
+    jobs: Job[]
+};
+
 export interface DetailedManagedEvent {
     id: string,
     team_id: string,
