@@ -28,7 +28,7 @@ export interface DetailedManagedEventDto {
     start_datetime: number,
     complete: boolean,
     volunteers: Volunteer[]
-    jobs: Job[]
+    jobs: JobDto[]
 };
 
 export interface DetailedManagedEvent {
@@ -47,10 +47,16 @@ export interface Volunteer {
     display_name: string
 };
 
-export interface Job {
+export interface JobDto {
     id: string,
     type: string,
     user_id: string | null
+};
+
+export interface Job {
+    id: string,
+    jobName: string,
+    userName: string | null
 };
 
 // DTOs

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 import http from '@/services/http-common';
 import ManagedEventViewerr from '@/components/ManagedEventViewer';
-import { DetailedManagedEventDto, DetailedManagedEvent } from '@/types';
+import { DetailedManagedEventDto, DetailedManagedEvent, Job } from '@/types';
 
 export default function ManagedEventViewer() {
     const { team_id, event_id } = useLocalSearchParams<{ team_id?: string, event_id?: string }>();
@@ -37,9 +37,15 @@ export default function ManagedEventViewer() {
     };
 
     const convertDto = (object: DetailedManagedEventDto): DetailedManagedEvent => {
+        const newJobs: Job[] = object.jobs.map(j => {
+            const userName = event?.volunteers.find(u => u.id === j.user_id)?.display_name;
+            return { id: j.id, jobName: j.type, userName: userName ? userName : "" };
+        });
+
         return {
             ...object,
-            start_datetime: new Date(object.start_datetime * 1000)
+            start_datetime: new Date(object.start_datetime * 1000),
+            jobs: newJobs.sort((a, b) => a.jobName.toLocaleLowerCase().localeCompare(b.jobName.toLocaleLowerCase()))
         };
     }
 

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import styles from '../assets/styles'
 import { LabelValue } from '@/components/basic/Containers'
 import http from '@/services/http-common';
-import { DetailedManagedEvent, } from '@/types';
+import { DetailedManagedEvent, Job } from '@/types';
 import VolunteerPicker from './VolunteerPicker';
 
 export default function ManagedEventViewerr(
@@ -31,14 +31,6 @@ export default function ManagedEventViewerr(
             console.error('userId and jobId should actually be existent!');
     }
 
-    const getDisplayName = (userId: string) => {
-        const r = event.volunteers.find(u => u.id === userId);
-        if (r)
-            return r.display_name;
-        console.error('userId should actually be existent!');
-        return `user ID: ${userId}`;
-    };
-
     return (
         <View style={{ backgroundColor: 'gray', flexDirection: 'column' }}>
             <Text style={styles.h1}>{event.name}</Text>
@@ -48,19 +40,19 @@ export default function ManagedEventViewerr(
             <Text>{event.description}</Text>
             <LabelValue label="Datum" value={event.start_datetime.toLocaleDateString()} />
             <LabelValue label="Uhrzeit" value={event.start_datetime.toLocaleTimeString()} />
-            <Text>Completed</Text>
-            {event.complete ? <Text>Completed!</Text> : <Text>Incomplete</Text>}
+            <LabelValue label="Einrichtung abgeschlossen" value={event.complete ? "✅" : "❌"} />
+            <JobsList jobsList={event.jobs} />
             <Text>Jobs</Text>
             {event.jobs &&
                 event.jobs.map(j => (
                     <View key={j.id}>
-                        <Text>{j.type}</Text>
+                        <Text>{j.jobName}</Text>
                         <Pressable onPress={() => {
                             setJobId(j.id);
                             setModalVisible(true);
                         }}>
                             <Text>Assign Volunteer</Text>
-                            {j.user_id ? <Text>{getDisplayName(j.user_id)}</Text> : <Text>noone assigned</Text>}
+                            {j.userName ? <Text>{j.userName}</Text> : <Text>noone assigned</Text>}
                         </Pressable>
                     </View>
                 ))
@@ -76,6 +68,22 @@ export default function ManagedEventViewerr(
                 setModalVisible={setModalVisible}
                 assignVolunteerToJob={assignVolunteerToJob}
                 volunteers={event.volunteers} />
+        </View>
+    );
+};
+
+function JobsList({ jobsList }: { jobsList: Job[] }) {
+    return (
+        <View>
+            <Text style={styles.h1}>Jobs</Text>
+            {
+                jobsList && jobsList.map(job => (
+                    <View key={job.id}>
+                        <Text>{job.jobName}</Text>
+                        <Text>{job.userName}</Text>
+                    </View>
+                ))
+            }
         </View>
     );
 };
