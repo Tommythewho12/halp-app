@@ -1,6 +1,9 @@
-import { FlatList, Modal, Pressable, Text, View } from "react-native";
+import { FlatList, Modal, Pressable, Text, View, Button } from "react-native";
 
+import globalStyles from "@/assets/styles";
+import { H1, MyText } from "./basic/Containers";
 import { Volunteer } from "@/types";
+import { red } from "react-native-reanimated/lib/typescript/Colors";
 
 export default function VolunteerPicker(
     {
@@ -11,7 +14,7 @@ export default function VolunteerPicker(
     }: {
         modalVisible: boolean,
         setModalVisible: React.Dispatch<React.SetStateAction<boolean>>,
-        assignVolunteerToJob: (userId: string | null) => void,
+        assignVolunteerToJob: (userId: string | undefined) => void,
         volunteers: Volunteer[]
     }) {
 
@@ -22,22 +25,24 @@ export default function VolunteerPicker(
                 transparent={false}
                 visible={modalVisible}
                 onRequestClose={() => {
-                    console.debug('onRequestClose in VolunteerPicker triggered');
-                    assignVolunteerToJob(null);
                     setModalVisible(false);
                 }}>
-                <View>
-                    <Text>Select a volunteer</Text>
+                <View style={{ alignItems: 'center', rowGap: 10 }}>
+                    <H1 style={globalStyles.h1}>Select a volunteer</H1>
+                    <Button
+                        title='unassign'
+                        onPress={() => {
+                            assignVolunteerToJob(undefined);
+                            setModalVisible(false);
+                        }} />
                     <FlatList
+                        style={{ backgroundColor: 'yellow' }}
                         data={volunteers}
                         renderItem={({ item }) =>
-                            <Pressable
-                                onPress={() => {
-                                    assignVolunteerToJob(item.id);
-                                    setModalVisible(false);
-                                }}>
-                                <Text>{item.display_name}</Text>
-                            </Pressable>
+                            <Button title={item.displayName} onPress={() => {
+                                assignVolunteerToJob(item.id);
+                                setModalVisible(false);
+                            }} />
                         }>
                     </FlatList>
                 </View>
@@ -45,3 +50,16 @@ export default function VolunteerPicker(
         </View>
     );
 }
+
+/*
+                            <Pressable
+                                style={{ backgroundColor: 'blue', width: 'auto' }}
+                                onPress={() => {
+                                    assignVolunteerToJob(item.id);
+                                    setModalVisible(false);
+                                }}>
+                                <View>
+                                    <MyText style={[globalStyles.h1, { backgroundColor: 'red', width: 'auto' }]}>{item.display_name}</MyText>
+                                </View>
+                            </Pressable>
+                            */
