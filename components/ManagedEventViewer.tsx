@@ -2,7 +2,7 @@ import { Pressable, Text, View } from 'react-native';
 import { useState } from 'react';
 
 import globalStyles from '../assets/styles'
-import { LabelValue, H1, MyText, TopView } from '@/components/basic/Containers'
+import { LabelValue, H1, MyText, TopView, IdText } from '@/components/basic/Containers'
 import http from '@/services/http-common';
 import { DetailedManagedEvent, Job } from '@/types';
 import VolunteerPicker from './VolunteerPicker';
@@ -33,14 +33,14 @@ export default function ManagedEventViewerr(
 
     return (
         <TopView style={{ flexDirection: 'column' }}>
-            <H1 style={globalStyles.h1}>{event.name} <Text style={{ fontStyle: 'italic', fontSize: 20, color: '#999' }}>ID:{event.team_id}</Text></H1>
-            <Text>Description</Text>
-            <Text>{event.description}</Text>
+            <H1>{event.name} <IdText>ID:{event.team_id}</IdText></H1>
             <LabelValue label="Datum" value={event.start_datetime.toLocaleDateString()} />
             <LabelValue label="Uhrzeit" value={event.start_datetime.toLocaleTimeString()} />
             <LabelValue label="Einrichtung abgeschlossen" value={event.complete ? "✅" : "❌"} />
+            <Text>Description</Text>
+            <Text>{event.description}</Text>
             <JobsList jobsList={event.jobs} jobIdAssignment={(jobId) => setJobId(jobId)} modalVisibility={() => setModalVisible(true)} />
-            <Text>Volunteers</Text>
+            <H1>Volunteers</H1>
             {event.volunteers &&
                 event.volunteers.map(v =>
                     <Text key={v.id} style={v.assigned && { textDecorationLine: 'line-through' }}>{v.displayName}</Text>
@@ -63,7 +63,7 @@ function JobsList({ jobsList, jobIdAssignment, modalVisibility }: { jobsList: Jo
                 jobsList && jobsList.map(job => (
                     <View key={job.id} style={{ flexDirection: 'row' }}>
                         <MyText style={{ flexShrink: 1 }}>{job.jobName} </MyText>
-                        <MyText style={{ flex: 1, backgroundColor: 'red' }}>{job.userName} </MyText>
+                        <MyText style={{ flex: 1 }}>{job.userName} </MyText>
                         <Pressable style={{ flexShrink: 1 }} onPress={() => { jobIdAssignment(job.id); modalVisibility(); }}><Text>🪛</Text></Pressable>
                     </View>
                 ))

@@ -36,7 +36,6 @@ export default function VolunteerPicker(
                             setModalVisible(false);
                         }} />
                     <FlatList
-                        style={{ backgroundColor: 'yellow' }}
                         data={volunteers}
                         renderItem={({ item }) =>
                             <Button title={item.displayName} onPress={() => {
@@ -50,16 +49,3 @@ export default function VolunteerPicker(
         </View>
     );
 }
-
-/*
-                            <Pressable
-                                style={{ backgroundColor: 'blue', width: 'auto' }}
-                                onPress={() => {
-                                    assignVolunteerToJob(item.id);
-                                    setModalVisible(false);
-                                }}>
-                                <View>
-                                    <MyText style={[globalStyles.h1, { backgroundColor: 'red', width: 'auto' }]}>{item.display_name}</MyText>
-                                </View>
-                            </Pressable>
-                            */

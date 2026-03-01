@@ -18,9 +18,9 @@ export function H2(props: TextProps) {
     return <Text {...props} style={[globalStyles.h2, props.style]} />
 };
 
-export function MyButton() {
-
-}
+export function IdText(props: TextProps) {
+    return <Text {...props} style={[{ fontStyle: 'italic', fontSize: 20, color: '#999' }, props.style]} />
+};
 
 export function LabelValue(
     {
@@ -33,8 +33,8 @@ export function LabelValue(
 
     return (
         <View style={localStyles.container}>
-            <Text style={localStyles.label}>{label}</Text>
-            <Text style={localStyles.value}>{value}</Text>
+            <MyText style={localStyles.label}>{label}</MyText>
+            <MyText style={localStyles.value}>{value}</MyText>
         </View>
     );
 };
