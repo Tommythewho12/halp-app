@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
-import { FlatList, Pressable, StyleSheet, Text, View, Alert } from 'react-native';
+import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Team } from '@/types';
+import { useEffect } from 'react';
 
 export default function TeamsListViewer({ teams }: { teams: Team[] }) {
     const handlePress = (teamId: string | undefined) => {
@@ -13,25 +14,23 @@ export default function TeamsListViewer({ teams }: { teams: Team[] }) {
     }
 
     return (
-        <View style={styles.container}>
-            <FlatList
-                data={teams}
-                renderItem={({ item }) =>
-                    <Pressable
-                        style={({ pressed }) => [
-                            styles.eventItem,
-                            pressed && styles.pressedItem,
-                        ]}
-                        onPress={() => handlePress(item.id)}
-                    >
-                        <Text style={styles.item}>
-                            {item.name} (id:{item.id})
-                        </Text>
-                        {item.is_subscribed ? <Text>Supporting</Text> : null}
-                    </Pressable>
-                }
-            />
-        </View>
+        <FlatList
+            data={teams}
+            renderItem={({ item }: { item: Team }) =>
+                <Pressable
+                    style={({ pressed }) => [
+                        styles.eventItem,
+                        pressed && styles.pressedItem,
+                    ]}
+                    onPress={() => handlePress(item.id)}
+                >
+                    <Text style={styles.item}>
+                        {item.name} (id:{item.id})
+                    </Text>
+                    {item.isSubscribed && <Text>Supporting</Text>}
+                </Pressable>
+            }
+        />
     );
 };
 

@@ -9,7 +9,7 @@ import http from '@/services/http-common';
 
 export default function ManagedTeamViewer(team: ManagedTeam) {
 
-    const { deleteTeam } = useTeams();
+    const { deleteManagedTeam } = useTeams();
     const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
     const handleOpenManagedEvent = (eventId: string) => {
@@ -24,7 +24,7 @@ export default function ManagedTeamViewer(team: ManagedTeam) {
         setDeleteModalVisible(false);
         await http.delete(`auth/teams/${team.id}`)
             .then(response => {
-                deleteTeam(team.id);
+                deleteManagedTeam(team.id);
             }).catch(e => {
                 console.error(e);
             });

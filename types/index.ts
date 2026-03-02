@@ -1,8 +1,27 @@
-export interface Team {
+export interface UserDto {
+    id: string,
+    display_name: string,
+    email: string
+};
+
+export interface User {
+    id: string,
+    name: string,
+    email: string
+};
+
+export interface TeamDto {
     id: string,
     name: string,
     is_admin: boolean,
     is_subscribed: boolean,
+};
+
+export interface Team {
+    id: string,
+    name: string,
+    isSubscribed: boolean,
+    isAdmin: boolean
 };
 
 export interface ManagedTeam {

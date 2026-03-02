@@ -1,13 +1,13 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 import http from '@/services/http-common';
-import { Team } from '@/types';
+import { ManagedTeam, Team, TeamDto } from '@/types';
 
 type TeamsContextType = {
     teams: Team[];
     fetchTeams: () => Promise<void>;
-    addTeam: (team: Team) => void;
-    deleteTeam: (teamId: string) => void;
+    addManagedTeam: (team: Team) => void;
+    deleteManagedTeam: (teamId: string) => void;
 };
 
 const TeamsContext = createContext<TeamsContextType | undefined>(undefined);
@@ -17,18 +17,24 @@ export const TeamsProvider = ({ children }: { children: React.ReactNode }) => {
 
     const fetchTeams = async () => {
         try {
-            const response = await http.get<Team[]>("auth/teams");
-            setTeams(response.data);
+            const response = await http.get<TeamDto[]>("auth/teams");
+            const convertedTeams: Team[] = response.data.map(team => ({
+                id: team.id,
+                name: team.name,
+                isSubscribed: team.is_subscribed,
+                isAdmin: team.is_admin
+            }));
+            setTeams(convertedTeams);
         } catch (e) {
             console.error("Failed to fetch teams:", e);
         }
     };
 
-    const addTeam = (team: Team) => {
+    const addManagedTeam = (team: Team) => {
         setTeams((prev) => [...prev, team]);
     };
 
-    const deleteTeam = (teamId: string) => {
+    const deleteManagedTeam = (teamId: string) => {
         setTeams((prev) => prev.filter(t => t.id !== teamId));
     };
 
@@ -38,7 +44,7 @@ export const TeamsProvider = ({ children }: { children: React.ReactNode }) => {
     }, []);
 
     return (
-        <TeamsContext.Provider value={{ teams, fetchTeams, addTeam, deleteTeam }}>
+        <TeamsContext.Provider value={{ teams, fetchTeams, addManagedTeam, deleteManagedTeam }}>
             {children}
         </TeamsContext.Provider>
     );

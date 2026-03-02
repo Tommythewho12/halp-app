@@ -3,9 +3,13 @@ import { FlatList, Pressable, StyleSheet, Text, View, Alert } from 'react-native
 
 import { EventListItemDto } from '@/types';
 import { useState } from 'react';
+import { TopView, H1, H2 } from './basic/Containers';
+import { useUser } from '@/contexts/UsersContext';
 
 export default function EventsListViewer({ events }: { events: EventListItemDto[] }) {
     const router = useRouter();
+    const { id, name, email } = useUser();
+
     const handlePress = (eventId: string) => {
         router.navigate({ pathname: '/(authenticated)/events/[event]', params: { event: eventId } });
     }
@@ -21,7 +25,9 @@ export default function EventsListViewer({ events }: { events: EventListItemDto[
 
 
     return (
-        <View style={styles.container}>
+        <TopView>
+            <H1>Hi {name}</H1>
+            <H2>Veranstaltungen</H2>
             <FlatList
                 data={events}
 
@@ -44,7 +50,7 @@ export default function EventsListViewer({ events }: { events: EventListItemDto[
                     </Pressable>
                 }
             />
-        </View>
+        </TopView>
     );
 };
 

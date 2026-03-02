@@ -5,6 +5,6 @@ export default function ManagedTeams() {
     const { teams } = useTeams();
 
     return (
-        <ManagedTeamsListViewer teams={teams} />
+        <ManagedTeamsListViewer teams={teams.filter(t => t.isAdmin)} />
     );
 }

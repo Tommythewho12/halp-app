@@ -1,28 +1,26 @@
 import { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
+import { FlatList, Text, View } from 'react-native';
 
 import http from '@/services/http-common';
 import TeamsListViewer from '@/components/TeamsListViewer';
-import { Team } from '@/types';
+import { TeamDto } from '@/types';
+import { H1, H2, TopView } from '@/components/basic/Containers';
+import { useTeams } from '@/contexts/TeamsContext';
 
 export default function Teams() {
-    const [teams, setTeams] = useState<Team[]>([]);
+    const { fetchTeams, teams } = useTeams();
 
     useEffect(() => {
-        http.get<Team[]>(`auth/teams`, { params: { as: 'user' } })
-            .then(response => {
-                setTeams(response.data);
-            }).catch(e => {
-                console.error(e);
-            });
+        // fetchTeams();
+        console.info("what teams gives my team view: ", teams)
     }, []);
 
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>Subscribed Teams</Text>
-            <TeamsListViewer teams={teams.filter(t => t.is_subscribed)} />
-            <Text>Unsubscribed Teams</Text>
-            <TeamsListViewer teams={teams.filter(t => !t.is_subscribed)} />
-        </View>
+        <TopView>
+            <H2>Gefolgte Teams</H2>
+            <TeamsListViewer teams={teams.filter(t => t.isSubscribed)} />
+            <H2>Alle Teams</H2>
+            <TeamsListViewer teams={teams.filter(t => !t.isSubscribed)} />
+        </TopView>
     );
 }

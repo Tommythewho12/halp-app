@@ -9,7 +9,7 @@ import http from '@/services/http-common';
 
 export default function NewManagedTeam() {
     const router = useRouter();
-    const { addTeam } = useTeams();
+    const { addManagedTeam: addTeam } = useTeams();
     const [name, setName] = useState('');
 
     const handleCreateTeam = async () => {
@@ -18,8 +18,8 @@ export default function NewManagedTeam() {
                 addTeam({
                     id: response.data.id,
                     name: name,
-                    is_admin: true,
-                    is_subscribed: false
+                    isAdmin: true,
+                    isSubscribed: false
                 });
             }).catch(e => {
                 console.error(e);

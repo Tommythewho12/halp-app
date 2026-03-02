@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import http from '@/services/http-common';
 import EventsListViewer from '@/components/EventsListViewer';
+import { TopView } from '@/components/basic/Containers';
 
 // events, but has to be named index
 export default function Events() {
@@ -24,8 +25,6 @@ export default function Events() {
     }, []);
 
     return (
-        <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <EventsListViewer events={events} />
-        </SafeAreaView>
+        <EventsListViewer events={events} />
     );
 }
