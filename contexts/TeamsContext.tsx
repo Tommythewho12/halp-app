@@ -7,6 +7,7 @@ type TeamsContextType = {
     teams: Team[];
     fetchTeams: () => Promise<void>;
     addTeam: (team: Team) => void;
+    deleteTeam: (teamId: string) => void;
 };
 
 const TeamsContext = createContext<TeamsContextType | undefined>(undefined);
@@ -27,13 +28,17 @@ export const TeamsProvider = ({ children }: { children: React.ReactNode }) => {
         setTeams((prev) => [...prev, team]);
     };
 
+    const deleteTeam = (teamId: string) => {
+        setTeams((prev) => prev.filter(t => t.id !== teamId));
+    };
+
     // fetch teams initially
     useEffect(() => {
         fetchTeams();
     }, []);
 
     return (
-        <TeamsContext.Provider value={{ teams, fetchTeams, addTeam }}>
+        <TeamsContext.Provider value={{ teams, fetchTeams, addTeam, deleteTeam }}>
             {children}
         </TeamsContext.Provider>
     );

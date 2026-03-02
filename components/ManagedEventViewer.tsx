@@ -1,4 +1,5 @@
-import { Pressable, Text, View } from 'react-native';
+import { Button, Modal, Pressable, Text, View } from 'react-native';
+import { router } from 'expo-router';
 import { useState } from 'react';
 
 import globalStyles from '../assets/styles'
@@ -6,6 +7,7 @@ import { LabelValue, H1, MyText, TopView, IdText } from '@/components/basic/Cont
 import http from '@/services/http-common';
 import { DetailedManagedEvent, Job } from '@/types';
 import VolunteerPicker from './VolunteerPicker';
+import { useEvents } from '@/contexts/EventsContext';
 
 export default function ManagedEventViewerr(
     {
@@ -16,13 +18,16 @@ export default function ManagedEventViewerr(
         handleVolunteerAssignment: (userId: string | undefined, jobId: string) => void
     }) {
 
+    const { deleteEvent } = useEvents();
+
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [jobId, setJobId] = useState<string | null>(null);
+    const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
 
     const assignVolunteerToJob = (userId: string | undefined) => {
         if (jobId) {
             handleVolunteerAssignment(userId, jobId);
-            http.patch(`auth/teams/${event.team_id}/events/${event.id}/jobs/${jobId}`, { volunteerId: userId })
+            http.patch(`auth/teams/${event.teamId}/events/${event.id}/jobs/${jobId}`, { volunteerId: userId })
                 .then(response => {
                     console.debug('reassignment done')
                 })
@@ -31,11 +36,22 @@ export default function ManagedEventViewerr(
             console.error('userId and jobId should actually be existent!');
     }
 
+    const handleDeleteEvent = async () => {
+        setDeleteModalVisible(false);
+        await http.delete(`auth/teams/${event.teamId}/events/${event.id}`)
+            .then(response => {
+                deleteEvent(event.id);
+            }).catch(e => {
+                console.error(e);
+            });
+        router.back();
+    }
+
     return (
         <TopView style={{ flexDirection: 'column' }}>
-            <H1>{event.name} <IdText>ID:{event.team_id}</IdText></H1>
-            <LabelValue label="Datum" value={event.start_datetime.toLocaleDateString()} />
-            <LabelValue label="Uhrzeit" value={event.start_datetime.toLocaleTimeString()} />
+            <H1>{event.name} <IdText>ID:{event.id}</IdText></H1>
+            <LabelValue label="Datum" value={event.startDatetime.toLocaleDateString()} />
+            <LabelValue label="Uhrzeit" value={event.startDatetime.toLocaleTimeString()} />
             <LabelValue label="Einrichtung abgeschlossen" value={event.complete ? "✅" : "❌"} />
             <Text>Description</Text>
             <Text>{event.description}</Text>
@@ -46,6 +62,24 @@ export default function ManagedEventViewerr(
                     <Text key={v.id} style={v.assigned && { textDecorationLine: 'line-through' }}>{v.displayName}</Text>
                 )
             }
+            <H1>Bearbeiten</H1>
+            <Button
+                title='Veranstaltung löschen'
+                color='#f00'
+                onPress={() => setDeleteModalVisible(true)} />
+
+            <Modal
+                visible={deleteModalVisible}>
+                <MyText>Veranstaltung wirklich löschen?</MyText>
+                <Button
+                    title='Ja, unwiederruflich löschen'
+                    color='#f00'
+                    onPress={handleDeleteEvent} />
+                <Button
+                    title='abbrechen'
+                    color='#666'
+                    onPress={() => setDeleteModalVisible(false)} />
+            </Modal>
             <VolunteerPicker
                 modalVisible={modalVisible}
                 setModalVisible={setModalVisible}

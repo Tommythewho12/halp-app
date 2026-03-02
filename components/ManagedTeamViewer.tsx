@@ -1,9 +1,16 @@
-import { Button, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Pressable, StyleSheet, Text, Button, Modal } from 'react-native';
 import { router } from 'expo-router';
 
 import { ManagedTeam } from '@/types';
+import { TopView, H1, IdText, H2, ItemTitleAndAddButton, MyText } from './basic/Containers';
+import { useState } from 'react';
+import { useTeams } from '@/contexts/TeamsContext';
+import http from '@/services/http-common';
 
 export default function ManagedTeamViewer(team: ManagedTeam) {
+
+    const { deleteTeam } = useTeams();
+    const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
     const handleOpenManagedEvent = (eventId: string) => {
         router.navigate({ pathname: `/(authenticated)/managed_teams/[team_id]/managed_events/[event_id]`, params: { team_id: team.id, event_id: eventId } });
@@ -13,14 +20,21 @@ export default function ManagedTeamViewer(team: ManagedTeam) {
         router.navigate({ pathname: `/(authenticated)/managed_teams/[team_id]/managed_events/new`, params: { team_id: team.id } });
     };
 
+    const handleDeleteTeam = async () => {
+        setDeleteModalVisible(false);
+        await http.delete(`auth/teams/${team.id}`)
+            .then(response => {
+                deleteTeam(team.id);
+            }).catch(e => {
+                console.error(e);
+            });
+        router.back();
+    }
+
     return (
-        <View style={styles.container}>
-            <Text>Team Name</Text>
-            <Text>{team.name}</Text>
-            <Text>Events</Text>
-            <Button
-                onPress={handleCreateNewManagedEvent}
-                title='Create new Event' />
+        <TopView>
+            <H1>{team.name} <IdText>ID:{team.id}</IdText></H1>
+            <ItemTitleAndAddButton title='Veranstaltungen' addItemEvent={handleCreateNewManagedEvent} />
             <FlatList
                 data={team.events}
                 renderItem={({ item }) =>
@@ -37,7 +51,25 @@ export default function ManagedTeamViewer(team: ManagedTeam) {
                     </Pressable>
                 }
             />
-        </View>
+            <H2>Bearbeiten</H2>
+            <Button
+                title='Team löschen'
+                color='red'
+                onPress={() => setDeleteModalVisible(true)} />
+
+            <Modal
+                visible={deleteModalVisible}>
+                <MyText>Veranstaltung wirklich löschen?</MyText>
+                <Button
+                    title='Ja, unwiederruflich löschen'
+                    color='#f00'
+                    onPress={handleDeleteTeam} />
+                <Button
+                    title='abbrechen'
+                    color='#666'
+                    onPress={() => setDeleteModalVisible(false)} />
+            </Modal>
+        </TopView>
     );
 };
 

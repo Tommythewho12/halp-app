@@ -7,6 +7,7 @@ type EventsContextType = {
     events: ManagedEvent[];
     fetchEvents: () => Promise<void>;
     addEvent: (event: ManagedEvent) => void;
+    deleteEvent: (eventId: string) => void;
 };
 
 const EventsContext = createContext<EventsContextType | undefined>(undefined);
@@ -27,13 +28,17 @@ export const EventsProvider = ({ children }: { children: React.ReactNode }) => {
         setEvents((prev) => [...prev, event]);
     };
 
+    const deleteEvent = (eventId: string) => {
+        setEvents((prev) => prev.filter(e => e.id !== eventId));
+    };
+
     // fetch events initially
     useEffect(() => {
         fetchEvents();
     }, []);
 
     return (
-        <EventsContext.Provider value={{ events, fetchEvents, addEvent }}>
+        <EventsContext.Provider value={{ events, fetchEvents, addEvent, deleteEvent }}>
             {children}
         </EventsContext.Provider>
     );

@@ -48,7 +48,8 @@ export default function ManagedEventViewer() {
 
         return {
             ...object,
-            start_datetime: new Date(object.start_datetime * 1000),
+            teamId: object.team_id,
+            startDatetime: new Date(object.start_datetime * 1000),
             jobs: newJobs.sort((a, b) => a.jobName.toLocaleLowerCase().localeCompare(b.jobName.toLocaleLowerCase())),
             volunteers: newVolunteers
         };
@@ -67,7 +68,7 @@ export default function ManagedEventViewer() {
     }, []);
 
     return (
-        <View>
+        <>
             {event ?
                 <ManagedEventViewerr
                     event={convertDto(event)}
@@ -75,6 +76,6 @@ export default function ManagedEventViewer() {
                 /> :
                 <Text>Sumting went wong!</Text>
             }
-        </View>
+        </>
     )
 };

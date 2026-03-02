@@ -13,17 +13,9 @@ export default function ManagedTeamm() {
 
     const team = team_id ? teams.find((t) => t.id == team_id) : undefined;
 
-    // useFocusEffect(
-    //     React.useCallback(() => {
-    //         if (id) {
-    //             setTeamId(searchParams.id);
-    //         }
-    //     }, [])
-    // );
-
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <>
             {team ? <ManagedTeamViewer id={team.id} name={team.name} events={events.filter((e) => e.team_id == team_id)} /> : <Text>Not found!</Text>}
-        </View>
+        </>
     );
 }

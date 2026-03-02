@@ -1,4 +1,5 @@
-import { Text, View, StyleSheet, Pressable, TextProps, ViewProps } from 'react-native';
+import { Text, View, StyleSheet, Pressable, TextProps, ViewProps, TextInput } from 'react-native';
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 
 import globalStyles from '@/assets/styles'
 
@@ -39,6 +40,119 @@ export function LabelValue(
     );
 };
 
+export function LabelShortTextEditor(
+    {
+        label, value, onChangeText
+    }: {
+        label: string,
+        value: string,
+        onChangeText: (text: string) => void
+    }) {
+
+    return (
+        <View>
+            <MyText style={localStyles.label}>{label}</MyText>
+            <TextInput
+                style={localStyles.inputField}
+                placeholder=''
+                keyboardType='default'
+                value={value}
+                onChangeText={onChangeText}
+            />
+        </View>
+    )
+};
+
+export function LabelLongTextEditor(
+    {
+        label, value, onChangeText
+    }: {
+        label: string,
+        value: string,
+        onChangeText: (text: string) => void
+    }) {
+
+    return (
+        <View>
+            <MyText style={localStyles.label}>{label}</MyText>
+            <TextInput
+                multiline
+                numberOfLines={4}
+                style={localStyles.inputField}
+                placeholder=''
+                keyboardType='default'
+                value={value}
+                onChangeText={onChangeText}
+            />
+        </View>
+    )
+};
+
+export function LabelShortNumberEditor(
+    {
+        label, value, onChangeNumber
+    }: {
+        label: string,
+        value: string,
+        onChangeNumber: (value: string) => void
+    }) {
+
+    return (
+        <View>
+            <MyText style={localStyles.label}>{label}</MyText>
+            <TextInput
+                style={localStyles.inputField}
+                placeholder=''
+                keyboardType='number-pad'
+                value={value}
+                onChangeText={onChangeNumber}
+            />
+        </View>
+    )
+};
+
+export function LabelDateEditor(
+    {
+        label, value, openDateTimePicker
+    }: {
+        label: string,
+        value: Date,
+        openDateTimePicker: () => void
+    }) {
+
+    return (
+        <View>
+            <MyText style={localStyles.label}>{label}</MyText>
+            <MyText
+                style={localStyles.inputField}
+                onPress={openDateTimePicker}>
+                {value.toLocaleDateString()}
+            </MyText>
+        </View>
+    )
+};
+
+export function LabelTimeEditor(
+    {
+        label, value, openDateTimePicker
+    }: {
+        label: string,
+        value: Date,
+        openDateTimePicker: () => void
+    }) {
+
+    return (
+        <View>
+            <MyText style={localStyles.label}>{label}</MyText>
+            <MyText
+                style={localStyles.inputField}
+                onPress={openDateTimePicker}>
+                {value.toLocaleTimeString()}
+            </MyText>
+        </View>
+    )
+};
+
 export function LabelValueListSelector_WIP(
     {
         label, value, listItems
@@ -60,6 +174,29 @@ export function LabelValueListSelector_WIP(
     )
 };
 
+export function ItemTitleAndAddButton(
+    {
+        title,
+        addItemEvent
+    }: {
+        title: string,
+        addItemEvent: () => void
+    }) {
+
+    return (
+        <View style={{ flexDirection: 'row' }}>
+            <H2 style={{ flex: 1, height: 'auto' }}>{title}</H2>
+            <Pressable
+                style={{ minWidth: 30, backgroundColor: 'green', justifyContent: 'center', alignItems: 'center' }}
+                onPress={addItemEvent}>
+                <View>
+                    <Text style={{ fontWeight: '900', color: 'white' }}>+</Text>
+                </View>
+            </Pressable>
+        </View>
+    )
+};
+
 const localStyles = StyleSheet.create({
     container: {
         flexDirection: 'row',
@@ -67,7 +204,6 @@ const localStyles = StyleSheet.create({
     },
 
     label: {
-        flex: 1,
         fontSize: 16
     },
 
@@ -75,5 +211,13 @@ const localStyles = StyleSheet.create({
         flex: 1,
         fontSize: 20,
         fontWeight: 'bold'
+    },
+
+    inputField: {
+        backgroundColor: '#fdfdfd'
+    },
+
+    simpleButton: {
+        backgroundColor: 'green'
     }
 })

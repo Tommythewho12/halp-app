@@ -1,10 +1,13 @@
-import { router } from 'expo-router';
-import { FlatList, Pressable, StyleSheet, Text, View, Alert } from 'react-native';
+import { useRouter } from 'expo-router';
+import { FlatList, Pressable, StyleSheet, Text } from 'react-native';
 
 import { Team } from '@/types';
+import { TopView, H2, ItemTitleAndAddButton } from './basic/Containers';
 
 export default function ManagedTeamsListViewer({ teams }: { teams: Team[] }) {
-    const handlePress = (teamId: string | undefined) => {
+    const router = useRouter();
+
+    const handleOpenTeam = (teamId: string | undefined) => {
         if (teamId === undefined) {
             // TODO throw Exception?
             console.error('team does not have an ID and cannot be navigated to')
@@ -13,8 +16,13 @@ export default function ManagedTeamsListViewer({ teams }: { teams: Team[] }) {
         router.navigate({ pathname: '/(authenticated)/managed_teams/[team_id]', params: { team_id: teamId } });
     }
 
+    const handleCreateNewTeam = () => {
+        router.navigate({ pathname: '/(authenticated)/managed_teams/new' });
+    }
+
     return (
-        <View style={styles.container}>
+        <TopView>
+            <ItemTitleAndAddButton title='Teams' addItemEvent={handleCreateNewTeam} />
             <FlatList
                 data={teams}
                 renderItem={({ item }) =>
@@ -23,7 +31,7 @@ export default function ManagedTeamsListViewer({ teams }: { teams: Team[] }) {
                             styles.eventItem,
                             pressed && styles.pressedItem,
                         ]}
-                        onPress={() => handlePress(item.id)}
+                        onPress={() => handleOpenTeam(item.id)}
                     >
                         <Text style={styles.item}>
                             {item.name}
@@ -31,7 +39,7 @@ export default function ManagedTeamsListViewer({ teams }: { teams: Team[] }) {
                     </Pressable>
                 }
             />
-        </View>
+        </TopView>
     );
 };
 

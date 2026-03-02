@@ -33,10 +33,10 @@ export interface DetailedManagedEventDto {
 
 export interface DetailedManagedEvent {
     id: string,
-    team_id: string,
+    teamId: string,
     name: string,
     description: string | null,
-    start_datetime: Date,
+    startDatetime: Date,
     complete: boolean,
     volunteers: Volunteer[]
     jobs: Job[]
