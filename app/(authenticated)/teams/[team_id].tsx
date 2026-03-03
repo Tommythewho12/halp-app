@@ -1,15 +1,20 @@
 import { useLocalSearchParams } from 'expo-router';
+import { Text } from 'react-native';
 import { useEffect, useState } from 'react';
 
 import http from '@/services/http-common';
 import TeamViewer from '@/components/TeamViewer';
+import { Team } from '@/types';
+import { useTeams } from '@/contexts/TeamsContext';
+import { isNumber } from '@/components/basic/Utils';
 
-export default function Team() {
+export default function TeamView() {
     const { team_id } = useLocalSearchParams();
-    const [team, setTeam] = useState({ id: team_id, name: '', admin_name: '', is_subscribed: false, isUserAdmin: false, subscribers: [] });
+    const { teams } = useTeams();
+    const [team, setTeam] = useState<Team>();
 
     const handleSubscribe = () => {
-        http.post(`auth/teams/${team.id}/subscribers`)
+        http.post(`auth/teams/${1}/subscribers`)
             .then(response => {
                 // TODO update subscription status
                 // setTeam({ ...team, is_subscribed: true });
@@ -18,7 +23,8 @@ export default function Team() {
     }
 
     const handleUnsubscribe = () => {
-        http.delete(`auth/teams/${team.id}/subscribers`)
+        // TODO move to teams context provider
+        http.delete(`auth/teams/${1}/subscribers`)
             .then(response => {
                 // TODO update subscription status
                 // setTeam({ ...team, is_subscribed: false });
@@ -26,26 +32,26 @@ export default function Team() {
             .catch(e => { console.error(e) });
     }
 
-    useEffect(() => {
-        if (team_id == null) {
-            throw new Error("no team_id was provided for team view");
-        }
-        http.get(`auth/teams/${team_id}`)
-            .then(response => {
-                console.debug(`## GET /auth/teams/${team_id}`);
-                setTeam(response.data);
-            })
-            .catch(e => { console.error(e) });
+    console.info("TeamView: ", team_id, teams, team, typeof team_id);
 
+    useEffect(() => {
+        let message = null;
+        if (team_id == null)
+            message = 'no team_id was provided for team view';
+        else if (Array.isArray(team_id))
+            message = 'team_id search-parameter expected to be string but is string[]';
+        else if (!isNumber(team_id))
+            message = 'team_id search-parameter is not a number';
+        else {
+            setTeam(teams.find(t => t.id === parseInt(team_id)));
+        }
+        if (message !== null)
+            throw new Error(message);
     }, [team_id]);
 
     return (
-        <TeamViewer
-            id={team.id}
-            name={team.name}
-            isSubscribed={team.is_subscribed}
-            isAdmin={team.isUserAdmin}
-            handleSubscribe={handleSubscribe}
-            handleUnsubscribe={handleUnsubscribe} />
+        <>
+            {team != undefined ? <TeamViewer team={team} /> : <Text>object does not exist {team}</Text>}
+        </>
     )
 }

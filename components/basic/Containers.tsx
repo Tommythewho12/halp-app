@@ -23,6 +23,20 @@ export function IdText(props: TextProps) {
     return <Text {...props} style={[{ fontStyle: 'italic', fontSize: 20, color: '#999' }, props.style]} />
 };
 
+export function TitleAndId(
+    {
+        title,
+        id
+    }: {
+        title: string,
+        id: string | number
+    }) {
+
+    return (
+        <H1>{title} <IdText>ID:{id}</IdText></H1>
+    )
+};
+
 export function LabelValue(
     {
         label,

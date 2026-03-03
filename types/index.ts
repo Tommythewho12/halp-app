@@ -1,37 +1,37 @@
 export interface UserDto {
-    id: string,
+    id: number,
     display_name: string,
     email: string
 };
 
 export interface User {
-    id: string,
+    id: number,
     name: string,
     email: string
 };
 
 export interface TeamDto {
-    id: string,
+    id: number,
     name: string,
-    is_admin: boolean,
-    is_subscribed: boolean,
+    is_admin: number,
+    is_subscribed: number,
 };
 
 export interface Team {
-    id: string,
+    id: number,
     name: string,
     isSubscribed: boolean,
     isAdmin: boolean
 };
 
 export interface ManagedTeam {
-    id: string,
+    id: number,
     name: string,
     events: ManagedEvent[]
 };
 
 export interface ManagedEvent {
-    id: string,
+    id: number,
     team_id: string,
     name: string,
     description: string | null,
@@ -40,7 +40,7 @@ export interface ManagedEvent {
 };
 
 export interface DetailedManagedEventDto {
-    id: string,
+    id: number,
     team_id: string,
     name: string,
     description: string | null,
@@ -51,7 +51,7 @@ export interface DetailedManagedEventDto {
 };
 
 export interface DetailedManagedEvent {
-    id: string,
+    id: number,
     teamId: string,
     name: string,
     description: string | null,
@@ -62,32 +62,31 @@ export interface DetailedManagedEvent {
 };
 
 export interface VolunteerDto {
-    id: string,
+    id: number,
     display_name: string
 };
 
 export interface Volunteer {
-    id: string,
+    id: number,
     displayName: string,
     assigned: boolean
 };
 
 export interface JobDto {
-    id: string,
+    id: number,
     type: string,
     user_id: string | undefined
 };
 
 export interface Job {
-    id: string,
+    id: number,
     jobName: string,
     userName: string | undefined
     userId: string | undefined
 };
 
-// DTOs
 export interface EventListItemDto {
-    id: string;
+    id: number;
     name: string;
     start_datetime: number;
     description: string;

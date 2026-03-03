@@ -1,10 +1,10 @@
 import { router } from 'expo-router';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+
 import { Team } from '@/types';
-import { useEffect } from 'react';
 
 export default function TeamsListViewer({ teams }: { teams: Team[] }) {
-    const handlePress = (teamId: string | undefined) => {
+    const handlePress = (teamId: number) => {
         if (teamId === undefined) {
             // TODO throw Exception?
             console.error('team does not have an ID and cannot be navigated to')

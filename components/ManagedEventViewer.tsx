@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 
 import globalStyles from '../assets/styles'
-import { LabelValue, H1, MyText, TopView, IdText } from '@/components/basic/Containers'
+import { LabelValue, H1, MyText, TopView, IdText, TitleAndId } from '@/components/basic/Containers'
 import http from '@/services/http-common';
 import { DetailedManagedEvent, Job } from '@/types';
 import VolunteerPicker from './VolunteerPicker';
@@ -15,16 +15,16 @@ export default function ManagedEventViewerr(
         handleVolunteerAssignment
     }: {
         event: DetailedManagedEvent,
-        handleVolunteerAssignment: (userId: string | undefined, jobId: string) => void
+        handleVolunteerAssignment: (userId: number | undefined, jobId: number) => void
     }) {
 
     const { deleteEvent } = useEvents();
 
     const [modalVisible, setModalVisible] = useState<boolean>(false);
-    const [jobId, setJobId] = useState<string | null>(null);
+    const [jobId, setJobId] = useState<number | null>(null);
     const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
 
-    const assignVolunteerToJob = (userId: string | undefined) => {
+    const assignVolunteerToJob = (userId: number | undefined) => {
         if (jobId) {
             handleVolunteerAssignment(userId, jobId);
             http.patch(`auth/teams/${event.teamId}/events/${event.id}/jobs/${jobId}`, { volunteerId: userId })
@@ -49,7 +49,7 @@ export default function ManagedEventViewerr(
 
     return (
         <TopView style={{ flexDirection: 'column' }}>
-            <H1>{event.name} <IdText>ID:{event.id}</IdText></H1>
+            <TitleAndId title={event.name} id={event.id} />
             <LabelValue label="Datum" value={event.startDatetime.toLocaleDateString()} />
             <LabelValue label="Uhrzeit" value={event.startDatetime.toLocaleTimeString()} />
             <LabelValue label="Einrichtung abgeschlossen" value={event.complete ? "✅" : "❌"} />
@@ -89,7 +89,7 @@ export default function ManagedEventViewerr(
     );
 };
 
-function JobsList({ jobsList, jobIdAssignment, modalVisibility }: { jobsList: Job[], jobIdAssignment: (jobId: string) => void, modalVisibility: () => void }) {
+function JobsList({ jobsList, jobIdAssignment, modalVisibility }: { jobsList: Job[], jobIdAssignment: (jobId: number) => void, modalVisibility: () => void }) {
     return (
         <View>
             <H1>Jobs</H1>

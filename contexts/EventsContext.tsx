@@ -7,7 +7,7 @@ type EventsContextType = {
     events: ManagedEvent[];
     fetchEvents: () => Promise<void>;
     addEvent: (event: ManagedEvent) => void;
-    deleteEvent: (eventId: string) => void;
+    deleteEvent: (eventId: number) => void;
 };
 
 const EventsContext = createContext<EventsContextType | undefined>(undefined);
@@ -28,7 +28,7 @@ export const EventsProvider = ({ children }: { children: React.ReactNode }) => {
         setEvents((prev) => [...prev, event]);
     };
 
-    const deleteEvent = (eventId: string) => {
+    const deleteEvent = (eventId: number) => {
         setEvents((prev) => prev.filter(e => e.id !== eventId));
     };
 
