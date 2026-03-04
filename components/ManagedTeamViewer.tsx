@@ -1,13 +1,13 @@
 import { FlatList, Pressable, StyleSheet, Text, Button, Modal } from 'react-native';
 import { router } from 'expo-router';
 
-import { ManagedTeam } from '@/types';
+import { Team, Event } from '@/types';
 import { TopView, H1, IdText, H2, ItemTitleAndAddButton, MyText } from './basic/Containers';
 import { useState } from 'react';
 import { useTeams } from '@/contexts/TeamsContext';
 import http from '@/services/http-common';
 
-export default function ManagedTeamViewer(team: ManagedTeam) {
+export default function ManagedTeamViewer({ team, events }: { team: Team, events: Event[] }) {
 
     const { deleteManagedTeam } = useTeams();
     const [deleteModalVisible, setDeleteModalVisible] = useState(false);
@@ -36,7 +36,7 @@ export default function ManagedTeamViewer(team: ManagedTeam) {
             <H1>{team.name} <IdText>ID:{team.id}</IdText></H1>
             <ItemTitleAndAddButton title='Veranstaltungen' addItemEvent={handleCreateNewManagedEvent} />
             <FlatList
-                data={team.events}
+                data={events}
                 renderItem={({ item }) =>
                     <Pressable
                         style={({ pressed }) => [

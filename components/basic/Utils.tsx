@@ -5,7 +5,6 @@ export function sanitizeNumberInput({ num }: { num: string }) {
 }
 
 export function safeBooleanConverter(bool: any): boolean {
-    console.info("bool is: ", typeof bool, bool, typeof typeof bool);
     if (typeof bool === 'boolean') {
         return bool;
     } else if (typeof bool === 'number') {
@@ -13,7 +12,17 @@ export function safeBooleanConverter(bool: any): boolean {
     } else if (typeof bool === 'string') {
         return (bool.trim() === '' || bool === '0') ? false : true;
     } else {
-        throw "unable to safely parse the value to a boolean";
+        throw new Error("unable to safely parse the value " + bool + " to a boolean");
+    }
+}
+
+export function safeNumberConverter(num: any): number {
+    if (typeof num === 'number') {
+        return num;
+    } else if (typeof num === 'string' && isNumber(num)) {
+        return Number(num);
+    } else {
+        throw new Error("unable to safely parse the value " + num + " to a number");
     }
 }
 

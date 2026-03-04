@@ -1,6 +1,6 @@
 import { Button, StyleSheet, Text, View } from 'react-native';
 
-import { H1, TitleAndId, TopView } from './basic/Containers';
+import { TitleAndId, TopView } from './basic/Containers';
 import { Team } from '@/types';
 import { useTeams } from '@/contexts/TeamsContext';
 

@@ -1,34 +1,45 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 import http from '@/services/http-common';
-import { ManagedEvent } from '@/types';
+import { Event, EventDto } from '@/types';
+import { safeBooleanConverter } from '@/components/basic/Utils';
 
 type EventsContextType = {
-    events: ManagedEvent[];
+    events: Event[];
     fetchEvents: () => Promise<void>;
-    addEvent: (event: ManagedEvent) => void;
-    deleteEvent: (eventId: number) => void;
+    addEvent: (event: Event) => Promise<void>;
+    deleteEvent: (eventId: string) => Promise<void>;
 };
 
 const EventsContext = createContext<EventsContextType | undefined>(undefined);
 
 export const EventsProvider = ({ children }: { children: React.ReactNode }) => {
-    const [events, setEvents] = useState<ManagedEvent[]>([]);
+    const [events, setEvents] = useState<Event[]>([]);
 
     const fetchEvents = async () => {
         try {
-            const response = await http.get<ManagedEvent[]>("auth/events");
-            setEvents(response.data);
+            const response = await http.get<EventDto[]>("auth/events");
+            const convertedEvents: Event[] = response.data.map(event => ({
+                id: String(event.id),
+                teamId: String(event.team_id),
+                name: event.name,
+                description: event.description,
+                startDatetime: new Date(event.start_datetime * 1000),
+                setupComplete: safeBooleanConverter(event.complete)
+            }));
+            setEvents(convertedEvents);
         } catch (e) {
             console.error("Failed to fetch events:", e);
         }
     };
 
-    const addEvent = (event: ManagedEvent) => {
+    const addEvent = async (event: Event) => {
+        // TODO move http to here
         setEvents((prev) => [...prev, event]);
     };
 
-    const deleteEvent = (eventId: number) => {
+    const deleteEvent = async (eventId: string) => {
+        // TODO move http to here
         setEvents((prev) => prev.filter(e => e.id !== eventId));
     };
 

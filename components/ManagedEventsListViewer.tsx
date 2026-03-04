@@ -1,12 +1,12 @@
 import { useRouter } from 'expo-router';
 import { FlatList, Pressable, StyleSheet, Text, View, Alert } from 'react-native';
 
-import { Event } from '@/types';
+import { EventListItemDto } from '@/types';
 import { useState } from 'react';
 import { TopView, H1, H2 } from './basic/Containers';
 import { useUser } from '@/contexts/UsersContext';
 
-export default function EventsListViewer({ events }: { events: Event[] }) {
+export default function ManagedEventsListViewer({ events }: { events: EventListItemDto[] }) {
     const router = useRouter();
     const { id, name, email } = useUser();
 
@@ -14,8 +14,8 @@ export default function EventsListViewer({ events }: { events: Event[] }) {
         router.navigate({ pathname: '/(authenticated)/events/[event]', params: { event: eventId } });
     }
 
-    const orderByDatetimeDesc = (events: Event[]) => {
-        const newOrder = events.sort((a, b) => a.startDatetime.valueOf() - b.startDatetime.valueOf());
+    const orderByDatetimeDesc = (events: EventListItemDto[]) => {
+        const newOrder = events.sort((a, b) => a.start_datetime.valueOf() - b.start_datetime.valueOf());
         return newOrder;
     };
 
@@ -42,8 +42,11 @@ export default function EventsListViewer({ events }: { events: Event[] }) {
                         <Text style={styles.item}>
                             {item.name}
                         </Text>
-                        <Text>{item.startDatetime.toLocaleString()}</Text>
+                        <Text>{new Date(item.start_datetime).toLocaleString()}</Text>
+                        <Text>{item.start_datetime}</Text>
                         <Text>{item.description}</Text>
+                        <Text>{item.is_subscribed ? "subscribed" : "not subscribed"}</Text>
+                        <Text>{item.is_assigned ? "assigned" : "not assigned"}</Text>
                     </Pressable>
                 }
             />

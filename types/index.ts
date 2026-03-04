@@ -5,7 +5,7 @@ export interface UserDto {
 };
 
 export interface User {
-    id: number,
+    id: string,
     name: string,
     email: string
 };
@@ -14,49 +14,61 @@ export interface TeamDto {
     id: number,
     name: string,
     is_admin: number,
-    is_subscribed: number,
+    is_subscribed: number
 };
 
 export interface Team {
-    id: number,
+    id: string,
     name: string,
     isSubscribed: boolean,
     isAdmin: boolean
 };
 
-export interface ManagedTeam {
-    id: number,
-    name: string,
-    events: ManagedEvent[]
-};
-
-export interface ManagedEvent {
-    id: number,
-    team_id: string,
+export interface PublicEvent {
+    id: string,
+    teamId: string,
     name: string,
     description: string | null,
-    start_datetime: Date,
-    complete: boolean,
+    startDatetime: Date,
+    setupComplete: boolean
+};
+
+export interface EventDto {
+    id: number,
+    team_id: number,
+    name: string,
+    description: string | null,
+    start_datetime: number,
+    complete: number
+};
+
+export interface Event {
+    id: string,
+    teamId: string,
+    name: string,
+    description: string | null,
+    startDatetime: Date,
+    setupComplete: boolean
 };
 
 export interface DetailedManagedEventDto {
     id: number,
-    team_id: string,
+    team_id: number,
     name: string,
     description: string | null,
     start_datetime: number,
-    complete: boolean,
+    complete: number,
     volunteers: VolunteerDto[]
     jobs: JobDto[]
 };
 
 export interface DetailedManagedEvent {
-    id: number,
+    id: string,
     teamId: string,
     name: string,
     description: string | null,
     startDatetime: Date,
-    complete: boolean,
+    setupComplete: boolean,
     volunteers: Volunteer[]
     jobs: Job[]
 };
@@ -67,7 +79,7 @@ export interface VolunteerDto {
 };
 
 export interface Volunteer {
-    id: number,
+    id: string,
     displayName: string,
     assigned: boolean
 };
@@ -79,7 +91,7 @@ export interface JobDto {
 };
 
 export interface Job {
-    id: number,
+    id: string,
     jobName: string,
     userName: string | undefined
     userId: string | undefined
@@ -91,6 +103,6 @@ export interface EventListItemDto {
     start_datetime: number;
     description: string;
     team_id: number,
-    is_subscribed: boolean,
-    is_assigned: boolean
+    is_subscribed: number,
+    is_assigned: number
 }

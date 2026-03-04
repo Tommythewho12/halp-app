@@ -5,25 +5,14 @@ import { TextInput } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useTeams } from '@/contexts/TeamsContext';
-import http from '@/services/http-common';
 
 export default function NewManagedTeam() {
     const router = useRouter();
-    const { addManagedTeam: addTeam } = useTeams();
+    const { newManagedTeam } = useTeams();
     const [name, setName] = useState('');
 
     const handleCreateTeam = async () => {
-        await http.post(`auth/teams`, { teamName: name })
-            .then(response => {
-                addTeam({
-                    id: response.data.id,
-                    name: name,
-                    isAdmin: true,
-                    isSubscribed: false
-                });
-            }).catch(e => {
-                console.error(e);
-            });
+        await newManagedTeam(name);
         router.back();
     }
 

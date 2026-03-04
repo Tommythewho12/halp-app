@@ -14,7 +14,7 @@ export default function VolunteerPicker(
     }: {
         modalVisible: boolean,
         setModalVisible: React.Dispatch<React.SetStateAction<boolean>>,
-        assignVolunteerToJob: (userId: number | undefined) => void,
+        assignVolunteerToJob: (userId: string | undefined) => void,
         volunteers: Volunteer[]
     }) {
 

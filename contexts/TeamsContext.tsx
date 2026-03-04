@@ -1,16 +1,16 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-
 import http from '@/services/http-common';
-import { ManagedTeam, Team, TeamDto } from '@/types';
+
+import { Team, TeamDto } from '@/types';
 import { safeBooleanConverter } from '@/components/basic/Utils';
 
 type TeamsContextType = {
     teams: Team[];
     fetchTeams: () => Promise<void>;
-    addManagedTeam: (team: Team) => void;
-    deleteManagedTeam: (teamId: number) => void;
-    subscribeToTeam: (teamId: number) => void;
-    unsubscribeFromTeam: (teamId: number) => void;
+    newManagedTeam: (name: string) => Promise<void>;
+    deleteManagedTeam: (teamId: string) => Promise<void>;
+    subscribeToTeam: (teamId: string) => Promise<void>;
+    unsubscribeFromTeam: (teamId: string) => Promise<void>;
 };
 
 const TeamsContext = createContext<TeamsContextType | undefined>(undefined);
@@ -22,7 +22,7 @@ export const TeamsProvider = ({ children }: { children: React.ReactNode }) => {
         try {
             const response = await http.get<TeamDto[]>("auth/teams");
             const convertedTeams: Team[] = response.data.map(team => ({
-                id: team.id,
+                id: String(team.id),
                 name: team.name,
                 isSubscribed: safeBooleanConverter(team.is_subscribed),
                 isAdmin: safeBooleanConverter(team.is_admin)
@@ -33,26 +33,32 @@ export const TeamsProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
-    const addManagedTeam = (team: Team) => {
-        // TODO add HTML-Request
-        setTeams((prev) => [...prev, team]);
+    const newManagedTeam = async (name: string) => {
+        try {
+            const response = await http.post(`auth/teams`, { teamName: name });
+            setTeams([...teams, {
+                id: response.data.id,
+                name: name,
+                isAdmin: true,
+                isSubscribed: false
+            }]);
+        } catch (e) {
+            console.error(e);
+        }
     };
 
-    const deleteManagedTeam = (teamId: number) => {
+    const deleteManagedTeam = async (teamId: string) => {
         // TODO add HTML-Request
         setTeams((prev) => prev.filter(t => t.id !== teamId));
     };
 
-    const subscribeToTeam = (teamId: number) => {
+    const subscribeToTeam = async (teamId: string) => {
         // TODO add HTML-Request
-        const team = teams.find(t => t.id === teamId);
-        if (team === undefined) {
-            throw "trying to subscribe to team with unknown teamId";
-        }
-        setTeams((prev) => [...prev, { ...team, isSubscribed: true }]);
+
+        setTeams(prev => prev.map(t => t.id === teamId ? t : { ...t, isSubscribed: true }));
     };
 
-    const unsubscribeFromTeam = (teamId: number) => {
+    const unsubscribeFromTeam = async (teamId: string) => {
         // TODO add HTML-Request
         const team = teams.find(t => t.id === teamId);
         if (team !== undefined) {
@@ -66,7 +72,7 @@ export const TeamsProvider = ({ children }: { children: React.ReactNode }) => {
     }, []);
 
     return (
-        <TeamsContext.Provider value={{ teams, fetchTeams, addManagedTeam, deleteManagedTeam, subscribeToTeam, unsubscribeFromTeam }}>
+        <TeamsContext.Provider value={{ teams, fetchTeams, newManagedTeam: newManagedTeam, deleteManagedTeam, subscribeToTeam, unsubscribeFromTeam }}>
             {children}
         </TeamsContext.Provider>
     );

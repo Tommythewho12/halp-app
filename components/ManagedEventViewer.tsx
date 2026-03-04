@@ -1,10 +1,9 @@
 import { Button, Modal, Pressable, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { useState } from 'react';
-
-import globalStyles from '../assets/styles'
-import { LabelValue, H1, MyText, TopView, IdText, TitleAndId } from '@/components/basic/Containers'
 import http from '@/services/http-common';
+
+import { LabelValue, H1, MyText, TopView, TitleAndId } from '@/components/basic/Containers'
 import { DetailedManagedEvent, Job } from '@/types';
 import VolunteerPicker from './VolunteerPicker';
 import { useEvents } from '@/contexts/EventsContext';
@@ -15,16 +14,16 @@ export default function ManagedEventViewerr(
         handleVolunteerAssignment
     }: {
         event: DetailedManagedEvent,
-        handleVolunteerAssignment: (userId: number | undefined, jobId: number) => void
+        handleVolunteerAssignment: (userId: string | undefined, jobId: string) => void
     }) {
 
     const { deleteEvent } = useEvents();
 
     const [modalVisible, setModalVisible] = useState<boolean>(false);
-    const [jobId, setJobId] = useState<number | null>(null);
+    const [jobId, setJobId] = useState<string | null>(null);
     const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
 
-    const assignVolunteerToJob = (userId: number | undefined) => {
+    const assignVolunteerToJob = (userId: string | undefined) => {
         if (jobId) {
             handleVolunteerAssignment(userId, jobId);
             http.patch(`auth/teams/${event.teamId}/events/${event.id}/jobs/${jobId}`, { volunteerId: userId })
@@ -52,7 +51,7 @@ export default function ManagedEventViewerr(
             <TitleAndId title={event.name} id={event.id} />
             <LabelValue label="Datum" value={event.startDatetime.toLocaleDateString()} />
             <LabelValue label="Uhrzeit" value={event.startDatetime.toLocaleTimeString()} />
-            <LabelValue label="Einrichtung abgeschlossen" value={event.complete ? "✅" : "❌"} />
+            <LabelValue label="Einrichtung abgeschlossen" value={event.setupComplete ? "✅" : "❌"} />
             <Text>Description</Text>
             <Text>{event.description}</Text>
             <JobsList jobsList={event.jobs} jobIdAssignment={(jobId) => setJobId(jobId)} modalVisibility={() => setModalVisible(true)} />
@@ -89,7 +88,7 @@ export default function ManagedEventViewerr(
     );
 };
 
-function JobsList({ jobsList, jobIdAssignment, modalVisibility }: { jobsList: Job[], jobIdAssignment: (jobId: number) => void, modalVisibility: () => void }) {
+function JobsList({ jobsList, jobIdAssignment, modalVisibility }: { jobsList: Job[], jobIdAssignment: (jobId: string) => void, modalVisibility: () => void }) {
     return (
         <View>
             <H1>Jobs</H1>

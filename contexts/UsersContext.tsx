@@ -18,7 +18,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         try {
             const response = await http.get<UserDto>("auth/user");
             setUser({
-                id: response.data.id,
+                id: String(response.data.id),
                 name: response.data.display_name,
                 email: response.data.email
             });

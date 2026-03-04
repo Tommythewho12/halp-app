@@ -23,6 +23,7 @@ export default function NewManagedEvent() {
     const [officials, setOfficials] = useState('0');
 
     const handleCreateEvent = async () => {
+        // TODO move http from here to events context
         await http.post(`auth/teams/${team_id}/events`,
             {
                 eventName: name,
@@ -38,11 +39,11 @@ export default function NewManagedEvent() {
                     throw new Error('team_id must be available but was not');
                 addEvent({
                     id: response.data.id,
-                    team_id: team_id,
+                    teamId: team_id,
                     name: name,
                     description: description,
-                    start_datetime: startDatetime,
-                    complete: false
+                    startDatetime: startDatetime,
+                    setupComplete: false
                 });
             }).catch(e => {
                 console.error(e);

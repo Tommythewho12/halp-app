@@ -2,12 +2,12 @@ import { useRouter } from 'expo-router';
 import { FlatList, Pressable, StyleSheet, Text } from 'react-native';
 
 import { Team } from '@/types';
-import { TopView, H2, ItemTitleAndAddButton } from './basic/Containers';
+import { TopView, ItemTitleAndAddButton } from './basic/Containers';
 
 export default function ManagedTeamsListViewer({ teams }: { teams: Team[] }) {
     const router = useRouter();
 
-    const handleOpenTeam = (teamId: string | undefined) => {
+    const handleOpenTeam = (teamId: string) => {
         if (teamId === undefined) {
             // TODO throw Exception?
             console.error('team does not have an ID and cannot be navigated to')
