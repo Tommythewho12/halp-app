@@ -54,16 +54,14 @@ export const TeamsProvider = ({ children }: { children: React.ReactNode }) => {
 
     const subscribeToTeam = async (teamId: string) => {
         // TODO add HTML-Request
-
+        console.debug('subscribed, teamId:', teamId);
         setTeams(prev => prev.map(t => t.id === teamId ? t : { ...t, isSubscribed: true }));
     };
 
     const unsubscribeFromTeam = async (teamId: string) => {
         // TODO add HTML-Request
-        const team = teams.find(t => t.id === teamId);
-        if (team !== undefined) {
-            setTeams((prev) => [...prev, { ...team, isSubscribed: false }]);
-        }
+        console.debug('unsubscribed, teamId:', teamId);
+        setTeams(prev => prev.map(t => t.id === teamId ? t : { ...t, isSubscribed: false }));
     };
 
     // fetch teams initially

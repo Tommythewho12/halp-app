@@ -4,7 +4,7 @@ import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Team } from '@/types';
 
 export default function TeamsListViewer({ teams }: { teams: Team[] }) {
-    const handlePress = (teamId: number) => {
+    const handlePress = (teamId: string) => {
         if (teamId === undefined) {
             // TODO throw Exception?
             console.error('team does not have an ID and cannot be navigated to')
