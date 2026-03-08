@@ -1,13 +1,13 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 import http from '@/services/http-common';
-import { Event, EventDto } from '@/types';
+import { DetailedManagedEventCreator, Event, EventDto } from '@/types';
 import { safeBooleanConverter } from '@/components/basic/Utils';
 
 type EventsContextType = {
     events: Event[];
     fetchEvents: () => Promise<void>;
-    addEvent: (event: Event) => Promise<void>;
+    addEvent: (event: DetailedManagedEventCreator) => Promise<boolean>;
     deleteEvent: (eventId: string) => Promise<void>;
 };
 
@@ -33,9 +33,33 @@ export const EventsProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
-    const addEvent = async (event: Event) => {
-        // TODO move http to here
-        setEvents((prev) => [...prev, event]);
+    const addEvent = async (creator: DetailedManagedEventCreator) => {
+        try {
+            const response = await http.post<EventDto>(`auth/teams/${creator.event.teamId}/events`,
+                {
+                    eventName: creator.event.name,
+                    dateTime: (creator.event.startDatetime.valueOf()) / 1000,
+                    description: creator.event.description,
+                    jobs: {
+                        scorer: creator.scorers,
+                        official: creator.officials
+                    }
+                });
+            const event = response.data;
+            const convertedEvent: Event = {
+                id: String(event.id),
+                teamId: String(event.team_id),
+                name: event.name,
+                description: event.description,
+                startDatetime: new Date(event.start_datetime * 1000),
+                setupComplete: safeBooleanConverter(event.complete)
+            };
+            setEvents((prev) => [...prev, convertedEvent]);
+            return true;
+        } catch (e) {
+            console.error(e);
+            return false;
+        }
     };
 
     const deleteEvent = async (eventId: string) => {

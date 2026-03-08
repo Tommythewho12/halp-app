@@ -10,11 +10,11 @@ import { useEvents } from '@/contexts/EventsContext';
 
 export default function ManagedEventViewerr(
     {
-        event,
+        detailedEvent,
         handleVolunteerAssignment
     }: {
-        event: DetailedManagedEvent,
-        handleVolunteerAssignment: (userId: string | undefined, jobId: string) => void
+        detailedEvent: DetailedManagedEvent,
+        handleVolunteerAssignment: (userId: string | null, jobId: string) => void
     }) {
 
     const { deleteEvent } = useEvents();
@@ -23,10 +23,10 @@ export default function ManagedEventViewerr(
     const [jobId, setJobId] = useState<string | null>(null);
     const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
 
-    const assignVolunteerToJob = (userId: string | undefined) => {
+    const assignVolunteerToJob = (userId: string | null) => {
         if (jobId) {
             handleVolunteerAssignment(userId, jobId);
-            http.patch(`auth/teams/${event.teamId}/events/${event.id}/jobs/${jobId}`, { volunteerId: userId })
+            http.patch(`auth/teams/${detailedEvent.event.teamId}/events/${detailedEvent.event.id}/jobs/${jobId}`, { volunteerId: userId })
                 .then(response => {
                     console.debug('reassignment done')
                 })
@@ -37,9 +37,10 @@ export default function ManagedEventViewerr(
 
     const handleDeleteEvent = async () => {
         setDeleteModalVisible(false);
-        await http.delete(`auth/teams/${event.teamId}/events/${event.id}`)
+        await http.delete(`auth/teams/${detailedEvent.event.teamId}/events/${detailedEvent.event.id}`)
             .then(response => {
-                deleteEvent(event.id);
+                deleteEvent(detailedEvent.event.id);
+                console.debug('event deleted');
             }).catch(e => {
                 console.error(e);
             });
@@ -48,16 +49,16 @@ export default function ManagedEventViewerr(
 
     return (
         <TopView style={{ flexDirection: 'column' }}>
-            <TitleAndId title={event.name} id={event.id} />
-            <LabelValue label="Datum" value={event.startDatetime.toLocaleDateString()} />
-            <LabelValue label="Uhrzeit" value={event.startDatetime.toLocaleTimeString()} />
-            <LabelValue label="Einrichtung abgeschlossen" value={event.setupComplete ? "✅" : "❌"} />
+            <TitleAndId title={detailedEvent.event.name} id={detailedEvent.event.id} />
+            <LabelValue label="Datum" value={detailedEvent.event.startDatetime.toLocaleDateString()} />
+            <LabelValue label="Uhrzeit" value={detailedEvent.event.startDatetime.toLocaleTimeString()} />
+            <LabelValue label="Einrichtung abgeschlossen" value={detailedEvent.event.setupComplete ? "✅" : "❌"} />
             <Text>Description</Text>
-            <Text>{event.description}</Text>
-            <JobsList jobsList={event.jobs} jobIdAssignment={(jobId) => setJobId(jobId)} modalVisibility={() => setModalVisible(true)} />
+            <Text>{detailedEvent.event.description}</Text>
+            <JobsList jobsList={detailedEvent.jobs} jobIdAssignment={(jobId) => setJobId(jobId)} modalVisibility={() => setModalVisible(true)} />
             <H1>Volunteers</H1>
-            {event.volunteers &&
-                event.volunteers.map(v =>
+            {detailedEvent.volunteers &&
+                detailedEvent.volunteers.map(v =>
                     <Text key={v.id} style={v.assigned && { textDecorationLine: 'line-through' }}>{v.displayName}</Text>
                 )
             }
@@ -83,7 +84,7 @@ export default function ManagedEventViewerr(
                 modalVisible={modalVisible}
                 setModalVisible={setModalVisible}
                 assignVolunteerToJob={assignVolunteerToJob}
-                volunteers={event.volunteers.filter(v => !v.assigned)} />
+                volunteers={detailedEvent.volunteers.filter(v => !v.assigned)} />
         </TopView>
     );
 };

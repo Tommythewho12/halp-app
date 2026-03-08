@@ -1,17 +1,18 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
-import { Text, View, Button } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
+import { useEffect, useState } from 'react';
+import { Button } from 'react-native';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 
-import http from '@/services/http-common';
 import { useEvents } from '@/contexts/EventsContext';
 import { LabelDateEditor, LabelTimeEditor, LabelLongTextEditor, LabelShortTextEditor, TopView, LabelShortNumberEditor } from '@/components/basic/Containers';
+import { DetailedManagedEventCreator, Event, } from '@/types';
+import { isNumber } from '@/components/basic/Utils';
 
 export default function NewManagedEvent() {
     const { team_id } = useLocalSearchParams<{ team_id?: string }>();
 
     const { addEvent } = useEvents();
+    const [teamId, setTeamId] = useState('');
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const date = new Date();
@@ -22,33 +23,33 @@ export default function NewManagedEvent() {
     const [scorers, setScorers] = useState('0');
     const [officials, setOfficials] = useState('0');
 
+    // validate team_id parameter on view load
+    useEffect(() => {
+        if (team_id === undefined) {
+            throw new Error('team_id parameter must be defined');
+        } else {
+            setTeamId(team_id);
+        }
+    }, [team_id]);
+
     const handleCreateEvent = async () => {
-        // TODO move http from here to events context
-        await http.post(`auth/teams/${team_id}/events`,
-            {
-                eventName: name,
-                dateTime: (startDatetime.valueOf()) / 1000,
-                description: description,
-                jobs: {
-                    scorer: Number.parseInt(scorers),
-                    official: Number.parseInt(officials)
-                }
-            })
-            .then(response => {
-                if (!team_id)
-                    throw new Error('team_id must be available but was not');
-                addEvent({
-                    id: response.data.id,
-                    teamId: team_id,
-                    name: name,
-                    description: description,
-                    startDatetime: startDatetime,
-                    setupComplete: false
-                });
-            }).catch(e => {
-                console.error(e);
-            });
-        router.back();
+        const newEvent: Event = {
+            id: '',
+            teamId: teamId,
+            name: name,
+            description: description,
+            startDatetime: startDatetime,
+            setupComplete: false
+        };
+        const newManagedEvent: DetailedManagedEventCreator = {
+            event: newEvent,
+            scorers: parseInt(scorers),
+            officials: parseInt(officials)
+        };
+        const response: boolean = await addEvent(newManagedEvent);
+        if (response) {
+            router.back();
+        }
     };
 
     const handleDatetimeChange = (event: DateTimePickerEvent, selectedDate: Date | undefined) => {
@@ -70,7 +71,11 @@ export default function NewManagedEvent() {
     };
 
     const sanitizeNumberInput = (number: string) => {
-        return number.replace(`/[^0-9]/g`, "");
+        let newNumber: string = number.replace(`/[^0-9]/g`, '');
+        if (isNumber(newNumber))
+            return newNumber
+        else
+            return '0'
     };
 
     return (

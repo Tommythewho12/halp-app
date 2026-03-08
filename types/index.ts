@@ -1,108 +1,131 @@
+enum JobType {
+    SCORER,
+    OFFICIAL
+}
+
 export interface UserDto {
-    id: number,
-    display_name: string,
+    id: number
+    display_name: string
     email: string
-};
+}
 
 export interface User {
-    id: string,
-    name: string,
+    id: string
+    name: string
     email: string
-};
+}
 
 export interface TeamDto {
-    id: number,
-    name: string,
-    is_admin: number,
+    id: number
+    name: string
+    is_admin: number
     is_subscribed: number
-};
+}
 
 export interface Team {
-    id: string,
-    name: string,
-    isSubscribed: boolean,
+    id: string
+    name: string
+    isSubscribed: boolean
     isAdmin: boolean
-};
+}
 
 export interface PublicEvent {
-    id: string,
-    teamId: string,
-    name: string,
-    description: string | null,
-    startDatetime: Date,
+    id: string
+    teamId: string
+    name: string
+    description: string | null
+    startDatetime: Date
     setupComplete: boolean
-};
+}
 
 export interface EventDto {
-    id: number,
-    team_id: number,
-    name: string,
-    description: string | null,
-    start_datetime: number,
+    id: number
+    team_id: number
+    name: string
+    description: string | null
+    start_datetime: number
     complete: number
-};
+}
 
 export interface Event {
-    id: string,
-    teamId: string,
-    name: string,
-    description: string | null,
-    startDatetime: Date,
+    id: string
+    teamId: string
+    name: string
+    description: string | null
+    startDatetime: Date
     setupComplete: boolean
-};
+}
 
 export interface DetailedManagedEventDto {
-    id: number,
-    team_id: number,
-    name: string,
-    description: string | null,
-    start_datetime: number,
-    complete: number,
+    id: number
+    team_id: number
+    name: string
+    description: string | null
+    start_datetime: number
+    complete: number
     volunteers: VolunteerDto[]
     jobs: JobDto[]
-};
+}
 
 export interface DetailedManagedEvent {
-    id: string,
-    teamId: string,
-    name: string,
-    description: string | null,
-    startDatetime: Date,
-    setupComplete: boolean,
+    event: Event
     volunteers: Volunteer[]
     jobs: Job[]
-};
+}
+
+export interface DetailedManagedEventCreator {
+    event: Event
+    scorers: number
+    officials: number
+}
 
 export interface VolunteerDto {
-    id: number,
+    id: number
     display_name: string
-};
+}
 
 export interface Volunteer {
-    id: string,
-    displayName: string,
+    id: string
+    displayName: string
     assigned: boolean
-};
+}
 
 export interface JobDto {
-    id: number,
-    type: string,
-    user_id: string | undefined
-};
+    id: number
+    type: string
+    user_id: string | null
+}
 
-export interface Job {
-    id: string,
-    jobName: string,
+export class Job {
+    id: string
+    jobName: string
+    userId: string | null
+    userName: string | null
+
+    constructor(jobName: string);
+    constructor(jobName: string, id: string);
+    constructor(jobName: string, id: string, userId: string, userName: string);
+    constructor(jobName: string, id?: string, userId?: string, userName?: string) {
+        this.id = id != undefined ? id : '';
+        this.jobName = jobName;
+        this.userId = userId != undefined ? userId : null;
+        this.userName = userName != undefined ? userName : null;
+    }
+}
+
+export interface Jobb {
+    id: string
+    jobName: string
     userName: string | undefined
     userId: string | undefined
-};
+}
 
 export interface EventListItemDto {
-    id: number;
-    name: string;
-    start_datetime: number;
-    description: string;
-    team_id: number,
-    is_subscribed: number,
+    id: number
+    name: string
+    start_datetime: number
+    description: string
+    team_id: number
+    is_subscribed: number
     is_assigned: number
 }

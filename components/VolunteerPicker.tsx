@@ -14,7 +14,7 @@ export default function VolunteerPicker(
     }: {
         modalVisible: boolean,
         setModalVisible: React.Dispatch<React.SetStateAction<boolean>>,
-        assignVolunteerToJob: (userId: string | undefined) => void,
+        assignVolunteerToJob: (userId: string | null) => void,
         volunteers: Volunteer[]
     }) {
 
@@ -32,7 +32,7 @@ export default function VolunteerPicker(
                     <Button
                         title='unassign'
                         onPress={() => {
-                            assignVolunteerToJob(undefined);
+                            assignVolunteerToJob(null);
                             setModalVisible(false);
                         }} />
                     <FlatList

@@ -4,14 +4,14 @@ import { useEffect, useState } from 'react';
 
 import http from '@/services/http-common';
 import ManagedEventViewerr from '@/components/ManagedEventViewer';
-import { DetailedManagedEventDto, DetailedManagedEvent, Job, Volunteer } from '@/types';
+import { DetailedManagedEventDto, DetailedManagedEvent, Event, Job, Volunteer } from '@/types';
 import { safeBooleanConverter } from '@/components/basic/Utils';
 
 export default function ManagedEventViewer() {
     const { team_id: teamIdParameter, event_id: eventIdParameter } = useLocalSearchParams<{ team_id?: string, event_id?: string }>();
     const [event, setEvent] = useState<DetailedManagedEvent | null>(null);
 
-    const handleVolunteerAssignment = (newUserId: string | undefined, jobId: string) => {
+    const handleVolunteerAssignment = (newUserId: string | null, jobId: string) => {
         if (event !== null) {
             const newJobs: Job[] = event.jobs.map(j => {
                 if (j.id !== jobId)
@@ -53,23 +53,28 @@ export default function ManagedEventViewer() {
                 return { ...v, assigned: assigned }
             });
 
-            const convertedEvent: DetailedManagedEvent = {
+            const convertedEvent: Event = {
                 id: String(response.data.id),
                 teamId: String(response.data.team_id),
                 name: response.data.name,
                 description: response.data.description,
                 startDatetime: new Date(response.data.start_datetime * 1000),
-                setupComplete: safeBooleanConverter(response.data.complete),
+                setupComplete: safeBooleanConverter(response.data.complete)
+            }
+
+            const convertedDetailedManagedEvent: DetailedManagedEvent = {
+                event: convertedEvent,
                 volunteers: updatedVolunteers,
                 jobs: jobs
             };
-            setEvent(convertedEvent);
+            setEvent(convertedDetailedManagedEvent);
         } catch (e) {
             console.error("Failed to fetch events:", e);
         }
     };
 
     useEffect(() => {
+        console.debug('useEffect of ManagedEventViewer');
         fetchEvent();
     }, [eventIdParameter, teamIdParameter]);
 
@@ -77,7 +82,7 @@ export default function ManagedEventViewer() {
         <>
             {event ?
                 <ManagedEventViewerr
-                    event={event}
+                    detailedEvent={event}
                     handleVolunteerAssignment={handleVolunteerAssignment}
                 /> :
                 <Text>Sumting went wong!</Text>
