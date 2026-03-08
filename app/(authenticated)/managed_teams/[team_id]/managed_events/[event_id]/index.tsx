@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from 'expo-router';
-import { Text, View } from 'react-native';
+import { Text } from 'react-native';
 import { useEffect, useState } from 'react';
 
 import http from '@/services/http-common';
@@ -74,7 +74,6 @@ export default function ManagedEventViewer() {
     };
 
     useEffect(() => {
-        console.debug('useEffect of ManagedEventViewer');
         fetchEvent();
     }, [eventIdParameter, teamIdParameter]);
 

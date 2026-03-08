@@ -10,9 +10,11 @@ export default function TeamViewer({ team }: { team: Team }) {
     return (
         <TopView>
             <TitleAndId title={team.name} id={team.id} />
-            {team.isSubscribed ?
-                <Button title="Unsubscribe from team!" onPress={() => unsubscribeFromTeam(team.id)} /> :
-                <Button title="Subscribe to team" onPress={() => subscribeToTeam(team.id)} />}
+            {team.isSubscribed ? (
+                <Button title="Unsubscribe from team!" onPress={() => unsubscribeFromTeam(team.id)} />
+            ) : (
+                <Button title="Subscribe to team" onPress={() => subscribeToTeam(team.id)} />
+            )}
             {team.isAdmin && <Text>You are the admin of this team!</Text>}
         </TopView>
     );

@@ -9,8 +9,8 @@ type TeamsContextType = {
     fetchTeams: () => Promise<void>;
     newManagedTeam: (name: string) => Promise<void>;
     deleteManagedTeam: (teamId: string) => Promise<void>;
-    subscribeToTeam: (teamId: string) => Promise<void>;
-    unsubscribeFromTeam: (teamId: string) => Promise<void>;
+    subscribeToTeam: (teamId: string) => Promise<boolean>;
+    unsubscribeFromTeam: (teamId: string) => Promise<boolean>;
 };
 
 const TeamsContext = createContext<TeamsContextType | undefined>(undefined);
@@ -53,15 +53,23 @@ export const TeamsProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     const subscribeToTeam = async (teamId: string) => {
-        // TODO add HTML-Request
-        console.debug('subscribed, teamId:', teamId);
-        setTeams(prev => prev.map(t => t.id === teamId ? t : { ...t, isSubscribed: true }));
+        const response = await http.post(`auth/teams/${teamId}/subscribers`) // TODO create DTO
+        if (response.status >= 200 && response.status < 300) {
+            setTeams(prev => prev.map(t => t.id === teamId ? { ...t, isSubscribed: true } : t));
+            return true;
+        }
+        console.error('process failed with status: ', response.status);
+        return false;
     };
 
     const unsubscribeFromTeam = async (teamId: string) => {
-        // TODO add HTML-Request
-        console.debug('unsubscribed, teamId:', teamId);
-        setTeams(prev => prev.map(t => t.id === teamId ? t : { ...t, isSubscribed: false }));
+        const response = await http.delete(`auth/teams/${teamId}/subscribers`) // TODO create DTO
+        if (response.status >= 200 && response.status < 300) {
+            setTeams(prev => prev.map(t => t.id === teamId ? { ...t, isSubscribed: false } : t));
+            return true;
+        }
+        console.error('process failed with status: ', response.status);
+        return false;
     };
 
     // fetch teams initially
