@@ -1,30 +1,12 @@
-import { useEffect, useState } from 'react';
-import { View } from 'react-native';
-import { SafeAreaView } from "react-native-safe-area-context";
-
-import http from '@/services/http-common';
 import EventsListViewer from '@/components/EventsListViewer';
-import { TopView } from '@/components/basic/Containers';
+import { useEvents } from '@/contexts/EventsContext';
 
-// events, but has to be named index
 export default function Events() {
-    const [events, setEvents] = useState([]);
+    const { events } = useEvents();
 
-    useEffect(() => {
-        http.get(`auth/events`, {
-            params: {
-                as: 'subscriber'
-            }
-        })
-            .then(response => {
-                console.debug("received events object: ", response.data);
-                setEvents(response.data);
-            }).catch(e => {
-                console.error(e);
-            });
-    }, []);
+    const showingEvents = events.filter(e => e.isVolunteering);
 
     return (
-        <EventsListViewer events={events} />
+        <EventsListViewer events={showingEvents} />
     );
 }

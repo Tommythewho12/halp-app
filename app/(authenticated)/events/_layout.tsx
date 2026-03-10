@@ -9,7 +9,7 @@ export default function EventsLayout() {
                 name='index'
             />
             <Stack.Screen
-                name='[event]'
+                name='[event_id]'
             />
         </Stack>
     );

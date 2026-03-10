@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import http from '@/services/http-common';
 
 import { Team, TeamDto } from '@/types';
-import { safeBooleanConverter } from '@/components/basic/Utils';
+import { is2XXStatus, safeBooleanConverter } from '@/components/basic/Utils';
 
 type TeamsContextType = {
     teams: Team[];
@@ -54,7 +54,7 @@ export const TeamsProvider = ({ children }: { children: React.ReactNode }) => {
 
     const subscribeToTeam = async (teamId: string) => {
         const response = await http.post(`auth/teams/${teamId}/subscribers`) // TODO create DTO
-        if (response.status >= 200 && response.status < 300) {
+        if (is2XXStatus(response.status)) {
             setTeams(prev => prev.map(t => t.id === teamId ? { ...t, isSubscribed: true } : t));
             return true;
         }
@@ -64,7 +64,7 @@ export const TeamsProvider = ({ children }: { children: React.ReactNode }) => {
 
     const unsubscribeFromTeam = async (teamId: string) => {
         const response = await http.delete(`auth/teams/${teamId}/subscribers`) // TODO create DTO
-        if (response.status >= 200 && response.status < 300) {
+        if (is2XXStatus(response.status)) {
             setTeams(prev => prev.map(t => t.id === teamId ? { ...t, isSubscribed: false } : t));
             return true;
         }

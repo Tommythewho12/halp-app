@@ -29,3 +29,7 @@ export function safeNumberConverter(num: any): number {
 export function isNumber(num: any): boolean {
     return !isNaN(Number(num));
 }
+
+export function is2XXStatus(statusCode: number): boolean {
+    return statusCode >= 200 && statusCode < 300;
+}

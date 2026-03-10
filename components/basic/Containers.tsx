@@ -218,11 +218,12 @@ const localStyles = StyleSheet.create({
     },
 
     label: {
+        flex: 1,
         fontSize: 16
     },
 
     value: {
-        flex: 1,
+        flex: 3,
         fontSize: 20,
         fontWeight: 'bold'
     },

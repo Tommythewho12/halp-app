@@ -2,13 +2,15 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 import http from '@/services/http-common';
 import { DetailedManagedEventCreator, Event, EventDto } from '@/types';
-import { safeBooleanConverter } from '@/components/basic/Utils';
+import { is2XXStatus, safeBooleanConverter } from '@/components/basic/Utils';
 
 type EventsContextType = {
     events: Event[];
     fetchEvents: () => Promise<void>;
     addEvent: (event: DetailedManagedEventCreator) => Promise<boolean>;
     deleteEvent: (eventId: string) => Promise<void>;
+    volunteerToEvent: (eventId: string) => Promise<boolean>;
+    unvolunteerFromEvent: (eventId: string) => Promise<boolean>;
 };
 
 const EventsContext = createContext<EventsContextType | undefined>(undefined);
@@ -25,7 +27,9 @@ export const EventsProvider = ({ children }: { children: React.ReactNode }) => {
                 name: event.name,
                 description: event.description,
                 startDatetime: new Date(event.start_datetime * 1000),
-                setupComplete: safeBooleanConverter(event.complete)
+                setupComplete: safeBooleanConverter(event.complete),
+                isVolunteering: safeBooleanConverter(event.is_volunteering),
+                isAssigned: safeBooleanConverter(event.is_assigned)
             }));
             setEvents(convertedEvents);
         } catch (e) {
@@ -52,7 +56,9 @@ export const EventsProvider = ({ children }: { children: React.ReactNode }) => {
                 name: event.name,
                 description: event.description,
                 startDatetime: new Date(event.start_datetime * 1000),
-                setupComplete: safeBooleanConverter(event.complete)
+                setupComplete: safeBooleanConverter(event.complete),
+                isVolunteering: safeBooleanConverter(event.is_volunteering),
+                isAssigned: safeBooleanConverter(event.is_assigned)
             };
             setEvents((prev) => [...prev, convertedEvent]);
             return true;
@@ -67,13 +73,35 @@ export const EventsProvider = ({ children }: { children: React.ReactNode }) => {
         setEvents((prev) => prev.filter(e => e.id !== eventId));
     };
 
+    const volunteerToEvent = async (eventId: string) => {
+        const response = await http.post(`auth/events/${eventId}/volunteers`); // TODO create DTO
+        if (is2XXStatus(response.status)) {
+            setEvents(prev => prev.map(e => e.id === eventId ? { ...e, isVolunteering: true } : e));
+            return true;
+        }
+
+        console.error('process failed with status: ', response.status);
+        return false;
+    }
+
+    const unvolunteerFromEvent = async (eventId: string): Promise<boolean> => {
+        const response = await http.delete(`auth/events/${eventId}/volunteers`); // TODO create DTO
+        if (is2XXStatus(response.status)) {
+            setEvents(prev => prev.map(e => e.id === eventId ? { ...e, isVolunteering: false } : e));
+            return true;
+        }
+
+        console.error('process failed with status: ', response.status);
+        return false;
+    }
+
     // fetch events initially
     useEffect(() => {
         fetchEvents();
     }, []);
 
     return (
-        <EventsContext.Provider value={{ events, fetchEvents, addEvent, deleteEvent }}>
+        <EventsContext.Provider value={{ events, fetchEvents, addEvent, deleteEvent, volunteerToEvent, unvolunteerFromEvent }}>
             {children}
         </EventsContext.Provider>
     );

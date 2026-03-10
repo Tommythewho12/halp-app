@@ -45,6 +45,8 @@ export interface EventDto {
     description: string | null
     start_datetime: number
     complete: number
+    is_volunteering: number
+    is_assigned: number
 }
 
 export interface Event {
@@ -54,6 +56,8 @@ export interface Event {
     description: string | null
     startDatetime: Date
     setupComplete: boolean
+    isVolunteering: boolean
+    isAssigned: boolean
 }
 
 export interface DetailedManagedEventDto {

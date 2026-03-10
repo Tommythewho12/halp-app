@@ -1,26 +1,25 @@
 import { Button, StyleSheet, Text, View } from 'react-native';
 
-type Event = {
-    id: string | string[] | null,
-    name: string | null,
-    startDatetime: string | null,
-    description: string | null,
-    teamId: number | null,
-    isSubscribed: boolean,
-    isAssigned: boolean,
-    handleVolunteer: () => void,
-    handleUnvolunteer: () => void
-};
+import { H1, LabelValue, TitleAndId, TopView } from './basic/Containers';
+import { Event } from '@/types';
+import { useEvents } from '@/contexts/EventsContext';
 
-export default function EventViewer(event: Event) {
+export default function EventViewer({ event }: { event: Event }) {
+    const { volunteerToEvent, unvolunteerFromEvent } = useEvents();
 
     return (
-        <View>
-            <Text>{event.name}</Text>
-            <Text>{event.startDatetime}</Text>
+        <TopView>
+            <TitleAndId title={event.name} id={event.id} />
+            <LabelValue label='Datum' value={event.startDatetime.toLocaleDateString()} />
+            <LabelValue label='Uhrzeit' value={event.startDatetime.toLocaleTimeString()} />
+            <Text>Description</Text>
             <Text>{event.description}</Text>
-            {event.isSubscribed ? <Button title="Withdraw from event!" onPress={event.handleUnvolunteer} /> : <Button title="Sign up as a volunteer" onPress={event.handleVolunteer} />}
-        </View>
+            {event.isVolunteering ? (
+                <Button title="Withdraw from event!" onPress={() => unvolunteerFromEvent(event.id)} />
+            ) : (
+                <Button title="Sign up as a volunteer" onPress={() => volunteerToEvent(event.id)} />
+            )}
+        </TopView>
     );
 };
 

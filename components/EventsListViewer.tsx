@@ -11,7 +11,7 @@ export default function EventsListViewer({ events }: { events: Event[] }) {
     const { id, name, email } = useUser();
 
     const handlePress = (eventId: string) => {
-        router.navigate({ pathname: '/(authenticated)/events/[event]', params: { event: eventId } });
+        router.navigate({ pathname: '/(authenticated)/events/[event_id]', params: { event_id: eventId } });
     }
 
     const orderByDatetimeDesc = (events: Event[]) => {
@@ -19,7 +19,8 @@ export default function EventsListViewer({ events }: { events: Event[] }) {
         return newOrder;
     };
 
-    const [eventz, setEventz] = useState(orderByDatetimeDesc(events));
+    // const [eventz, setEventz] = useState(orderByDatetimeDesc(events));
+    const orderedEvents = orderByDatetimeDesc(events);
 
     // TODO pull up un-/volunteering handler here to update this view
 
@@ -29,7 +30,7 @@ export default function EventsListViewer({ events }: { events: Event[] }) {
             <H1>Hi {name}</H1>
             <H2>Veranstaltungen</H2>
             <FlatList
-                data={events}
+                data={orderedEvents}
 
                 renderItem={({ item }) =>
                     <Pressable

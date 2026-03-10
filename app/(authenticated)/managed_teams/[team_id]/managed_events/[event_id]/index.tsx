@@ -59,7 +59,9 @@ export default function ManagedEventViewer() {
                 name: response.data.name,
                 description: response.data.description,
                 startDatetime: new Date(response.data.start_datetime * 1000),
-                setupComplete: safeBooleanConverter(response.data.complete)
+                setupComplete: safeBooleanConverter(response.data.complete),
+                isVolunteering: false,
+                isAssigned: false
             }
 
             const convertedDetailedManagedEvent: DetailedManagedEvent = {
