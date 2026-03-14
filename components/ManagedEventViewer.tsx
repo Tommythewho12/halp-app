@@ -4,7 +4,7 @@ import { useState } from 'react';
 import http from '@/services/http-common';
 
 import { LabelValue, H1, MyText, TopView, TitleAndId } from '@/components/basic/Containers'
-import { DetailedManagedEvent, Job } from '@/types';
+import { DetailedManagedEvent, Volunteer, Job } from '@/types';
 import VolunteerPicker from './VolunteerPicker';
 import { useEvents } from '@/contexts/EventsContext';
 
@@ -14,25 +14,28 @@ export default function ManagedEventViewerr(
         handleVolunteerAssignment
     }: {
         detailedEvent: DetailedManagedEvent,
-        handleVolunteerAssignment: (userId: string | null, jobId: string) => void
+        handleVolunteerAssignment: (newUserId: string | null, jobId: string) => void
     }) {
 
     const { deleteEvent } = useEvents();
 
     const [modalVisible, setModalVisible] = useState<boolean>(false);
-    const [jobId, setJobId] = useState<string | null>(null);
+    const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
     const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
 
-    const assignVolunteerToJob = (userId: string | null) => {
-        if (jobId) {
-            handleVolunteerAssignment(userId, jobId);
-            http.patch(`auth/teams/${detailedEvent.event.teamId}/events/${detailedEvent.event.id}/jobs/${jobId}`, { volunteerId: userId })
-                .then(response => {
-                    console.debug('reassignment done')
-                })
-                .catch(e => console.error(e));
+    const jobsList: JobWithVolunteerName[] = [...detailedEvent.jobs].map(([id, job]) => {
+        let volunteerName = "unassigned";
+        if (job.userId)
+            volunteerName = detailedEvent.volunteers.get(job.userId)?.displayName ?? "unassigned";
+        return { job, volunteerName: volunteerName };
+    });
+    const volunteerList: Volunteer[] = [...detailedEvent.volunteers.values()];
+
+    const assignVolunteerToJob = (newUserId: string | null) => {
+        if (selectedJobId) {
+            handleVolunteerAssignment(newUserId, selectedJobId);
         } else
-            console.error('userId and jobId should actually be existent!');
+            console.error('jobId must be defined');
     }
 
     const handleDeleteEvent = async () => {
@@ -55,11 +58,11 @@ export default function ManagedEventViewerr(
             <LabelValue label="Einrichtung abgeschlossen" value={detailedEvent.event.setupComplete ? "✅" : "❌"} />
             <Text>Description</Text>
             <Text>{detailedEvent.event.description}</Text>
-            <JobsList jobsList={detailedEvent.jobs} jobIdAssignment={(jobId) => setJobId(jobId)} modalVisibility={() => setModalVisible(true)} />
+            <JobsList jobsList={jobsList} setJobId={(jobId) => setSelectedJobId(jobId)} modalVisibility={() => setModalVisible(true)} />
             <H1>Volunteers</H1>
-            {detailedEvent.volunteers &&
-                detailedEvent.volunteers.map(v =>
-                    <Text key={v.id} style={v.assigned && { textDecorationLine: 'line-through' }}>{v.displayName}</Text>
+            {volunteerList &&
+                volunteerList.map(v =>
+                    <Text key={v.id} style={v.assigned && { textDecorationLine: 'line-through', color: '#999' }}>{v.displayName}</Text>
                 )
             }
             <H1>Bearbeiten</H1>
@@ -84,21 +87,26 @@ export default function ManagedEventViewerr(
                 modalVisible={modalVisible}
                 setModalVisible={setModalVisible}
                 assignVolunteerToJob={assignVolunteerToJob}
-                volunteers={detailedEvent.volunteers.filter(v => !v.assigned)} />
+                volunteers={volunteerList.filter(v => !v.assigned)} />
         </TopView>
     );
 };
 
-function JobsList({ jobsList, jobIdAssignment, modalVisibility }: { jobsList: Job[], jobIdAssignment: (jobId: string) => void, modalVisibility: () => void }) {
+interface JobWithVolunteerName {
+    job: Job,
+    volunteerName: String
+}
+
+function JobsList({ jobsList, setJobId, modalVisibility }: { jobsList: JobWithVolunteerName[], setJobId: (jobId: string) => void, modalVisibility: () => void }) {
     return (
         <View>
             <H1>Jobs</H1>
             {
                 jobsList && jobsList.map(job => (
-                    <View key={job.id} style={{ flexDirection: 'row' }}>
-                        <MyText style={{ flexShrink: 1 }}>{job.jobName} </MyText>
-                        <MyText style={{ flex: 1 }}>{job.userName} </MyText>
-                        <Pressable style={{ flexShrink: 1 }} onPress={() => { jobIdAssignment(job.id); modalVisibility(); }}><Text>🪛</Text></Pressable>
+                    <View key={job.job.id} style={{ flexDirection: 'row' }}>
+                        <MyText style={{ flexShrink: 1 }}>{job.job.jobName} </MyText>
+                        <MyText style={{ flex: 1 }}>{job.volunteerName} </MyText>
+                        <Pressable style={{ flexShrink: 1 }} onPress={() => { setJobId(job.job.id); modalVisibility(); }}><Text>🪛</Text></Pressable>
                     </View>
                 ))
             }

@@ -5,22 +5,40 @@ import { useEffect, useState } from 'react';
 import http from '@/services/http-common';
 import ManagedEventViewerr from '@/components/ManagedEventViewer';
 import { DetailedManagedEventDto, DetailedManagedEvent, Event, Job, Volunteer } from '@/types';
-import { safeBooleanConverter } from '@/components/basic/Utils';
+import { is2XXStatus, safeBooleanConverter } from '@/components/basic/Utils';
 
 export default function ManagedEventViewer() {
     const { team_id: teamIdParameter, event_id: eventIdParameter } = useLocalSearchParams<{ team_id?: string, event_id?: string }>();
     const [event, setEvent] = useState<DetailedManagedEvent | null>(null);
 
-    const handleVolunteerAssignment = (newUserId: string | null, jobId: string) => {
-        if (event !== null) {
-            const newJobs: Job[] = event.jobs.map(j => {
-                if (j.id !== jobId)
-                    return j;
-                return { ...j, userId: newUserId }
-            });
+    const handleVolunteerAssignment = async (newUserId: string | null, jobId: string) => {
+        if (event != null) {
+            const response = await http.patch(`auth/teams/${teamIdParameter}/events/${eventIdParameter}/jobs/${jobId}`, { volunteerId: newUserId });
+            if (is2XXStatus(response.status)) {
+                setEvent(prev => {
+                    if (!prev) return prev;
 
-            const newEvent = { ...event, jobs: newJobs };
-            setEvent(newEvent);
+                    const newJobs = new Map<String, Job>();
+                    prev.jobs.forEach((value, key) => newJobs.set(key, key != jobId ? { ...value } : { ...value, userId: newUserId }));
+
+                    const prevUserId = prev.jobs.get(jobId)?.userId;
+
+                    const newVolunteers = new Map<String, Volunteer>();
+                    prev.volunteers.forEach((value, key) => {
+                        if (key == newUserId)
+                            newVolunteers.set(key, { ...value, assigned: true })
+                        else if (key == prevUserId)
+                            newVolunteers.set(key, { ...value, assigned: false })
+                        else
+                            newVolunteers.set(key, { ...value })
+                    });
+
+                    return { ...prev, jobs: newJobs, volunteers: newVolunteers }
+                });
+            } else {
+                console.error('process failed with status: ', response.status);
+                return false;
+            }
         }
     };
 
@@ -31,26 +49,17 @@ export default function ManagedEventViewer() {
 
         try {
             const response = await http.get<DetailedManagedEventDto>(`auth/teams/${teamIdParameter}/events/${eventIdParameter}`);
-            const volunteers: Volunteer[] = response.data.volunteers.map(v => ({
-                id: String(v.id),
-                displayName: v.display_name,
-                assigned: false
-            }));
-            const jobs: Job[] = response.data.jobs.map(j => ({
-                id: String(j.id),
-                jobName: j.type,
-                userName: '',
-                userId: j.user_id
-            }));
-
-            const updatedVolunteers: Volunteer[] = volunteers.map(v => {
-                let assigned: boolean = false;
-                const jobIndex = jobs.findIndex(j => j.userId === v.id);
-                if (jobIndex >= 0) {
-                    jobs[jobIndex] = { ...jobs[jobIndex], userId: v.id, userName: v.displayName };
-                    assigned = true;
+            const volunteerss = new Map<String, Volunteer>();
+            const jobss = new Map<String, Job>();
+            response.data.volunteers.forEach(volunteer => {
+                volunteerss.set(String(volunteer.id), { id: String(volunteer.id), displayName: volunteer.display_name, assigned: false });
+            });
+            response.data.jobs.forEach(job => {
+                jobss.set(String(job.id), { id: String(job.id), jobName: job.type, userId: String(job.user_id) });
+                const assignedVolunteer = volunteerss.get(String(job.user_id))
+                if (assignedVolunteer != undefined) {
+                    assignedVolunteer.assigned = true;
                 }
-                return { ...v, assigned: assigned }
             });
 
             const convertedEvent: Event = {
@@ -64,12 +73,12 @@ export default function ManagedEventViewer() {
                 isAssigned: false
             }
 
-            const convertedDetailedManagedEvent: DetailedManagedEvent = {
+            const convertedDetailedManagedEventt: DetailedManagedEvent = {
                 event: convertedEvent,
-                volunteers: updatedVolunteers,
-                jobs: jobs
+                volunteers: volunteerss,
+                jobs: jobss
             };
-            setEvent(convertedDetailedManagedEvent);
+            setEvent(convertedDetailedManagedEventt);
         } catch (e) {
             console.error("Failed to fetch events:", e);
         }
@@ -77,7 +86,7 @@ export default function ManagedEventViewer() {
 
     useEffect(() => {
         fetchEvent();
-    }, [eventIdParameter, teamIdParameter]);
+    }, []);
 
     return (
         <>

@@ -73,8 +73,8 @@ export interface DetailedManagedEventDto {
 
 export interface DetailedManagedEvent {
     event: Event
-    volunteers: Volunteer[]
-    jobs: Job[]
+    volunteers: Map<String, Volunteer>
+    jobs: Map<String, Job>
 }
 
 export interface DetailedManagedEventCreator {
@@ -97,31 +97,13 @@ export interface Volunteer {
 export interface JobDto {
     id: number
     type: string
-    user_id: string | null
+    user_id: number | null
 }
 
-export class Job {
+export interface Job {
     id: string
     jobName: string
     userId: string | null
-    userName: string | null
-
-    constructor(jobName: string);
-    constructor(jobName: string, id: string);
-    constructor(jobName: string, id: string, userId: string, userName: string);
-    constructor(jobName: string, id?: string, userId?: string, userName?: string) {
-        this.id = id != undefined ? id : '';
-        this.jobName = jobName;
-        this.userId = userId != undefined ? userId : null;
-        this.userName = userName != undefined ? userName : null;
-    }
-}
-
-export interface Jobb {
-    id: string
-    jobName: string
-    userName: string | undefined
-    userId: string | undefined
 }
 
 export interface EventListItemDto {

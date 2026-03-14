@@ -1,9 +1,8 @@
 import { FlatList, Modal, Pressable, Text, View, Button } from "react-native";
 
 import globalStyles from "@/assets/styles";
-import { H1, MyText } from "./basic/Containers";
+import { H1 } from "./basic/Containers";
 import { Volunteer } from "@/types";
-import { red } from "react-native-reanimated/lib/typescript/Colors";
 
 export default function VolunteerPicker(
     {
@@ -14,7 +13,7 @@ export default function VolunteerPicker(
     }: {
         modalVisible: boolean,
         setModalVisible: React.Dispatch<React.SetStateAction<boolean>>,
-        assignVolunteerToJob: (userId: string | null) => void,
+        assignVolunteerToJob: (newUserId: string | null) => void,
         volunteers: Volunteer[]
     }) {
 
