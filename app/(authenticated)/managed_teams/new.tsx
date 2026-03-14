@@ -6,7 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useTeams } from '@/contexts/TeamsContext';
 
-export default function NewManagedTeam() {
+export default function NewManagedTeamController() {
     const router = useRouter();
     const { newManagedTeam } = useTeams();
     const [name, setName] = useState('');

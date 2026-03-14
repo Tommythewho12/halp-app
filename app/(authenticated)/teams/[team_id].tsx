@@ -3,12 +3,12 @@ import { Text } from 'react-native';
 import { useEffect, useState } from 'react';
 
 import http from '@/services/http-common';
-import TeamViewer from '@/components/TeamViewer';
+import TeamView from '@/components/TeamView';
 import { Team } from '@/types';
 import { useTeams } from '@/contexts/TeamsContext';
 import { isNumber } from '@/components/basic/Utils';
 
-export default function TeamView() {
+export default function TeamController() {
     const { team_id } = useLocalSearchParams();
     const { teams } = useTeams();
 
@@ -17,7 +17,7 @@ export default function TeamView() {
     return (
         <>
             {team ? (
-                <TeamViewer team={team} />
+                <TeamView team={team} />
             ) : (
                 <Text>object does not exist {team}</Text>
             )}

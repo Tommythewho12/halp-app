@@ -1,11 +1,11 @@
 import { Text } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 
-import ManagedTeamViewer from '@/components/ManagedTeamViewer';
+import ManagedTeamView from '@/components/ManagedTeamView';
 import { useTeams } from '@/contexts/TeamsContext';
 import { useEvents } from '@/contexts/EventsContext';
 
-export default function ManagedTeamm() {
+export default function ManagedTeamController() {
     const { team_id: teamIdParameter } = useLocalSearchParams<{ team_id?: string }>();
     const { teams } = useTeams();
     const { events } = useEvents();
@@ -18,7 +18,7 @@ export default function ManagedTeamm() {
     return (
         <>
             {team ? (
-                <ManagedTeamViewer
+                <ManagedTeamView
                     team={team}
                     events={events.filter((e) => e.teamId === team.id)}
                 />

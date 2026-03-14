@@ -4,7 +4,7 @@ import { TitleAndId, TopView } from './basic/Containers';
 import { Team } from '@/types';
 import { useTeams } from '@/contexts/TeamsContext';
 
-export default function TeamViewer({ team }: { team: Team }) {
+export default function TeamView({ team }: { team: Team }) {
     const { subscribeToTeam, unsubscribeFromTeam } = useTeams();
 
     return (

@@ -8,7 +8,7 @@ import { LabelDateEditor, LabelTimeEditor, LabelLongTextEditor, LabelShortTextEd
 import { DetailedManagedEventCreator, Event, } from '@/types';
 import { isNumber } from '@/components/basic/Utils';
 
-export default function NewManagedEvent() {
+export default function NewManagedEventController() {
     const { team_id } = useLocalSearchParams<{ team_id?: string }>();
 
     const { addEvent } = useEvents();
@@ -39,7 +39,9 @@ export default function NewManagedEvent() {
             name: name,
             description: description,
             startDatetime: startDatetime,
-            setupComplete: false
+            setupComplete: false,
+            isAssigned: false,
+            isVolunteering: false
         };
         const newManagedEvent: DetailedManagedEventCreator = {
             event: newEvent,

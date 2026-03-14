@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { useTeams } from '@/contexts/TeamsContext';
 import http from '@/services/http-common';
 
-export default function ManagedTeamViewer({ team, events }: { team: Team, events: Event[] }) {
+export default function ManagedTeamView({ team, events }: { team: Team, events: Event[] }) {
 
     const { deleteManagedTeam } = useTeams();
     const [deleteModalVisible, setDeleteModalVisible] = useState(false);

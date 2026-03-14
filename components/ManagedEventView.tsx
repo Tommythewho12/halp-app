@@ -8,7 +8,7 @@ import { DetailedManagedEvent, Volunteer, Job } from '@/types';
 import VolunteerPicker from './VolunteerPicker';
 import { useEvents } from '@/contexts/EventsContext';
 
-export default function ManagedEventViewerr(
+export default function ManagedEventView(
     {
         detailedEvent,
         handleVolunteerAssignment

@@ -4,7 +4,7 @@ import { FlatList, Pressable, StyleSheet, Text } from 'react-native';
 import { Team } from '@/types';
 import { TopView, ItemTitleAndAddButton } from './basic/Containers';
 
-export default function ManagedTeamsListViewer({ teams }: { teams: Team[] }) {
+export default function ManagedTeamsView({ teams }: { teams: Team[] }) {
     const router = useRouter();
 
     const handleOpenTeam = (teamId: string) => {

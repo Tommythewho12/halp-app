@@ -1,10 +1,10 @@
-import ManagedTeamsListViewer from '@/components/ManagedTeamsListViewer';
+import ManagedTeamsView from '@/components/ManagedTeamsView';
 import { useTeams } from '@/contexts/TeamsContext';
 
-export default function ManagedTeams() {
+export default function ManagedTeamsController() {
     const { teams } = useTeams();
 
     return (
-        <ManagedTeamsListViewer teams={teams.filter(t => t.isAdmin)} />
+        <ManagedTeamsView teams={teams.filter(t => t.isAdmin)} />
     );
 }

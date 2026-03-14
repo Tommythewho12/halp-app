@@ -3,7 +3,7 @@ import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Team } from '@/types';
 
-export default function TeamsListViewer({ teams }: { teams: Team[] }) {
+export default function TeamsView({ teams }: { teams: Team[] }) {
     const handlePress = (teamId: string) => {
         if (teamId === undefined) {
             // TODO throw Exception?

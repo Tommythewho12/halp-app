@@ -3,11 +3,11 @@ import { Text } from 'react-native';
 import { useEffect, useState } from 'react';
 
 import http from '@/services/http-common';
-import ManagedEventViewerr from '@/components/ManagedEventViewer';
+import ManagedEventView from '@/components/ManagedEventView';
 import { DetailedManagedEventDto, DetailedManagedEvent, Event, Job, Volunteer } from '@/types';
 import { is2XXStatus, safeBooleanConverter } from '@/components/basic/Utils';
 
-export default function ManagedEventViewer() {
+export default function ManagedEventController() {
     const { team_id: teamIdParameter, event_id: eventIdParameter } = useLocalSearchParams<{ team_id?: string, event_id?: string }>();
     const [event, setEvent] = useState<DetailedManagedEvent | null>(null);
 
@@ -91,7 +91,7 @@ export default function ManagedEventViewer() {
     return (
         <>
             {event ?
-                <ManagedEventViewerr
+                <ManagedEventView
                     detailedEvent={event}
                     handleVolunteerAssignment={handleVolunteerAssignment}
                 /> :

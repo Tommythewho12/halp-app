@@ -6,12 +6,12 @@ import { useState } from 'react';
 import { TopView, H1, H2 } from './basic/Containers';
 import { useUser } from '@/contexts/UsersContext';
 
-export default function ManagedEventsListViewer({ events }: { events: EventListItemDto[] }) {
+export default function ManagedEventsView({ events }: { events: EventListItemDto[] }) {
     const router = useRouter();
     const { id, name, email } = useUser();
 
     const handlePress = (eventId: string) => {
-        router.navigate({ pathname: '/(authenticated)/events/[event]', params: { event: eventId } });
+        router.navigate({ pathname: '/(authenticated)/events/[event_id]', params: { event_id: eventId } });
     }
 
     const orderByDatetimeDesc = (events: EventListItemDto[]) => {
@@ -37,7 +37,7 @@ export default function ManagedEventsListViewer({ events }: { events: EventListI
                             styles.eventItem,
                             pressed && styles.pressedItem,
                         ]}
-                        onPress={() => handlePress(item.id)}
+                        onPress={() => handlePress(String(item.id))}
                     >
                         <Text style={styles.item}>
                             {item.name}
