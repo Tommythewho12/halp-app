@@ -1,5 +1,4 @@
-import { Text, View, StyleSheet, Pressable, TextProps, ViewProps, TextInput } from 'react-native';
-import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import { Text, View, StyleSheet, Pressable, TextProps, ViewProps, TextInput, Modal, Button } from 'react-native';
 
 import globalStyles from '@/assets/styles'
 
@@ -208,6 +207,45 @@ export function ItemTitleAndAddButton(
                 </View>
             </Pressable>
         </View>
+    )
+};
+
+export function DeleteModal({ visible, handleConfirm, handleCancel, text }: { visible: boolean, handleConfirm: () => void, handleCancel: () => void, text: string }) {
+    return (
+        <Modal
+            animationType='none'
+            transparent={true}
+            visible={visible}
+            onRequestClose={handleCancel}>
+            <Pressable style={{ height: '100%', backgroundColor: 'black', opacity: 0.5 }} onPress={handleCancel} />
+            <View style={{ position: 'absolute', height: '100%', justifyContent: 'center' }}>
+                <View style={{
+                    margin: 20,
+                    backgroundColor: 'white',
+                    borderRadius: 10,
+                    paddingVertical: 15,
+                    paddingHorizontal: 35,
+                    alignItems: 'center',
+                    shadowColor: 'black',
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.25,
+                    shadowRadius: 4,
+                    elevation: 5
+                }}>
+                    <MyText style={{ margin: 20 }}>{text}</MyText>
+                    <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-evenly' }}>
+                        <Button
+                            title='Löschen'
+                            color='#f00'
+                            onPress={handleConfirm} />
+                        <Button
+                            title='Abbrechen'
+                            color='#777'
+                            onPress={handleCancel} />
+                    </View>
+                </View>
+            </View>
+        </Modal>
     )
 };
 

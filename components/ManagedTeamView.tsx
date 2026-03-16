@@ -2,7 +2,7 @@ import { FlatList, Pressable, StyleSheet, Text, Button, Modal } from 'react-nati
 import { router } from 'expo-router';
 
 import { Team, Event } from '@/types';
-import { TopView, H1, IdText, H2, ItemTitleAndAddButton, MyText } from './basic/Containers';
+import { TopView, H1, IdText, H2, ItemTitleAndAddButton, MyText, DeleteModal } from './basic/Containers';
 import { useState } from 'react';
 import { useTeams } from '@/contexts/TeamsContext';
 import http from '@/services/http-common';
@@ -57,18 +57,11 @@ export default function ManagedTeamView({ team, events }: { team: Team, events: 
                 color='red'
                 onPress={() => setDeleteModalVisible(true)} />
 
-            <Modal
-                visible={deleteModalVisible}>
-                <MyText>Veranstaltung wirklich löschen?</MyText>
-                <Button
-                    title='Ja, unwiederruflich löschen'
-                    color='#f00'
-                    onPress={handleDeleteTeam} />
-                <Button
-                    title='abbrechen'
-                    color='#666'
-                    onPress={() => setDeleteModalVisible(false)} />
-            </Modal>
+            <DeleteModal
+                visible={deleteModalVisible}
+                handleConfirm={handleDeleteTeam}
+                handleCancel={() => setDeleteModalVisible(false)}
+                text='Soll das Team wirklich unwiederruflich gelöscht werden?' />
         </TopView>
     );
 };

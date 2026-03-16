@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import http from '@/services/http-common';
 
-import { LabelValue, H1, MyText, TopView, TitleAndId } from '@/components/basic/Containers'
+import { LabelValue, H1, MyText, TopView, TitleAndId, DeleteModal } from '@/components/basic/Containers'
 import { DetailedManagedEvent, Volunteer, Job } from '@/types';
 import VolunteerPicker from './VolunteerPicker';
 import { useEvents } from '@/contexts/EventsContext';
@@ -71,18 +71,11 @@ export default function ManagedEventView(
                 color='#f00'
                 onPress={() => setDeleteModalVisible(true)} />
 
-            <Modal
-                visible={deleteModalVisible}>
-                <MyText>Veranstaltung wirklich löschen?</MyText>
-                <Button
-                    title='Ja, unwiederruflich löschen'
-                    color='#f00'
-                    onPress={handleDeleteEvent} />
-                <Button
-                    title='abbrechen'
-                    color='#666'
-                    onPress={() => setDeleteModalVisible(false)} />
-            </Modal>
+            <DeleteModal
+                visible={deleteModalVisible}
+                handleConfirm={handleDeleteEvent}
+                handleCancel={() => setDeleteModalVisible(false)}
+                text='Soll das Event wirklich unwiederruflich gelöscht werden?' />
             <VolunteerPicker
                 modalVisible={modalVisible}
                 setModalVisible={setModalVisible}
