@@ -7,7 +7,7 @@ import { is2XXStatus, safeBooleanConverter } from '@/components/basic/Utils';
 type EventsContextType = {
     events: Event[];
     fetchEvents: () => Promise<void>;
-    addEvent: (event: DetailedManagedEventCreator) => Promise<boolean>;
+    addEvent: (event: DetailedManagedEventCreator) => Promise<string>;
     deleteEvent: (eventId: string) => Promise<void>;
     volunteerToEvent: (eventId: string) => Promise<boolean>;
     unvolunteerFromEvent: (eventId: string) => Promise<boolean>;
@@ -37,7 +37,7 @@ export const EventsProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
-    const addEvent = async (creator: DetailedManagedEventCreator) => {
+    const addEvent = async (creator: DetailedManagedEventCreator): Promise<string> => {
         try {
             const response = await http.post<EventDto>(`auth/teams/${creator.event.teamId}/events`,
                 {
@@ -61,10 +61,10 @@ export const EventsProvider = ({ children }: { children: React.ReactNode }) => {
                 isAssigned: safeBooleanConverter(event.is_assigned)
             };
             setEvents((prev) => [...prev, convertedEvent]);
-            return true;
+            return String(event.id);
         } catch (e) {
             console.error(e);
-            return false;
+            return '';
         }
     };
 

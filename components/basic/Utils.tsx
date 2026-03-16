@@ -1,7 +1,8 @@
 
 
-export function sanitizeNumberInput({ num }: { num: string }) {
-    return num.replace(`/[^0-9]/g`, "");
+export function sanitizeNumberInput(num: string): string {
+    let newNumber: string = num.replace(`/[^0-9]/g`, '');
+    return isNumber(newNumber) ? newNumber : '0';
 }
 
 export function safeBooleanConverter(bool: any): boolean {

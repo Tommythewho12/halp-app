@@ -1,33 +1,17 @@
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
-import { Text, Button } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useTeams } from '@/contexts/TeamsContext';
+import ManagedTeamCreateView from '@/components/ManagedTeamCreateView';
 
 export default function NewManagedTeamController() {
     const router = useRouter();
-    const { newManagedTeam } = useTeams();
-    const [name, setName] = useState('');
+    const { addManagedTeam } = useTeams();
 
-    const handleCreateTeam = async () => {
-        await newManagedTeam(name);
-        router.back();
+    const handleCreateTeam = async (name: string) => {
+        if (name) return;
+        const response = await addManagedTeam(name);
+        router.replace({ pathname: '/(authenticated)/managed_teams/[team_id]', params: { team_id: response } });
     }
 
-    return (
-        <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>Team Name</Text>
-
-            <TextInput
-                placeholder='Name'
-                keyboardType='default'
-                value={name}
-                onChangeText={setName}
-            />
-
-            <Button onPress={handleCreateTeam} title='Create' />
-        </SafeAreaView>
-    )
+    return <ManagedTeamCreateView handleCreateTeam={handleCreateTeam} />;
 }

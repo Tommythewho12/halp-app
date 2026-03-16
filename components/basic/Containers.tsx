@@ -218,7 +218,6 @@ const localStyles = StyleSheet.create({
     },
 
     label: {
-        flex: 1,
         fontSize: 16
     },
 
@@ -229,10 +228,11 @@ const localStyles = StyleSheet.create({
     },
 
     inputField: {
-        backgroundColor: '#fdfdfd'
+        backgroundColor: '#fdfdfd',
+        marginBottom: 5
     },
 
     simpleButton: {
         backgroundColor: 'green'
     }
-})
+});

@@ -7,7 +7,7 @@ import { is2XXStatus, safeBooleanConverter } from '@/components/basic/Utils';
 type TeamsContextType = {
     teams: Team[];
     fetchTeams: () => Promise<void>;
-    newManagedTeam: (name: string) => Promise<void>;
+    addManagedTeam: (name: string) => Promise<string>;
     deleteManagedTeam: (teamId: string) => Promise<void>;
     subscribeToTeam: (teamId: string) => Promise<boolean>;
     unsubscribeFromTeam: (teamId: string) => Promise<boolean>;
@@ -33,8 +33,9 @@ export const TeamsProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
-    const newManagedTeam = async (name: string) => {
+    const addManagedTeam = async (name: string): Promise<string> => {
         try {
+            // TODO add DTO
             const response = await http.post(`auth/teams`, { teamName: name });
             setTeams([...teams, {
                 id: response.data.id,
@@ -42,8 +43,10 @@ export const TeamsProvider = ({ children }: { children: React.ReactNode }) => {
                 isAdmin: true,
                 isSubscribed: false
             }]);
+            return String(response.data.id);
         } catch (e) {
             console.error(e);
+            return '';
         }
     };
 
@@ -78,7 +81,7 @@ export const TeamsProvider = ({ children }: { children: React.ReactNode }) => {
     }, []);
 
     return (
-        <TeamsContext.Provider value={{ teams, fetchTeams, newManagedTeam: newManagedTeam, deleteManagedTeam, subscribeToTeam, unsubscribeFromTeam }}>
+        <TeamsContext.Provider value={{ teams, fetchTeams, addManagedTeam, deleteManagedTeam, subscribeToTeam, unsubscribeFromTeam }}>
             {children}
         </TeamsContext.Provider>
     );
