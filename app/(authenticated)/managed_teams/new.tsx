@@ -8,7 +8,7 @@ export default function NewManagedTeamController() {
     const { addManagedTeam } = useTeams();
 
     const handleCreateTeam = async (name: string) => {
-        if (name) return;
+        if (!name) return;
         const response = await addManagedTeam(name);
         router.replace({ pathname: '/(authenticated)/managed_teams/[team_id]', params: { team_id: response } });
     }

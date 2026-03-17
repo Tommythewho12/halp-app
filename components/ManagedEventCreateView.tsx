@@ -31,6 +31,8 @@ export default function ManagedEventCreateView({ submitNewEvent }: { submitNewEv
     };
 
     const handleCreateEvent = () => {
+        // TODO validate input first!
+
         const newEvent: Event = {
             id: '',
             teamId: '',
@@ -47,7 +49,6 @@ export default function ManagedEventCreateView({ submitNewEvent }: { submitNewEv
             officials: parseInt(officials)
         };
         submitNewEvent(newManagedEvent);
-
     };
 
     return (

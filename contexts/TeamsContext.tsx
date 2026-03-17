@@ -3,6 +3,7 @@ import http from '@/services/http-common';
 
 import { Team, TeamDto } from '@/types';
 import { is2XXStatus, safeBooleanConverter } from '@/components/basic/Utils';
+import { router } from 'expo-router';
 
 type TeamsContextType = {
     teams: Team[];
@@ -37,7 +38,7 @@ export const TeamsProvider = ({ children }: { children: React.ReactNode }) => {
         try {
             // TODO add DTO
             const response = await http.post(`auth/teams`, { teamName: name });
-            setTeams([...teams, {
+            setTeams(prev => [...prev, {
                 id: response.data.id,
                 name: name,
                 isAdmin: true,
@@ -51,8 +52,17 @@ export const TeamsProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     const deleteManagedTeam = async (teamId: string) => {
-        // TODO add HTML-Request
-        setTeams((prev) => prev.filter(t => t.id !== teamId));
+        try {
+            const response = await http.delete(`auth/teams/${teamId}`);
+            if (is2XXStatus(response.status)) {
+                setTeams((prev) => prev.filter(t => t.id !== teamId));
+                router.back();
+            } else {
+                console.error('deletion failed: ', response.data);
+            }
+        } catch (e) {
+            console.error(e);
+        }
     };
 
     const subscribeToTeam = async (teamId: string) => {

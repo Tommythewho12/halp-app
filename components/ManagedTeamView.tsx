@@ -1,15 +1,11 @@
+import { useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, Button, Modal } from 'react-native';
 import { router } from 'expo-router';
 
 import { Team, Event } from '@/types';
-import { TopView, H1, IdText, H2, ItemTitleAndAddButton, MyText, DeleteModal } from './basic/Containers';
-import { useState } from 'react';
-import { useTeams } from '@/contexts/TeamsContext';
-import http from '@/services/http-common';
+import { TopView, H1, IdText, H2, ItemTitleAndAddButton, DeleteModal } from './basic/Containers';
 
-export default function ManagedTeamView({ team, events }: { team: Team, events: Event[] }) {
-
-    const { deleteManagedTeam } = useTeams();
+export default function ManagedTeamView({ team, events, handleDeleteTeam }: { team: Team, events: Event[], handleDeleteTeam: () => Promise<void> }) {
     const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
     const handleOpenManagedEvent = (eventId: string) => {
@@ -20,16 +16,13 @@ export default function ManagedTeamView({ team, events }: { team: Team, events: 
         router.navigate({ pathname: `/(authenticated)/managed_teams/[team_id]/managed_events/new`, params: { team_id: team.id } });
     };
 
-    const handleDeleteTeam = async () => {
-        setDeleteModalVisible(false);
-        await http.delete(`auth/teams/${team.id}`)
-            .then(response => {
-                deleteManagedTeam(team.id);
-            }).catch(e => {
-                console.error(e);
-            });
-        router.back();
-    }
+    const handleOpenDeleteModal = () => {
+        if (events.length > 0) {
+            console.warn('all events for this team must be deleted first');
+        } else {
+            setDeleteModalVisible(true)
+        }
+    };
 
     return (
         <TopView>
@@ -55,7 +48,7 @@ export default function ManagedTeamView({ team, events }: { team: Team, events: 
             <Button
                 title='Team löschen'
                 color='red'
-                onPress={() => setDeleteModalVisible(true)} />
+                onPress={handleOpenDeleteModal} />
 
             <DeleteModal
                 visible={deleteModalVisible}
