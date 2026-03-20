@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { TopView, H1, H2 } from './basic/Containers';
 import { useUser } from '@/contexts/UsersContext';
 
-export default function EventsListViewer({ events }: { events: Event[] }) {
+export default function EventsView({ events }: { events: Event[] }) {
     const router = useRouter();
     const { id, name, email } = useUser();
 
@@ -28,7 +28,7 @@ export default function EventsListViewer({ events }: { events: Event[] }) {
     return (
         <TopView>
             <H1>Hi {name}</H1>
-            <H2>Veranstaltungen</H2>
+            <H2>Meine angemeldeten Veranstaltungen</H2>
             <FlatList
                 data={orderedEvents}
 

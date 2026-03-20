@@ -4,7 +4,7 @@ import { useLocalSearchParams } from "expo-router";
 import http from '@/services/http-common';
 
 import { DetailedEvent, DetailedEventDto } from '@/types';
-import EventViewer from "@/components/EventViewer";
+import EventView from "@/components/EventView";
 import { useEvents } from "@/contexts/EventsContext";
 import { toDetailedEvent } from '@/components/basic/Utils';
 import { useUser } from '@/contexts/UsersContext';
@@ -66,7 +66,7 @@ export default function EventViewController() {
     return (
         <>
             {event ? (
-                <EventViewer
+                <EventView
                     detailedEvent={event}
                     volunteerToEvent={requestVolunteerToEvent}
                     unvolunteerFromEvent={requestUnvolunteerFromEvent} />

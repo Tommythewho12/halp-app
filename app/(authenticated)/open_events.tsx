@@ -1,11 +1,10 @@
-
-import EventsListViewer from '@/components/EventsListViewer';
+import OpenEventsView from '@/components/OpenEventsView';
 import { useEvents } from '@/contexts/EventsContext';
 
-export default function Events_notSubscribed() {
+export default function OpenEventsController() {
     const { events } = useEvents();
 
-    const showingEvents = events.filter(e => !e.isAssigned);
+    const showingEvents = events.filter(e => !e.isVolunteering);
 
-    return <EventsListViewer events={showingEvents} />;
+    return <OpenEventsView events={showingEvents} />;
 }

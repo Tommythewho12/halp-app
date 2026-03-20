@@ -3,7 +3,7 @@ import { Button, Text } from 'react-native';
 import { LabelValue, TitleAndId, TopView } from './basic/Containers';
 import { DetailedEvent } from '@/types';
 
-export default function EventViewer({
+export default function EventView({
     detailedEvent,
     volunteerToEvent,
     unvolunteerFromEvent
