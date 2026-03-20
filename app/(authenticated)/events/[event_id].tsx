@@ -1,19 +1,75 @@
+import { useEffect, useState } from 'react';
 import { Text } from 'react-native';
 import { useLocalSearchParams } from "expo-router";
+import http from '@/services/http-common';
 
+import { DetailedEvent, DetailedEventDto } from '@/types';
 import EventViewer from "@/components/EventViewer";
 import { useEvents } from "@/contexts/EventsContext";
+import { toDetailedEvent } from '@/components/basic/Utils';
+import { useUser } from '@/contexts/UsersContext';
 
-export default function EventViewerr() {
+export default function EventViewController() {
     const { event_id: eventId } = useLocalSearchParams<{ event_id?: string }>();
-    const { events } = useEvents();
+    const [event, setEvent] = useState<DetailedEvent | null>(null);
+    const { id: userId } = useUser();
+    const { volunteerToEvent, unvolunteerFromEvent } = useEvents();
 
-    const event = events.find(e => e.id == eventId);
+    useEffect(() => {
+        fetchEvent();
+    }, [eventId]);
+
+    const fetchEvent = async () => {
+        if (eventId === undefined) {
+            throw new Error("event_id parameters must be set");
+        }
+
+        try {
+            const response = await http.get<DetailedEventDto>(`auth/events/${eventId}`);
+            const detailedEvent: DetailedEvent = toDetailedEvent(response.data);
+
+            setEvent(detailedEvent);
+        } catch (e) {
+            console.error("Failed to fetch events:", e);
+        }
+    };
+
+    const requestVolunteerToEvent = async (): Promise<boolean> => {
+        if (!eventId) return false;
+        const response = await volunteerToEvent(eventId);
+        if (response) {
+            setEvent(prev => {
+                if (!prev) return prev;
+                return { ...prev, event: { ...prev.event, isVolunteering: true } };
+            });
+        }
+        return false;
+    };
+
+    const requestUnvolunteerFromEvent = async (): Promise<boolean> => {
+        if (!eventId) return false;
+        if (event?.jobs.find(j => j.assigneeId == userId)) {
+            console.error('you cannot unvolunteer from this event because you are already assigned to a job');
+            return false;
+        }
+        const result = await unvolunteerFromEvent(eventId);
+        if (!result) {
+            throw new Error('unknown error; unable to unvolunteer from event');
+        }
+        setEvent(prev => {
+            if (!prev) return prev;
+            return { ...prev, event: { ...prev.event, isVolunteering: false } };
+        });
+        return true;
+    };
 
     return (
         <>
             {event ? (
-                <EventViewer event={event} />
+                <EventViewer
+                    detailedEvent={event}
+                    volunteerToEvent={requestVolunteerToEvent}
+                    unvolunteerFromEvent={requestUnvolunteerFromEvent} />
             ) : (
                 <Text>Not found!</Text>
             )}

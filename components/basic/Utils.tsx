@@ -1,4 +1,9 @@
+import { BasicEvent, BasicEventDto, BasicTeam, BasicTeamDto, DetailedEvent, DetailedEventDto, EventDto, Event, JobAndAssignee, JobAndAssigneeDto, User, UserDto } from "@/types";
 
+
+export function toDate(epoch: number): Date {
+    return new Date(epoch * 1000);
+}
 
 export function sanitizeNumberInput(num: string): string {
     let newNumber: string = num.replace(`/[^0-9]/g`, '');
@@ -33,4 +38,65 @@ export function isNumber(num: any): boolean {
 
 export function is2XXStatus(statusCode: number): boolean {
     return statusCode >= 200 && statusCode < 300;
+}
+
+/*
+    #### Mappers ####
+*/
+export function toDetailedEvent(eventDto: DetailedEventDto): DetailedEvent {
+    return {
+        admin: toUser(eventDto.admin),
+        team: toBasicTeam(eventDto.team),
+        event: toEvent(eventDto.event),
+        jobs: eventDto.jobs.map(j => toJobAndAssignee(j))
+    };
+}
+
+export function toUser(userDto: UserDto): User {
+    return {
+        id: String(userDto.id),
+        name: userDto.display_name,
+        email: userDto.email
+    };
+}
+
+export function toBasicTeam(teamDto: BasicTeamDto): BasicTeam {
+    return {
+        id: String(teamDto.id),
+        name: teamDto.name,
+        adminId: String(teamDto.admin_id)
+    };
+}
+
+export function toBasicEvent(eventDto: BasicEventDto): BasicEvent {
+    return {
+        id: String(eventDto.id),
+        name: eventDto.name,
+        description: eventDto.description,
+        startDatetime: toDate(eventDto.start_datetime),
+        teamId: String(eventDto.team_id),
+        setupComplete: safeBooleanConverter(eventDto.complete)
+    };
+}
+
+export function toEvent(eventDto: EventDto): Event {
+    return {
+        id: String(eventDto.id),
+        name: eventDto.name,
+        description: eventDto.description,
+        startDatetime: toDate(eventDto.start_datetime),
+        teamId: String(eventDto.team_id),
+        setupComplete: safeBooleanConverter(eventDto.complete),
+        isVolunteering: safeBooleanConverter(eventDto.is_volunteering),
+        isAssigned: safeBooleanConverter(eventDto.is_assigned)
+    };
+}
+
+export function toJobAndAssignee(jobDto: JobAndAssigneeDto): JobAndAssignee {
+    return {
+        jobId: String(jobDto.id),
+        jobName: jobDto.type,
+        assigneeId: String(jobDto.assignee_id),
+        assigneeName: jobDto.assignee_name
+    };
 }

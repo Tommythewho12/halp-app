@@ -1,54 +1,34 @@
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { Button, Text } from 'react-native';
 
-import { H1, LabelValue, TitleAndId, TopView } from './basic/Containers';
-import { Event } from '@/types';
-import { useEvents } from '@/contexts/EventsContext';
+import { LabelValue, TitleAndId, TopView } from './basic/Containers';
+import { DetailedEvent } from '@/types';
 
-export default function EventViewer({ event }: { event: Event }) {
-    const { volunteerToEvent, unvolunteerFromEvent } = useEvents();
+export default function EventViewer({
+    detailedEvent,
+    volunteerToEvent,
+    unvolunteerFromEvent
+}: {
+    detailedEvent: DetailedEvent,
+    volunteerToEvent: (id: string) => Promise<boolean>,
+    unvolunteerFromEvent: (id: string) => Promise<boolean>
+}) {
 
     return (
         <TopView>
-            <TitleAndId title={event.name} id={event.id} />
-            <LabelValue label='Datum' value={event.startDatetime.toLocaleDateString()} />
-            <LabelValue label='Uhrzeit' value={event.startDatetime.toLocaleTimeString()} />
+            <TitleAndId title={detailedEvent.event.name} id={detailedEvent.event.id} />
+            <LabelValue label='Datum' value={detailedEvent.event.startDatetime.toLocaleDateString()} />
+            <LabelValue label='Uhrzeit' value={detailedEvent.event.startDatetime.toLocaleTimeString()} />
             <Text>Description</Text>
-            <Text>{event.description}</Text>
-            {event.isVolunteering ? (
-                <Button title="Withdraw from event!" onPress={() => unvolunteerFromEvent(event.id)} />
+            <Text>{detailedEvent.event.description}</Text>
+            {!detailedEvent.event.isAssigned ? (
+                detailedEvent.event.isVolunteering ? (
+                    <Button title='Withdraw from event!' onPress={() => unvolunteerFromEvent(detailedEvent.event.id)} />
+                ) : (
+                    <Button title='Sign up as a volunteer' onPress={() => volunteerToEvent(detailedEvent.event.id)} />
+                )
             ) : (
-                <Button title="Sign up as a volunteer" onPress={() => volunteerToEvent(event.id)} />
+                <Button title='Withdraw from event!' disabled />
             )}
         </TopView>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingTop: 22,
-    },
-    item: {
-        padding: 10,
-        fontSize: 18,
-        height: 44,
-    },
-    eventItem: {
-        padding: 16,
-        marginVertical: 8,
-        backgroundColor: '#f0f0f0',
-        borderRadius: 8,
-        elevation: 2,
-    },
-    pressedItem: {
-        backgroundColor: '#d0e0ff',
-    },
-    eventName: {
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
-    eventDetail: {
-        fontSize: 14,
-        color: '#555',
-    },
-});
