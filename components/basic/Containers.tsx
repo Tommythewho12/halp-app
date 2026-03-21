@@ -1,9 +1,11 @@
-import { Text, View, StyleSheet, Pressable, TextProps, ViewProps, TextInput, Modal, Button } from 'react-native';
+import { Text, View, StyleSheet, Pressable, TextProps, ViewProps, TextInput, Modal, Button, PressableProps, KeyboardAvoidingView } from 'react-native';
 
 import globalStyles from '@/assets/styles'
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { ComponentProps } from 'react';
 
 export function TopView(props: ViewProps) {
-    return <View {...props} style={[{ padding: 10 }, props.style]} />
+    return <SafeAreaView {...props} style={[{ padding: 10 }, props.style]} />
 }
 
 export function MyText(props: TextProps) {
@@ -53,6 +55,29 @@ export function LabelValue(
     );
 };
 
+export function LabelPasswordEditor(
+    {
+        label, value, onChangeText
+    }: {
+        label: string,
+        value: string,
+        onChangeText: (text: string) => void
+    }) {
+
+    return (
+        <>
+            <MyText style={localStyles.label}>{label}</MyText>
+            <TextInput
+                style={localStyles.inputField}
+                placeholder={label}
+                placeholderTextColor='#888'
+                secureTextEntry
+                value={value}
+                onChangeText={onChangeText} />
+        </>
+    )
+};
+
 export function LabelShortTextEditor(
     {
         label, value, onChangeText
@@ -63,16 +88,16 @@ export function LabelShortTextEditor(
     }) {
 
     return (
-        <View>
+        <>
             <MyText style={localStyles.label}>{label}</MyText>
             <TextInput
                 style={localStyles.inputField}
-                placeholder=''
+                placeholder={label}
                 keyboardType='default'
                 value={value}
                 onChangeText={onChangeText}
             />
-        </View>
+        </>
     )
 };
 
@@ -86,7 +111,7 @@ export function LabelLongTextEditor(
     }) {
 
     return (
-        <View>
+        <>
             <MyText style={localStyles.label}>{label}</MyText>
             <TextInput
                 multiline
@@ -97,11 +122,11 @@ export function LabelLongTextEditor(
                 value={value}
                 onChangeText={onChangeText}
             />
-        </View>
+        </>
     )
 };
 
-export function LabelShortNumberEditor(
+export function LabelNumberEditor(
     {
         label, value, onChangeNumber
     }: {
@@ -111,7 +136,7 @@ export function LabelShortNumberEditor(
     }) {
 
     return (
-        <View>
+        <>
             <MyText style={localStyles.label}>{label}</MyText>
             <TextInput
                 style={localStyles.inputField}
@@ -120,7 +145,7 @@ export function LabelShortNumberEditor(
                 value={value}
                 onChangeText={onChangeNumber}
             />
-        </View>
+        </>
     )
 };
 
@@ -134,14 +159,14 @@ export function LabelDateEditor(
     }) {
 
     return (
-        <View>
+        <>
             <MyText style={localStyles.label}>{label}</MyText>
             <MyText
                 style={localStyles.inputField}
                 onPress={openDateTimePicker}>
                 {value.toLocaleDateString()}
             </MyText>
-        </View>
+        </>
     )
 };
 
@@ -155,35 +180,14 @@ export function LabelTimeEditor(
     }) {
 
     return (
-        <View>
+        <>
             <MyText style={localStyles.label}>{label}</MyText>
             <MyText
                 style={localStyles.inputField}
                 onPress={openDateTimePicker}>
                 {value.toLocaleTimeString()}
             </MyText>
-        </View>
-    )
-};
-
-export function LabelValueListSelector_WIP(
-    {
-        label, value, listItems
-    }: {
-        label: string,
-        value: string,
-        listItems: string[]
-    }) {
-
-    return (
-        <View style={localStyles.container}>
-            <Text style={localStyles.label}>{label}</Text>
-            <Pressable onPress={() => {
-
-            }}>
-                <Text style={localStyles.value}>{value}</Text>
-            </Pressable>
-        </View>
+        </>
     )
 };
 
@@ -247,6 +251,28 @@ export function DeleteModal({ visible, handleConfirm, handleCancel, text }: { vi
             </View>
         </Modal>
     )
+};
+
+export function ButtonDefault({ title, onPress }: { title: string, onPress: any }) {
+    return <Pressable
+        onPress={onPress}
+        style={({ pressed }) => [
+            globalStyles.pressableButton,
+            pressed && globalStyles.pressableButton_pressed
+        ]}>
+        <Text style={globalStyles.pressableButtonText}>{title}</Text>
+    </Pressable>
+};
+
+export function ButtonInverted({ title, onPress }: { title: string, onPress: any }) {
+    return <Pressable
+        onPress={onPress}
+        style={({ pressed }) => [
+            globalStyles.pressableButtonInverted,
+            pressed && globalStyles.pressableButtonInverted_pressed
+        ]}>
+        <Text style={globalStyles.pressableButtonInvertedText}>{title}</Text>
+    </Pressable>
 };
 
 const localStyles = StyleSheet.create({

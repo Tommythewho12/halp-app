@@ -1,4 +1,4 @@
-import { router, useLocalSearchParams } from 'expo-router';
+import { router } from 'expo-router';
 import { View, Button } from 'react-native';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -7,7 +7,7 @@ export default function Settings() {
 
     const handleLogout = () => {
         setTokens({ accessToken: null, refreshToken: null });
-        router.replace('/login');
+        router.replace('/');
     }
 
     return (

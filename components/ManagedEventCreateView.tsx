@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button } from "react-native";
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 
-import { LabelDateEditor, LabelLongTextEditor, LabelShortNumberEditor, LabelShortTextEditor, LabelTimeEditor, TopView } from "./basic/Containers";
+import { LabelDateEditor, LabelLongTextEditor, LabelNumberEditor, LabelShortTextEditor, LabelTimeEditor, TopView } from "./basic/Containers";
 import { sanitizeNumberInput } from "./basic/Utils";
 import { DetailedManagedEventCreator, Event, } from '@/types';
 
@@ -87,12 +87,12 @@ export default function ManagedEventCreateView({ submitNewEvent }: { submitNewEv
                 value={description}
                 onChangeText={setDescription} />
 
-            <LabelShortNumberEditor
+            <LabelNumberEditor
                 label='Scorers'
                 value={scorers}
                 onChangeNumber={(v) => setScorers(sanitizeNumberInput(v))} />
 
-            <LabelShortNumberEditor
+            <LabelNumberEditor
                 label='Officials'
                 value={officials}
                 onChangeNumber={(v) => setOfficials(sanitizeNumberInput(v))} />

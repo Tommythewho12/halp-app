@@ -3,6 +3,7 @@ import { FlatList, Pressable, StyleSheet, Text } from 'react-native';
 
 import { Team } from '@/types';
 import { TopView, ItemTitleAndAddButton } from './basic/Containers';
+import globalStyles from '@/assets/styles';
 
 export default function ManagedTeamsView({ teams }: { teams: Team[] }) {
     const router = useRouter();
@@ -28,8 +29,8 @@ export default function ManagedTeamsView({ teams }: { teams: Team[] }) {
                 renderItem={({ item }) =>
                     <Pressable
                         style={({ pressed }) => [
-                            styles.eventItem,
-                            pressed && styles.pressedItem,
+                            globalStyles.pressableListItem,
+                            pressed && globalStyles.pressableListItem_pressed,
                         ]}
                         onPress={() => handleOpenTeam(item.id)}
                     >

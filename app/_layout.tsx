@@ -1,13 +1,16 @@
 import { SplashScreen, Stack } from "expo-router";
 
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function RootLayout() {
     return (
-        <AuthProvider>
-            <SplashScreenController />
-            <RootNavigator />
-        </AuthProvider>
+        <SafeAreaProvider>
+            <AuthProvider>
+                <SplashScreenController />
+                <RootNavigator />
+            </AuthProvider>
+        </SafeAreaProvider>
     );
 }
 
@@ -26,7 +29,11 @@ function RootNavigator() {
             </Stack.Protected>
 
             <Stack.Protected guard={accessToken == null}>
-                <Stack.Screen name="login" />
+                <Stack.Screen
+                    name="index"
+                    options={{
+                        headerShown: false
+                    }} />
             </Stack.Protected>
         </Stack>
     )
