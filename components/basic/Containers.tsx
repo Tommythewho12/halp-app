@@ -126,6 +126,7 @@ export const NumberInputWithLabel = forwardRef<TextInput, TextInputProps>(({ ...
     )
 });
 
+// TODO rework?
 export function LabelDateEditor(
     {
         label, value, openDateTimePicker
@@ -147,6 +148,7 @@ export function LabelDateEditor(
     )
 };
 
+// TODO rework?
 export function LabelTimeEditor(
     {
         label, value, openDateTimePicker
