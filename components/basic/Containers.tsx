@@ -78,6 +78,29 @@ export function LabelPasswordEditor(
     )
 };
 
+export function LabelEmailEditor(
+    {
+        label, value, onChangeText
+    }: {
+        label: string,
+        value: string,
+        onChangeText: (text: string) => void
+    }) {
+
+    return (
+        <>
+            <MyText style={localStyles.label}>{label}</MyText>
+            <TextInput
+                style={localStyles.inputField}
+                placeholder={label}
+                placeholderTextColor='#888'
+                keyboardType='email-address'
+                value={value}
+                onChangeText={onChangeText} />
+        </>
+    )
+};
+
 export function LabelShortTextEditor(
     {
         label, value, onChangeText
@@ -93,6 +116,7 @@ export function LabelShortTextEditor(
             <TextInput
                 style={localStyles.inputField}
                 placeholder={label}
+                placeholderTextColor='#888'
                 keyboardType='default'
                 value={value}
                 onChangeText={onChangeText}

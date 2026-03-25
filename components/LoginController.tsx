@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { router } from 'expo-router';
 
 import http from '@/services/http-common';
@@ -9,7 +8,7 @@ import { LoadingModal } from './LoadingModal';
 import LoginView from './LoginView';
 
 export default function LoginController() {
-    const { accessToken, refreshToken, setTokens, isLoading } = useAuth();
+    const { setTokens, isLoading } = useAuth();
     const [isLocalLoading, setLocalLoading] = useState(false);
 
     const handleLogin = async (email: string, password: string) => {

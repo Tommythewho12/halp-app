@@ -2,7 +2,7 @@ import { KeyboardAvoidingView, ScrollView } from 'react-native';
 import { useState } from 'react';
 import { router } from 'expo-router';
 
-import { ButtonDefault, ButtonInverted, LabelPasswordEditor, LabelShortTextEditor, TopView } from './basic/Containers';
+import { ButtonDefault, ButtonInverted, LabelPasswordEditor, LabelEmailEditor, LabelShortTextEditor, TopView } from './basic/Containers';
 import AppPresentationView from './AppPresentationView';
 
 export default function RegisterView(
@@ -26,7 +26,7 @@ export default function RegisterView(
                 <ScrollView>
                     <AppPresentationView />
                     <LabelShortTextEditor label='Name' value={name} onChangeText={setName} />
-                    <LabelShortTextEditor label='Email' value={email} onChangeText={setEmail} />
+                    <LabelEmailEditor label='Email' value={email} onChangeText={setEmail} />
                     <LabelPasswordEditor label='Passwort' value={password} onChangeText={setPassword} />
                     <LabelPasswordEditor label='Passwort wiederholen' value={passwordConfirmation} onChangeText={setPasswordConfirmation} />
                     <ButtonDefault
