@@ -1,8 +1,8 @@
+import { useState } from 'react';
+import { FlatList, Pressable, StyleSheet, Text } from 'react-native';
 import { useRouter } from 'expo-router';
-import { FlatList, Pressable, StyleSheet, Text, View, Alert } from 'react-native';
 
 import { EventListItemDto } from '@/types';
-import { useState } from 'react';
 import { TopView, H1, H2 } from './basic/Containers';
 import { useUser } from '@/contexts/UsersContext';
 

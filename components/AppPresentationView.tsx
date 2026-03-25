@@ -1,5 +1,4 @@
-import { Image, Text, View } from "react-native";
-import { useSafeAreaFrame } from "react-native-safe-area-context";
+import { Image } from "react-native";
 
 export default function AppPresentationView() {
 

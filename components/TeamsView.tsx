@@ -1,5 +1,5 @@
+import { FlatList, Pressable, StyleSheet, Text } from 'react-native';
 import { router } from 'expo-router';
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Team } from '@/types';
 

@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { KeyboardAvoidingView, ScrollView, TextInput } from 'react-native';
 import { router } from 'expo-router';
 
-import { ButtonDefault, ButtonInverted, LabelEmailEditor, LabelPasswordEditor } from './basic/Containers';
+import { ButtonDefault, ButtonInverted, PasswordInputWithLabel, EmailInputWithLabel } from './basic/Containers';
 import AppPresentationView from './AppPresentationView';
 
 export default function LoginView(
@@ -12,25 +13,35 @@ export default function LoginView(
     }) {
     const [email, setEmail] = useState('tommythewho12@googlemail.com');
     const [password, setPassword] = useState('p');
+    const inputRef = useRef<TextInput | null>(null);
+
+    const submitLogin = () => {
+        handleLogin(email, password)
+    };
 
     return (
-        <>
-            <AppPresentationView />
-            <LabelEmailEditor
-                label='Email'
-                value={email}
-                onChangeText={setEmail} />
-            <LabelPasswordEditor
-                label='Password'
-                value={password}
-                onChangeText={setPassword} />
+        <KeyboardAvoidingView behavior='position'>
+            <ScrollView>
+                <AppPresentationView />
+                <EmailInputWithLabel
+                    value={email}
+                    onChangeText={setEmail}
+                    onSubmitEditing={() => inputRef.current?.focus()} />
+                <PasswordInputWithLabel
+                    ref={inputRef}
+                    value={password}
+                    onChangeText={setPassword}
+                    onSubmitEditing={submitLogin}
+                    returnKeyType='send' />
 
-            <ButtonDefault
-                onPress={() => handleLogin(email, password)}
-                title='Anmelden' />
-            <ButtonInverted
-                onPress={() => router.navigate(`/registration`)}
-                title='Noch nicht registriert?' />
-        </>
+                <ButtonDefault
+                    onPress={submitLogin}
+                    title='Anmelden' />
+
+                <ButtonInverted
+                    onPress={() => router.navigate(`/registration`)}
+                    title='Noch nicht registriert?' />
+            </ScrollView>
+        </KeyboardAvoidingView>
     );
 }

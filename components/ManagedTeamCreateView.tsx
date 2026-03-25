@@ -1,19 +1,25 @@
 import { useState } from "react";
 import { Button } from "react-native";
 
-import { LabelShortTextEditor, TopView } from "./basic/Containers";
+import { ShortTextInputWithLabel, TopView } from "./basic/Containers";
 
 export default function ManagedTeamCreateView({ handleCreateTeam }: { handleCreateTeam: (name: string) => Promise<void> }) {
     const [name, setName] = useState<string>('');
 
+    const submitCreateTeam = () => {
+        handleCreateTeam(name);
+    }
+
     return (
         <TopView>
-            <LabelShortTextEditor
-                label='Team Name'
+            <ShortTextInputWithLabel
+                placeholder='Team Name'
                 value={name}
-                onChangeText={setName} />
+                onChangeText={setName}
+                onSubmitEditing={submitCreateTeam}
+                returnKeyType='send' />
 
-            <Button onPress={() => handleCreateTeam(name)} title='Create' />
+            <Button onPress={submitCreateTeam} title='Create' />
         </TopView>
     )
 }

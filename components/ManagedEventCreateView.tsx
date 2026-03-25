@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { Button } from "react-native";
+import React, { useRef, useState } from "react";
+import { Button, TextInput } from "react-native";
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 
-import { LabelDateEditor, LabelLongTextEditor, LabelNumberEditor, LabelShortTextEditor, LabelTimeEditor, TopView } from "./basic/Containers";
+import { LabelDateEditor, LabelTimeEditor, MultilineTextInputWithLabel, NumberInputWithLabel, ShortTextInputWithLabel, TopView } from "./basic/Containers";
 import { sanitizeNumberInput } from "./basic/Utils";
 import { DetailedManagedEventCreator, Event, } from '@/types';
 
@@ -18,6 +18,9 @@ export default function ManagedEventCreateView({ submitNewEvent }: { submitNewEv
 
     const [showModal, setShowModal] = useState(false);
     const [datetimeMode, setDatetimeMode] = useState('date');
+
+    const scorersRef = useRef<TextInput | null>(null);
+    const officialsRef = useRef<TextInput | null>(null);
 
     const showDateTimePicker = (mode: string) => {
         setDatetimeMode(mode);
@@ -53,8 +56,8 @@ export default function ManagedEventCreateView({ submitNewEvent }: { submitNewEv
 
     return (
         <TopView>
-            <LabelShortTextEditor
-                label='Event Name'
+            <ShortTextInputWithLabel
+                placeholder="Event Name"
                 value={name}
                 onChangeText={setName} />
 
@@ -82,20 +85,24 @@ export default function ManagedEventCreateView({ submitNewEvent }: { submitNewEv
                 onChange={handleDatetimeChange} />
             )}
 
-            <LabelLongTextEditor
-                label='Description'
+            <MultilineTextInputWithLabel
+                placeholder='Description'
                 value={description}
-                onChangeText={setDescription} />
-
-            <LabelNumberEditor
-                label='Scorers'
+                onChangeText={setDescription}
+                onSubmitEditing={() => scorersRef.current?.focus()} />
+            <NumberInputWithLabel
+                ref={scorersRef}
+                placeholder='Scorers'
                 value={scorers}
-                onChangeNumber={(v) => setScorers(sanitizeNumberInput(v))} />
-
-            <LabelNumberEditor
-                label='Officials'
+                onChangeText={(v) => setScorers(sanitizeNumberInput(v))}
+                onSubmitEditing={() => officialsRef.current?.focus()} />
+            <NumberInputWithLabel
+                ref={officialsRef}
+                placeholder='Officials'
                 value={officials}
-                onChangeNumber={(v) => setOfficials(sanitizeNumberInput(v))} />
+                onChangeText={(v) => setOfficials(sanitizeNumberInput(v))}
+                onSubmitEditing={handleCreateEvent}
+                returnKeyType='send' />
 
             <Button onPress={handleCreateEvent} title='Create' />
         </TopView>

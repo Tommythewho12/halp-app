@@ -1,8 +1,8 @@
-import { Text, View, StyleSheet, Pressable, TextProps, ViewProps, TextInput, Modal, Button, PressableProps, KeyboardAvoidingView } from 'react-native';
+import { forwardRef } from 'react';
+import { Text, View, StyleSheet, Pressable, TextProps, ViewProps, TextInput, Modal, Button, TextInputProps } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import globalStyles from '@/assets/styles'
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { ComponentProps } from 'react';
 
 export function TopView(props: ViewProps) {
     return <SafeAreaView {...props} style={[{ padding: 10 }, props.style]} />
@@ -55,123 +55,76 @@ export function LabelValue(
     );
 };
 
-export function LabelPasswordEditor(
-    {
-        label, value, onChangeText
-    }: {
-        label: string,
-        value: string,
-        onChangeText: (text: string) => void
-    }) {
+export const MyTextInput = forwardRef<TextInput, TextInputProps>(({ ...props }, ref) => {
+    return (
+        <TextInput
+            ref={ref}
+            {...props}
+            style={[localStyles.inputField, props.style]} />
+    )
+});
 
+export const BaseTextInputWithLabel = forwardRef<TextInput, TextInputProps>(({ ...props }, ref) => {
     return (
         <>
-            <MyText style={localStyles.label}>{label}</MyText>
-            <TextInput
-                style={localStyles.inputField}
-                placeholder={label}
+            <MyText style={localStyles.label}>{props.placeholder}</MyText>
+            <MyTextInput
+                ref={ref}
+                selectTextOnFocus={true}
+                submitBehavior='submit'
+                returnKeyType='next'
                 placeholderTextColor='#888'
-                secureTextEntry
-                value={value}
-                onChangeText={onChangeText} />
+                {...props} />
         </>
     )
-};
+});
 
-export function LabelEmailEditor(
-    {
-        label, value, onChangeText
-    }: {
-        label: string,
-        value: string,
-        onChangeText: (text: string) => void
-    }) {
-
+export const PasswordInputWithLabel = forwardRef<TextInput, TextInputProps>(({ ...props }, ref) => {
     return (
-        <>
-            <MyText style={localStyles.label}>{label}</MyText>
-            <TextInput
-                style={localStyles.inputField}
-                placeholder={label}
-                placeholderTextColor='#888'
-                keyboardType='email-address'
-                value={value}
-                onChangeText={onChangeText} />
-        </>
+        <BaseTextInputWithLabel
+            ref={ref}
+            secureTextEntry
+            placeholder='Password'
+            {...props} />
     )
-};
+});
 
-export function LabelShortTextEditor(
-    {
-        label, value, onChangeText
-    }: {
-        label: string,
-        value: string,
-        onChangeText: (text: string) => void
-    }) {
-
+export const EmailInputWithLabel = forwardRef<TextInput, TextInputProps>(({ ...props }, ref) => {
     return (
-        <>
-            <MyText style={localStyles.label}>{label}</MyText>
-            <TextInput
-                style={localStyles.inputField}
-                placeholder={label}
-                placeholderTextColor='#888'
-                keyboardType='default'
-                value={value}
-                onChangeText={onChangeText}
-            />
-        </>
+        <BaseTextInputWithLabel
+            ref={ref}
+            inputMode='email'
+            placeholder='Email'
+            {...props} />
     )
-};
+});
 
-export function LabelLongTextEditor(
-    {
-        label, value, onChangeText
-    }: {
-        label: string,
-        value: string,
-        onChangeText: (text: string) => void
-    }) {
-
+export const ShortTextInputWithLabel = forwardRef<TextInput, TextInputProps>(({ ...props }, ref) => {
     return (
-        <>
-            <MyText style={localStyles.label}>{label}</MyText>
-            <TextInput
-                multiline
-                numberOfLines={4}
-                style={localStyles.inputField}
-                placeholder=''
-                keyboardType='default'
-                value={value}
-                onChangeText={onChangeText}
-            />
-        </>
+        <BaseTextInputWithLabel
+            ref={ref}
+            {...props} />
     )
-};
+});
 
-export function LabelNumberEditor(
-    {
-        label, value, onChangeNumber
-    }: {
-        label: string,
-        value: string,
-        onChangeNumber: (value: string) => void
-    }) {
-
+export const MultilineTextInputWithLabel = forwardRef<TextInput, TextInputProps>(({ ...props }, ref) => {
     return (
-        <>
-            <MyText style={localStyles.label}>{label}</MyText>
-            <TextInput
-                style={localStyles.inputField}
-                placeholder=''
-                keyboardType='number-pad'
-                value={value}
-                onChangeText={onChangeNumber}
-            />
-        </>
+        <BaseTextInputWithLabel
+            ref={ref}
+            multiline
+            numberOfLines={4}
+            {...props} />
     )
-};
+});
+
+export const NumberInputWithLabel = forwardRef<TextInput, TextInputProps>(({ ...props }, ref) => {
+    return (
+        <BaseTextInputWithLabel
+            ref={ref}
+            inputMode='numeric'
+            {...props} />
+    )
+});
 
 export function LabelDateEditor(
     {

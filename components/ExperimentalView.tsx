@@ -1,9 +1,7 @@
-import { Button, KeyboardAvoidingView, ScrollView, TextInput } from 'react-native';
-
-import { MyText, TitleAndId, TopView } from './basic/Containers';
-import { Team } from '@/types';
-import { useTeams } from '@/contexts/TeamsContext';
 import { useState } from 'react';
+import { KeyboardAvoidingView, ScrollView, TextInput } from 'react-native';
+
+import { MyText } from './basic/Containers';
 
 export default function ExperimentalView() {
     const [input, setInput] = useState('');

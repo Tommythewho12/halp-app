@@ -1,4 +1,4 @@
-import { FlatList, Modal, Pressable, Text, View, Button } from "react-native";
+import { FlatList, Modal, View, Button } from "react-native";
 
 import globalStyles from "@/assets/styles";
 import { H1 } from "./basic/Containers";

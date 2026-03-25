@@ -1,8 +1,8 @@
-import { KeyboardAvoidingView, ScrollView } from 'react-native';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { KeyboardAvoidingView, ScrollView, TextInput } from 'react-native';
 import { router } from 'expo-router';
 
-import { ButtonDefault, ButtonInverted, LabelPasswordEditor, LabelEmailEditor, LabelShortTextEditor, TopView } from './basic/Containers';
+import { ButtonDefault, ButtonInverted, EmailInputWithLabel, PasswordInputWithLabel, ShortTextInputWithLabel, TopView } from './basic/Containers';
 import AppPresentationView from './AppPresentationView';
 
 export default function RegisterView(
@@ -16,6 +16,10 @@ export default function RegisterView(
     const [password, setPassword] = useState<string>('');
     const [passwordConfirmation, setPasswordConfirmation] = useState<string>('');
 
+    const emailRef = useRef<TextInput | null>(null);
+    const passRef = useRef<TextInput | null>(null);
+    const passConfirmRef = useRef<TextInput | null>(null);
+
     const submitRegistration = () => {
         handleRegistration(name, email, password);
     };
@@ -25,10 +29,27 @@ export default function RegisterView(
             <KeyboardAvoidingView behavior='position'>
                 <ScrollView>
                     <AppPresentationView />
-                    <LabelShortTextEditor label='Name' value={name} onChangeText={setName} />
-                    <LabelEmailEditor label='Email' value={email} onChangeText={setEmail} />
-                    <LabelPasswordEditor label='Passwort' value={password} onChangeText={setPassword} />
-                    <LabelPasswordEditor label='Passwort wiederholen' value={passwordConfirmation} onChangeText={setPasswordConfirmation} />
+                    <ShortTextInputWithLabel
+                        placeholder='Name'
+                        value={name}
+                        onChangeText={setName}
+                        onSubmitEditing={() => emailRef.current?.focus()} />
+                    <EmailInputWithLabel
+                        ref={emailRef}
+                        value={email}
+                        onChangeText={setEmail}
+                        onSubmitEditing={() => passRef.current?.focus()} />
+                    <PasswordInputWithLabel
+                        ref={passRef}
+                        value={password}
+                        onChangeText={setPassword}
+                        onSubmitEditing={() => passConfirmRef.current?.focus()} />
+                    <PasswordInputWithLabel
+                        ref={passConfirmRef}
+                        value={passwordConfirmation}
+                        onChangeText={setPasswordConfirmation}
+                        onSubmitEditing={submitRegistration}
+                        returnKeyType='send' />
                     <ButtonDefault
                         title='Registrieren'
                         onPress={submitRegistration} />

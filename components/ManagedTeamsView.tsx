@@ -1,5 +1,5 @@
-import { useRouter } from 'expo-router';
 import { FlatList, Pressable, StyleSheet, Text } from 'react-native';
+import { useRouter } from 'expo-router';
 
 import { Team } from '@/types';
 import { TopView, ItemTitleAndAddButton } from './basic/Containers';
