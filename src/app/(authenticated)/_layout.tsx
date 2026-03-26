@@ -3,7 +3,7 @@ import { Drawer } from 'expo-router/drawer';
 
 import { TeamsProvider } from '@/contexts/TeamsContext';
 import { EventsProvider } from '@/contexts/EventsContext';
-import { UserProvider } from '@/contexts/UsersContext';
+import { UserProvider } from '@/contexts/UserContext';
 
 export default function Layout() {
     return (

@@ -7,12 +7,12 @@ import { DetailedEvent, DetailedEventDto } from '@/types';
 import EventView from "@/views/EventView";
 import { useEvents } from "@/contexts/EventsContext";
 import { toDetailedEvent } from '@/utils/Utils';
-import { useUser } from '@/contexts/UsersContext';
+import { useUser } from '@/contexts/UserContext';
 
 export default function EventViewController() {
     const { event_id: eventId } = useLocalSearchParams<{ event_id?: string }>();
     const [event, setEvent] = useState<DetailedEvent | null>(null);
-    const { id: userId } = useUser();
+    const { user } = useUser();
     const { volunteerToEvent, unvolunteerFromEvent } = useEvents();
 
     useEffect(() => {
@@ -48,7 +48,7 @@ export default function EventViewController() {
 
     const requestUnvolunteerFromEvent = async (): Promise<boolean> => {
         if (!eventId) return false;
-        if (event?.jobs.find(j => j.assigneeId == userId)) {
+        if (event?.jobs.find(j => j.assigneeId == user?.id)) {
             console.error('you cannot unvolunteer from this event because you are already assigned to a job');
             return false;
         }

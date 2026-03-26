@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 
 import { EventListItemDto } from '@/types';
 import { TopView, H1, H2 } from '@/components/Containers';
-import { useUser } from '@/contexts/UsersContext';
+import { useUser } from '@/contexts/UserContext';
 
 export default function ManagedEventsView({ events }: { events: EventListItemDto[] }) {
     const router = useRouter();

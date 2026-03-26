@@ -15,7 +15,7 @@ export interface User {
     email: string
 }
 
-// TODO implement this base to all other Team-interfaces
+// TODO implement this base to all other Team-interfaces or delete
 export interface BasicTeamDto {
     id: number
     name: string
@@ -51,44 +51,31 @@ export interface PublicEvent {
     setupComplete: boolean
 }
 
-// TODO implement this as base to all other Event-interfaces
-// TODO unused... delete?
 export interface BasicEventDto {
     id: number
     name: string
+    team_id: number
     description: string | null
     start_datetime: number
-    team_id: number
     complete: number
 }
 
 export interface BasicEvent {
     id: string
     name: string
+    teamId: string
     description: string | null
     startDatetime: Date
-    teamId: string
     setupComplete: boolean
 }
 
-export interface EventDto {
-    id: number
-    team_id: number
-    name: string
-    description: string | null
-    start_datetime: number
-    complete: number
+export interface EventDto extends BasicEventDto {
     is_volunteering: number
     is_assigned: number
 }
 
-export interface Event {
-    id: string
-    teamId: string
-    name: string
-    description: string | null
-    startDatetime: Date
-    setupComplete: boolean
+export interface Event extends BasicEvent {
+    teamName: string
     isVolunteering: boolean
     isAssigned: boolean
 }

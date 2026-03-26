@@ -47,7 +47,7 @@ export function toDetailedEvent(eventDto: DetailedEventDto): DetailedEvent {
     return {
         admin: toUser(eventDto.admin),
         team: toBasicTeam(eventDto.team),
-        event: toEvent(eventDto.event),
+        event: toEvent(eventDto.event, eventDto.team.name),
         jobs: eventDto.jobs.map(j => toJobAndAssignee(j))
     };
 }
@@ -79,14 +79,15 @@ export function toBasicEvent(eventDto: BasicEventDto): BasicEvent {
     };
 }
 
-export function toEvent(eventDto: EventDto): Event {
+export function toEvent(eventDto: EventDto, teamName: string): Event {
     return {
         id: String(eventDto.id),
         name: eventDto.name,
+        teamId: String(eventDto.team_id),
         description: eventDto.description,
         startDatetime: toDate(eventDto.start_datetime),
-        teamId: String(eventDto.team_id),
         setupComplete: safeBooleanConverter(eventDto.complete),
+        teamName: teamName,
         isVolunteering: safeBooleanConverter(eventDto.is_volunteering),
         isAssigned: safeBooleanConverter(eventDto.is_assigned)
     };

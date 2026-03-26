@@ -3,6 +3,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import http from '@/services/http-common';
 import { DetailedManagedEventCreator, Event, EventDto } from '@/types';
 import { is2XXStatus, safeBooleanConverter } from '@/utils/Utils';
+import { useTeams } from './TeamsContext';
 
 type EventsContextType = {
     events: Event[];
@@ -16,6 +17,7 @@ type EventsContextType = {
 const EventsContext = createContext<EventsContextType | undefined>(undefined);
 
 export const EventsProvider = ({ children }: { children: React.ReactNode }) => {
+    const teamsContext = useTeams();
     const [events, setEvents] = useState<Event[]>([]);
 
     const fetchEvents = async () => {
@@ -23,11 +25,12 @@ export const EventsProvider = ({ children }: { children: React.ReactNode }) => {
             const response = await http.get<EventDto[]>("auth/events");
             const convertedEvents: Event[] = response.data.map(event => ({
                 id: String(event.id),
-                teamId: String(event.team_id),
                 name: event.name,
+                teamId: String(event.team_id),
                 description: event.description,
                 startDatetime: new Date(event.start_datetime * 1000),
                 setupComplete: safeBooleanConverter(event.complete),
+                teamName: teamsContext.getTeamName(String(event.team_id)),
                 isVolunteering: safeBooleanConverter(event.is_volunteering),
                 isAssigned: safeBooleanConverter(event.is_assigned)
             }));
@@ -57,6 +60,7 @@ export const EventsProvider = ({ children }: { children: React.ReactNode }) => {
                 description: event.description,
                 startDatetime: new Date(event.start_datetime * 1000),
                 setupComplete: safeBooleanConverter(event.complete),
+                teamName: teamsContext.getTeamName(String(event.team_id)),
                 isVolunteering: safeBooleanConverter(event.is_volunteering),
                 isAssigned: safeBooleanConverter(event.is_assigned)
             };
@@ -97,11 +101,22 @@ export const EventsProvider = ({ children }: { children: React.ReactNode }) => {
 
     // fetch events initially
     useEffect(() => {
+        if (!teamsContext || teamsContext.isLoading) {
+            return;
+        }
+
         fetchEvents();
-    }, []);
+    }, [teamsContext.isLoading]);
 
     return (
-        <EventsContext.Provider value={{ events, fetchEvents, addEvent, deleteEvent, volunteerToEvent, unvolunteerFromEvent }}>
+        <EventsContext.Provider value={{
+            events,
+            fetchEvents,
+            addEvent,
+            deleteEvent,
+            volunteerToEvent,
+            unvolunteerFromEvent
+        }}>
             {children}
         </EventsContext.Provider>
     );

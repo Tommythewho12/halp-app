@@ -1,20 +1,21 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 import http from '@/services/http-common';
-import { UserDto } from '@/types';
+import { User, UserDto } from '@/types';
 
 type UserContextType = {
-    id: string | undefined;
-    name: string | undefined;
-    email: string | undefined;
+    isLoading: boolean;
+    user: User | undefined;
 };
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
-    const [user, setUser] = useState<UserContextType | undefined>(undefined);
+    const [isLoading, setLoading] = useState<boolean>(true);
+    const [user, setUser] = useState<User | undefined>(undefined);
 
     const fetchUser = async () => {
+        setLoading(true);
         try {
             const response = await http.get<UserDto>("auth/user");
             setUser({
@@ -24,16 +25,20 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
             });
         } catch (e) {
             console.error("Failed to fetch user:", e);
+        } finally {
+            setLoading(false);
         }
     };
 
-    // fetch teams initially
     useEffect(() => {
         fetchUser();
     }, []);
 
     return (
-        <UserContext.Provider value={{ id: user?.id, name: user?.name, email: user?.email }}>
+        <UserContext.Provider value={{
+            isLoading: isLoading,
+            user: user
+        }}>
             {children}
         </UserContext.Provider>
     );

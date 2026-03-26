@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 
 import { Event } from '@/types';
 import { TopView, H1, H2 } from '@/components/Containers';
-import { useUser } from '@/contexts/UsersContext';
+import { useUser } from '@/contexts/UserContext';
 
 export default function OpenEventsView({ events }: { events: Event[] }) {
     const router = useRouter();

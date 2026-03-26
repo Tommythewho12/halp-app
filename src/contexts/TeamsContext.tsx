@@ -4,24 +4,30 @@ import http from '@/services/http-common';
 import { Team, TeamDto } from '@/types';
 import { is2XXStatus, safeBooleanConverter } from '@/utils/Utils';
 import { router } from 'expo-router';
+import { useUser } from './UserContext';
 
 type TeamsContextType = {
+    isLoading: boolean;
     teams: Team[];
     fetchTeams: () => Promise<void>;
     addManagedTeam: (name: string) => Promise<string>;
     deleteManagedTeam: (teamId: string) => Promise<void>;
     subscribeToTeam: (teamId: string) => Promise<boolean>;
     unsubscribeFromTeam: (teamId: string) => Promise<boolean>;
+    getTeamName: (teamId: string) => string;
 };
 
 const TeamsContext = createContext<TeamsContextType | undefined>(undefined);
 
 export const TeamsProvider = ({ children }: { children: React.ReactNode }) => {
+    const userContext = useUser();
+    const [isLoading, setLoading] = useState<boolean>(true);
     const [teams, setTeams] = useState<Team[]>([]);
 
     const fetchTeams = async () => {
+        setLoading(true);
         try {
-            const response = await http.get<TeamDto[]>("auth/teams");
+            const response = await http.get<TeamDto[]>('auth/teams');
             const convertedTeams: Team[] = response.data.map(team => ({
                 id: String(team.id),
                 name: team.name,
@@ -30,7 +36,9 @@ export const TeamsProvider = ({ children }: { children: React.ReactNode }) => {
             }));
             setTeams(convertedTeams);
         } catch (e) {
-            console.error("Failed to fetch teams:", e);
+            console.error('Failed to fetch teams:', e);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -85,13 +93,37 @@ export const TeamsProvider = ({ children }: { children: React.ReactNode }) => {
         return false;
     };
 
+    // TODO Check why this is called twice
+    const getTeamName = (teamId: string) => {
+        if (teams.length == 0) return 'unknown';
+        const r = teams.find(t => t.id == teamId);
+        if (r != undefined) {
+            return r.name;
+        }
+        console.error('unable to find team with id: ', teamId);
+        return 'unknown';
+    };
+
     // fetch teams initially
     useEffect(() => {
+        if (!userContext || userContext.isLoading) {
+            return;
+        }
+
         fetchTeams();
-    }, []);
+    }, [userContext.isLoading]);
 
     return (
-        <TeamsContext.Provider value={{ teams, fetchTeams, addManagedTeam, deleteManagedTeam, subscribeToTeam, unsubscribeFromTeam }}>
+        <TeamsContext.Provider value={{
+            isLoading,
+            teams,
+            fetchTeams,
+            addManagedTeam,
+            deleteManagedTeam,
+            subscribeToTeam,
+            unsubscribeFromTeam,
+            getTeamName
+        }}>
             {children}
         </TeamsContext.Provider>
     );

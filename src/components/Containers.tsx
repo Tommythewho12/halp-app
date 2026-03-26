@@ -5,7 +5,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import globalStyles from '@/assets/styles'
 
 export function TopView(props: ViewProps) {
-    return <SafeAreaView {...props} style={[{ padding: 10 }, props.style]} />
+    return (
+        <SafeAreaView>
+            <View
+                {...props}
+                style={[{ margin: 12 }, props.style]} />
+        </SafeAreaView>
+    )
 }
 
 export function MyText(props: TextProps) {
@@ -18,6 +24,10 @@ export function H1(props: TextProps) {
 
 export function H2(props: TextProps) {
     return <Text {...props} style={[globalStyles.h2, props.style]} />
+};
+
+export function H3(props: TextProps) {
+    return <Text {...props} style={[globalStyles.h3, props.style]} />
 };
 
 export function IdText(props: TextProps) {

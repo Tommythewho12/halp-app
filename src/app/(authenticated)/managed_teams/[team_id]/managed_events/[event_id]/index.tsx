@@ -6,10 +6,12 @@ import http from '@/services/http-common';
 import ManagedEventView from '@/views/ManagedEventView';
 import { DetailedManagedEventDto, DetailedManagedEvent, Event, Job, Volunteer } from '@/types';
 import { is2XXStatus, safeBooleanConverter } from '@/utils/Utils';
+import { useTeams } from '@/contexts/TeamsContext';
 
 export default function ManagedEventController() {
     const { team_id: teamIdParameter, event_id: eventIdParameter } = useLocalSearchParams<{ team_id?: string, event_id?: string }>();
     const [event, setEvent] = useState<DetailedManagedEvent | null>(null);
+    const { getTeamName } = useTeams();
 
     const handleVolunteerAssignment = async (newUserId: string | null, jobId: string) => {
         if (event != null) {
@@ -42,6 +44,7 @@ export default function ManagedEventController() {
         }
     };
 
+    // TODO call EventsContext?
     const fetchEvent = async () => {
         if (eventIdParameter === undefined || teamIdParameter === undefined) {
             throw new Error("both team_id and event_id parameters must be set");
@@ -64,11 +67,12 @@ export default function ManagedEventController() {
 
             const convertedEvent: Event = {
                 id: String(response.data.id),
-                teamId: String(response.data.team_id),
                 name: response.data.name,
+                teamId: String(response.data.team_id),
                 description: response.data.description,
                 startDatetime: new Date(response.data.start_datetime * 1000),
                 setupComplete: safeBooleanConverter(response.data.complete),
+                teamName: getTeamName(String(response.data.team_id)),
                 isVolunteering: false,
                 isAssigned: false
             }

@@ -10,13 +10,22 @@ const globalStyles = StyleSheet.create({
     h1: {
         fontSize: 28,
         fontWeight: 'bold',
+        marginTop: 15,
         marginBottom: 10,
     },
 
     h2: {
         fontSize: 24,
         fontWeight: 'bold',
+        marginTop: 11,
         marginBottom: 8,
+    },
+
+    h3: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginTop: 5,
+        marginBottom: 3,
     },
 
     baseText: {
