@@ -1,0 +1,75 @@
+import { FlatList, Pressable, StyleSheet, Text } from 'react-native';
+import { useRouter } from 'expo-router';
+
+import { Team } from '@/types';
+import { TopView, ItemTitleAndAddButton } from '@/components/Containers';
+import globalStyles from '@/assets/styles';
+
+export default function ManagedTeamsView({ teams }: { teams: Team[] }) {
+    const router = useRouter();
+
+    const handleOpenTeam = (teamId: string) => {
+        if (teamId === undefined) {
+            // TODO throw Exception?
+            console.error('team does not have an ID and cannot be navigated to')
+            return;
+        }
+        router.navigate({ pathname: '/(authenticated)/managed_teams/[team_id]', params: { team_id: teamId } });
+    }
+
+    const handleCreateNewTeam = () => {
+        router.navigate({ pathname: '/(authenticated)/managed_teams/new' });
+    }
+
+    return (
+        <TopView>
+            <ItemTitleAndAddButton title='Teams' addItemEvent={handleCreateNewTeam} />
+            <FlatList
+                data={teams}
+                renderItem={({ item }) =>
+                    <Pressable
+                        style={({ pressed }) => [
+                            globalStyles.pressableListItem,
+                            pressed && globalStyles.pressableListItem_pressed,
+                        ]}
+                        onPress={() => handleOpenTeam(item.id)}
+                    >
+                        <Text style={styles.item}>
+                            {item.name}
+                        </Text>
+                    </Pressable>
+                }
+            />
+        </TopView>
+    );
+};
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        paddingTop: 22,
+    },
+    item: {
+        padding: 10,
+        fontSize: 18,
+        height: 44,
+    },
+    eventItem: {
+        padding: 16,
+        marginVertical: 8,
+        backgroundColor: '#f0f0f0',
+        borderRadius: 8,
+        elevation: 2,
+    },
+    pressedItem: {
+        backgroundColor: '#d0e0ff',
+    },
+    eventName: {
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    eventDetail: {
+        fontSize: 14,
+        color: '#555',
+    },
+});
