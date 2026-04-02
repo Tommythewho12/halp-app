@@ -73,8 +73,8 @@ export function toBasicEvent(eventDto: BasicEventDto): BasicEvent {
         id: String(eventDto.id),
         name: eventDto.name,
         description: eventDto.description,
-        startDatetime: toDate(eventDto.start_datetime),
-        teamId: String(eventDto.team_id),
+        startDatetime: toDate(eventDto.startDatetime),
+        teamId: String(eventDto.teamId),
         setupComplete: safeBooleanConverter(eventDto.complete)
     };
 }
@@ -83,13 +83,13 @@ export function toEvent(eventDto: EventDto, teamName: string): Event {
     return {
         id: String(eventDto.id),
         name: eventDto.name,
-        teamId: String(eventDto.team_id),
+        teamId: String(eventDto.teamId),
         description: eventDto.description,
-        startDatetime: toDate(eventDto.start_datetime),
+        startDatetime: toDate(eventDto.startDatetime),
         setupComplete: safeBooleanConverter(eventDto.complete),
         teamName: teamName,
-        isVolunteering: safeBooleanConverter(eventDto.is_volunteering),
-        isAssigned: safeBooleanConverter(eventDto.is_assigned)
+        isVolunteering: safeBooleanConverter(eventDto.isVolunteering),
+        isAssigned: safeBooleanConverter(eventDto.isAssigned)
     };
 }
 

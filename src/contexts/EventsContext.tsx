@@ -26,13 +26,13 @@ export const EventsProvider = ({ children }: { children: React.ReactNode }) => {
             const convertedEvents: Event[] = response.data.map(event => ({
                 id: String(event.id),
                 name: event.name,
-                teamId: String(event.team_id),
+                teamId: String(event.teamId),
                 description: event.description,
-                startDatetime: new Date(event.start_datetime * 1000),
+                startDatetime: new Date(event.startDatetime * 1000),
                 setupComplete: safeBooleanConverter(event.complete),
-                teamName: teamsContext.getTeamName(String(event.team_id)),
-                isVolunteering: safeBooleanConverter(event.is_volunteering),
-                isAssigned: safeBooleanConverter(event.is_assigned)
+                teamName: teamsContext.getTeamName(String(event.teamId)),
+                isVolunteering: safeBooleanConverter(event.isVolunteering),
+                isAssigned: safeBooleanConverter(event.isAssigned)
             }));
             setEvents(convertedEvents);
         } catch (e) {
@@ -55,14 +55,14 @@ export const EventsProvider = ({ children }: { children: React.ReactNode }) => {
             const event = response.data;
             const convertedEvent: Event = {
                 id: String(event.id),
-                teamId: String(event.team_id),
+                teamId: String(event.teamId),
                 name: event.name,
                 description: event.description,
-                startDatetime: new Date(event.start_datetime * 1000),
+                startDatetime: new Date(event.startDatetime * 1000),
                 setupComplete: safeBooleanConverter(event.complete),
-                teamName: teamsContext.getTeamName(String(event.team_id)),
-                isVolunteering: safeBooleanConverter(event.is_volunteering),
-                isAssigned: safeBooleanConverter(event.is_assigned)
+                teamName: teamsContext.getTeamName(String(event.teamId)),
+                isVolunteering: safeBooleanConverter(event.isVolunteering),
+                isAssigned: safeBooleanConverter(event.isAssigned)
             };
             setEvents((prev) => [...prev, convertedEvent]);
             return String(event.id);

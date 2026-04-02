@@ -31,8 +31,8 @@ export const TeamsProvider = ({ children }: { children: React.ReactNode }) => {
             const convertedTeams: Team[] = response.data.map(team => ({
                 id: String(team.id),
                 name: team.name,
-                isSubscribed: safeBooleanConverter(team.is_subscribed),
-                isAdmin: safeBooleanConverter(team.is_admin)
+                isSubscribed: safeBooleanConverter(team.isSubscribed),
+                isAdmin: safeBooleanConverter(team.isAdmin)
             }));
             setTeams(convertedTeams);
         } catch (e) {

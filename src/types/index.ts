@@ -31,8 +31,8 @@ export interface BasicTeam {
 export interface TeamDto {
     id: number
     name: string
-    is_admin: number
-    is_subscribed: number
+    isAdmin: number
+    isSubscribed: number
 }
 
 export interface Team {
@@ -54,9 +54,9 @@ export interface PublicEvent {
 export interface BasicEventDto {
     id: number
     name: string
-    team_id: number
+    teamId: number
     description: string | null
-    start_datetime: number
+    startDatetime: number
     complete: number
 }
 
@@ -70,8 +70,8 @@ export interface BasicEvent {
 }
 
 export interface EventDto extends BasicEventDto {
-    is_volunteering: number
-    is_assigned: number
+    isVolunteering: number
+    isAssigned: number
 }
 
 export interface Event extends BasicEvent {
