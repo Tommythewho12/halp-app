@@ -55,7 +55,7 @@ export function toDetailedEvent(eventDto: DetailedEventDto): DetailedEvent {
 export function toUser(userDto: UserDto): User {
     return {
         id: String(userDto.id),
-        name: userDto.display_name,
+        name: userDto.displayName,
         email: userDto.email
     };
 }
@@ -64,7 +64,7 @@ export function toBasicTeam(teamDto: BasicTeamDto): BasicTeam {
     return {
         id: String(teamDto.id),
         name: teamDto.name,
-        adminId: String(teamDto.admin_id)
+        adminId: String(teamDto.adminId)
     };
 }
 
@@ -97,7 +97,7 @@ export function toJobAndAssignee(jobDto: JobAndAssigneeDto): JobAndAssignee {
     return {
         jobId: String(jobDto.id),
         jobName: jobDto.type,
-        assigneeId: String(jobDto.assignee_id),
-        assigneeName: jobDto.assignee_name
+        assigneeId: String(jobDto.assigneeId),
+        assigneeName: jobDto.assigneeName
     };
 }

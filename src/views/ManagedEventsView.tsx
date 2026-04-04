@@ -15,7 +15,7 @@ export default function ManagedEventsView({ events }: { events: EventListItemDto
     }
 
     const orderByDatetimeDesc = (events: EventListItemDto[]) => {
-        const newOrder = events.sort((a, b) => a.start_datetime.valueOf() - b.start_datetime.valueOf());
+        const newOrder = events.sort((a, b) => a.startDatetime.valueOf() - b.startDatetime.valueOf());
         return newOrder;
     };
 
@@ -42,11 +42,11 @@ export default function ManagedEventsView({ events }: { events: EventListItemDto
                         <Text style={styles.item}>
                             {item.name}
                         </Text>
-                        <Text>{new Date(item.start_datetime).toLocaleString()}</Text>
-                        <Text>{item.start_datetime}</Text>
+                        <Text>{new Date(item.startDatetime).toLocaleString()}</Text>
+                        <Text>{item.startDatetime}</Text>
                         <Text>{item.description}</Text>
-                        <Text>{item.is_subscribed ? "subscribed" : "not subscribed"}</Text>
-                        <Text>{item.is_assigned ? "assigned" : "not assigned"}</Text>
+                        <Text>{item.isSubscribed ? "subscribed" : "not subscribed"}</Text>
+                        <Text>{item.isAssigned ? "assigned" : "not assigned"}</Text>
                     </Pressable>
                 }
             />

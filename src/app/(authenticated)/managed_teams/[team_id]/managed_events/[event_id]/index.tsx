@@ -55,24 +55,24 @@ export default function ManagedEventController() {
             const volunteerss = new Map<String, Volunteer>();
             const jobss = new Map<String, Job>();
             response.data.volunteers.forEach(volunteer => {
-                volunteerss.set(String(volunteer.id), { id: String(volunteer.id), displayName: volunteer.display_name, assigned: false });
+                volunteerss.set(volunteer.id, { id: volunteer.id, displayName: volunteer.displayName, assigned: false });
             });
             response.data.jobs.forEach(job => {
-                jobss.set(String(job.id), { id: String(job.id), jobName: job.type, userId: String(job.user_id) });
-                const assignedVolunteer = volunteerss.get(String(job.user_id))
+                jobss.set(job.id, { id: job.id, jobName: job.type, userId: job.assigneeId });
+                const assignedVolunteer = volunteerss.get(String(job.assigneeId))
                 if (assignedVolunteer != undefined) {
                     assignedVolunteer.assigned = true;
                 }
             });
 
             const convertedEvent: Event = {
-                id: String(response.data.id),
+                id: response.data.id,
                 name: response.data.name,
-                teamId: String(response.data.team_id),
+                teamId: response.data.teamId,
                 description: response.data.description,
-                startDatetime: new Date(response.data.start_datetime * 1000),
+                startDatetime: new Date(response.data.startDatetime * 1000),
                 setupComplete: safeBooleanConverter(response.data.complete),
-                teamName: getTeamName(String(response.data.team_id)),
+                teamName: getTeamName(response.data.teamId),
                 isVolunteering: false,
                 isAssigned: false
             }
@@ -82,6 +82,7 @@ export default function ManagedEventController() {
                 volunteers: volunteerss,
                 jobs: jobss
             };
+            console.debug('[ManagedEventController] convertedDetailedMangedEventt ', convertedDetailedManagedEventt);
             setEvent(convertedDetailedManagedEventt);
         } catch (e) {
             console.error("Failed to fetch events:", e);

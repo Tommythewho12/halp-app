@@ -1,11 +1,13 @@
 enum JobType {
     SCORER,
-    OFFICIAL
+    OFFICIAL,
+    BALLER,
+    CLEANER
 }
 
 export interface UserDto {
-    id: number
-    display_name: string
+    id: string
+    displayName: string
     email: string
 }
 
@@ -17,9 +19,9 @@ export interface User {
 
 // TODO implement this base to all other Team-interfaces or delete
 export interface BasicTeamDto {
-    id: number
+    id: string
     name: string
-    admin_id: number
+    adminId: string
 }
 
 export interface BasicTeam {
@@ -29,10 +31,10 @@ export interface BasicTeam {
 }
 
 export interface TeamDto {
-    id: number
+    id: string
     name: string
-    isAdmin: number
-    isSubscribed: number
+    isAdmin: boolean
+    isSubscribed: boolean
 }
 
 export interface Team {
@@ -52,26 +54,26 @@ export interface PublicEvent {
 }
 
 export interface BasicEventDto {
-    id: number
+    id: string
+    teamId: string
     name: string
-    teamId: number
-    description: string | null
+    description: string
     startDatetime: number
-    complete: number
+    complete: boolean
+}
+
+export interface EventDto extends BasicEventDto {
+    isVolunteering: boolean
+    isAssigned: boolean
 }
 
 export interface BasicEvent {
     id: string
-    name: string
     teamId: string
+    name: string
     description: string | null
     startDatetime: Date
     setupComplete: boolean
-}
-
-export interface EventDto extends BasicEventDto {
-    isVolunteering: number
-    isAssigned: number
 }
 
 export interface Event extends BasicEvent {
@@ -95,12 +97,12 @@ export interface DetailedEvent {
 }
 
 export interface DetailedManagedEventDto {
-    id: number
-    team_id: number
+    id: string
+    teamId: string
     name: string
     description: string | null
-    start_datetime: number
-    complete: number
+    startDatetime: number
+    complete: boolean
     volunteers: VolunteerDto[]
     jobs: JobDto[]
 }
@@ -118,8 +120,8 @@ export interface DetailedManagedEventCreator {
 }
 
 export interface VolunteerDto {
-    id: number
-    display_name: string
+    id: string
+    displayName: string
 }
 
 export interface Volunteer {
@@ -129,9 +131,9 @@ export interface Volunteer {
 }
 
 export interface JobDto {
-    id: number
+    id: string
     type: string
-    user_id: number | null
+    assigneeId: string | null
 }
 
 export interface Job {
@@ -141,10 +143,10 @@ export interface Job {
 }
 
 export interface JobAndAssigneeDto {
-    id: number
+    id: string
     type: string
-    assignee_id: number | null
-    assignee_name: string | null
+    assigneeId: string | null
+    assigneeName: string | null
 }
 
 export interface JobAndAssignee {
@@ -155,11 +157,11 @@ export interface JobAndAssignee {
 }
 
 export interface EventListItemDto {
-    id: number
+    id: string
     name: string
-    start_datetime: number
+    startDatetime: number
     description: string
-    team_id: number
-    is_subscribed: number
-    is_assigned: number
+    teamId: string
+    isSubscribed: boolean
+    isAssigned: boolean
 }

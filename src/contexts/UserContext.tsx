@@ -20,7 +20,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
             const response = await http.get<UserDto>("auth/user");
             setUser({
                 id: String(response.data.id),
-                name: response.data.display_name,
+                name: response.data.displayName,
                 email: response.data.email
             });
         } catch (e) {
