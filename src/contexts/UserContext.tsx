@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 import http from '@/services/http-common';
 import { User, UserDto } from '@/types';
+import { components } from '@/external/schema';
 
 type UserContextType = {
     isLoading: boolean;
@@ -17,7 +18,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     const fetchUser = async () => {
         setLoading(true);
         try {
-            const response = await http.get<UserDto>("auth/user");
+            const response = await http.get<components["schemas"]["UserSchema"]>("auth/user");
             setUser({
                 id: String(response.data.id),
                 name: response.data.displayName,
