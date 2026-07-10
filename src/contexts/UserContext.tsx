@@ -18,7 +18,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     const fetchUser = async () => {
         setLoading(true);
         try {
-            const response = await http.get<components["schemas"]["UserSchema"]>("auth/user");
+            const response = await http.get<components["schemas"]["UserSchema"]>("auth/users");
             setUser({
                 id: String(response.data.id),
                 name: response.data.displayName,

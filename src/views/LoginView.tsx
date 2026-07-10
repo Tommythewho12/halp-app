@@ -36,7 +36,7 @@ export default function LoginView(
 
                 <ButtonDefault
                     onPress={submitLogin}
-                    title='Anmelden' />
+                    title='Anmelden!' />
 
                 <ButtonInverted
                     onPress={() => router.navigate(`/registration`)}

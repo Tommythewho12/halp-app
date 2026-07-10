@@ -2,7 +2,7 @@ import axios from "axios";
 import { getAccessToken } from '@/contexts/AuthContext';
 
 const http = axios.create({
-    baseURL: "http://192.168.0.73:3000/",
+    baseURL: "http://192.168.0.168:3000/",
     headers: {
         common: {
             "Content-type": "application/json"

@@ -5,6 +5,8 @@ import { Team, TeamDto } from '@/types';
 import { is2XXStatus, safeBooleanConverter } from '@/utils/Utils';
 import { router } from 'expo-router';
 import { useUser } from './UserContext';
+import { components } from '@/external/schema';
+import { AxiosResponse } from 'axios';
 
 type TeamsContextType = {
     isLoading: boolean;
@@ -27,7 +29,7 @@ export const TeamsProvider = ({ children }: { children: React.ReactNode }) => {
     const fetchTeams = async () => {
         setLoading(true);
         try {
-            const response = await http.get<TeamDto[]>('auth/teams');
+            const response = await http.get<components["schemas"]["TeamEnrichedSchema"][]>('auth/teams');
             const convertedTeams: Team[] = response.data.map(team => ({
                 id: String(team.id),
                 name: team.name,
@@ -44,24 +46,27 @@ export const TeamsProvider = ({ children }: { children: React.ReactNode }) => {
 
     const addManagedTeam = async (name: string): Promise<string> => {
         try {
-            // TODO add DTO
-            const response = await http.post(`auth/teams`, { teamName: name });
+            const response = await http.post<
+                components["schemas"]["TeamSchema"],
+                AxiosResponse<components["schemas"]["TeamSchema"]>,
+                components["schemas"]["TeamCreateRequestSchema"]
+            >(`auth/teams`, { teamName: name });
             setTeams(prev => [...prev, {
-                id: response.data.id,
-                name: name,
+                ...response.data,
                 isAdmin: true,
                 isSubscribed: false
             }]);
             return String(response.data.id);
         } catch (e) {
             console.error(e);
+            // TODO
             return '';
         }
     };
 
     const deleteManagedTeam = async (teamId: string) => {
         try {
-            const response = await http.delete(`auth/teams/${teamId}`);
+            const response = await http.delete<components["schemas"]["DefaultSuccessResponseSchema"]>(`auth/teams/${teamId}`);
             if (is2XXStatus(response.status)) {
                 setTeams((prev) => prev.filter(t => t.id !== teamId));
                 router.back();
@@ -74,7 +79,7 @@ export const TeamsProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     const subscribeToTeam = async (teamId: string) => {
-        const response = await http.post(`auth/teams/${teamId}/subscribers`) // TODO create DTO
+        const response = await http.post<components["schemas"]["DefaultSuccessResponseSchema"]>(`auth/teams/${teamId}/subscribers`) // TODO create DTO
         if (is2XXStatus(response.status)) {
             setTeams(prev => prev.map(t => t.id === teamId ? { ...t, isSubscribed: true } : t));
             return true;
@@ -84,7 +89,7 @@ export const TeamsProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     const unsubscribeFromTeam = async (teamId: string) => {
-        const response = await http.delete(`auth/teams/${teamId}/subscribers`) // TODO create DTO
+        const response = await http.delete<components["schemas"]["DefaultSuccessResponseSchema"]>(`auth/teams/${teamId}/subscribers`) // TODO create DTO
         if (is2XXStatus(response.status)) {
             setTeams(prev => prev.map(t => t.id === teamId ? { ...t, isSubscribed: false } : t));
             return true;

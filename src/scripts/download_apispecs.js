@@ -5,7 +5,7 @@ import fs from "fs/promises"
 
 const URL = "http://localhost:3000"
 const PATH = "api-spec/generated"
-const DESTINATION = "../external"
+const DESTINATION = "src/external"
 const FILE = "schema.d.ts"
 
 async function main() {

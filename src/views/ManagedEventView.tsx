@@ -30,6 +30,9 @@ export default function ManagedEventView(
         return { job, volunteerName: volunteerName };
     });
     const volunteerList: Volunteer[] = [...detailedEvent.volunteers.values()];
+    console.debug("#### debug ####");
+    console.debug("volunteerList: ", volunteerList);
+    console.debug("detailedEvent: ", detailedEvent);
 
     const assignVolunteerToJob = (newUserId: string | null) => {
         if (selectedJobId) {
@@ -55,7 +58,7 @@ export default function ManagedEventView(
             <TitleAndId title={detailedEvent.event.name} id={detailedEvent.event.id} />
             <LabelValue label="Datum" value={detailedEvent.event.startDatetime.toLocaleDateString()} />
             <LabelValue label="Uhrzeit" value={detailedEvent.event.startDatetime.toLocaleTimeString()} />
-            <LabelValue label="Einrichtung abgeschlossen" value={detailedEvent.event.setupComplete ? "✅" : "❌"} />
+            <LabelValue label="Einrichtung abgeschlossen" value={detailedEvent.event != null ? "✅" : "❌"} />
             <Text>Description</Text>
             <Text>{detailedEvent.event.description}</Text>
             <JobsList jobsList={jobsList} setJobId={(jobId) => setSelectedJobId(jobId)} modalVisibility={() => setModalVisible(true)} />

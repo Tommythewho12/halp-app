@@ -50,7 +50,6 @@ export interface PublicEvent {
     name: string
     description: string | null
     startDatetime: Date
-    setupComplete: boolean
 }
 
 export interface BasicEventDto {
@@ -59,7 +58,6 @@ export interface BasicEventDto {
     name: string
     description: string
     startDatetime: number
-    complete: boolean
 }
 
 export interface EventDto extends BasicEventDto {
@@ -71,9 +69,8 @@ export interface BasicEvent {
     id: string
     teamId: string
     name: string
-    description: string | null
+    description: string | undefined
     startDatetime: Date
-    setupComplete: boolean
 }
 
 export interface Event extends BasicEvent {
@@ -102,7 +99,6 @@ export interface DetailedManagedEventDto {
     name: string
     description: string | null
     startDatetime: number
-    complete: boolean
     volunteers: VolunteerDto[]
     jobs: JobDto[]
 }

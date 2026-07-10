@@ -4,6 +4,8 @@ import http from '@/services/http-common';
 import { DetailedManagedEventCreator, Event, EventDto } from '@/types';
 import { is2XXStatus, safeBooleanConverter } from '@/utils/Utils';
 import { useTeams } from './TeamsContext';
+import { components } from '@/external/schema';
+import { AxiosResponse } from 'axios';
 
 type EventsContextType = {
     events: Event[];
@@ -22,14 +24,13 @@ export const EventsProvider = ({ children }: { children: React.ReactNode }) => {
 
     const fetchEvents = async () => {
         try {
-            const response = await http.get<EventDto[]>("auth/events");
+            const response = await http.get<components["schemas"]["EventEnrichedSchema"][]>("auth/events");
             const convertedEvents: Event[] = response.data.map(event => ({
                 id: String(event.id),
                 name: event.name,
                 teamId: String(event.teamId),
                 description: event.description,
                 startDatetime: new Date(event.startDatetime * 1000),
-                setupComplete: safeBooleanConverter(event.complete),
                 teamName: teamsContext.getTeamName(String(event.teamId)),
                 isVolunteering: safeBooleanConverter(event.isVolunteering),
                 isAssigned: safeBooleanConverter(event.isAssigned)
@@ -42,28 +43,55 @@ export const EventsProvider = ({ children }: { children: React.ReactNode }) => {
 
     const addEvent = async (creator: DetailedManagedEventCreator): Promise<string> => {
         try {
-            const response = await http.post<EventDto>(`auth/teams/${creator.event.teamId}/events`,
+            const response = await http.post<
+                components["schemas"]["EventSchema"],
+                AxiosResponse<components["schemas"]["EventSchema"]>,
+                components["schemas"]["EventCreateRequestSchema"]
+            >(`auth/teams/${creator.event.teamId}/events`,
                 {
-                    eventName: creator.event.name,
+                    name: creator.event.name,
                     dateTime: (creator.event.startDatetime.valueOf()) / 1000,
                     description: creator.event.description,
-                    jobs: {
+                    /*jobs: {
                         scorer: creator.scorers,
                         official: creator.officials
-                    }
+                    }*/
                 });
             const event = response.data;
             const convertedEvent: Event = {
-                id: String(event.id),
-                teamId: String(event.teamId),
+                id: event.id,
+                teamId: event.teamId,
                 name: event.name,
                 description: event.description,
                 startDatetime: new Date(event.startDatetime * 1000),
-                setupComplete: safeBooleanConverter(event.complete),
                 teamName: teamsContext.getTeamName(String(event.teamId)),
-                isVolunteering: safeBooleanConverter(event.isVolunteering),
-                isAssigned: safeBooleanConverter(event.isAssigned)
+                isVolunteering: false,
+                isAssigned: false
             };
+
+            // TODO refactor the shit out of this
+            for (let i = 0; i < creator.officials; i++) {
+                const responseJobs = await http.post<
+                    components["schemas"]["JobSchema"],
+                    AxiosResponse<components["schemas"]["JobSchema"]>,
+                    components["schemas"]["JobCreateRequestSchema"]
+                >(`auth/teams/${event.teamId}/events/${event.id}/jobs`,
+                    {
+                        jobType: "OFFICIAL"
+                    });
+            }
+
+            for (let i = 0; i < creator.scorers; i++) {
+                const responseJobs = await http.post<
+                    components["schemas"]["JobSchema"],
+                    AxiosResponse<components["schemas"]["JobSchema"]>,
+                    components["schemas"]["JobCreateRequestSchema"]
+                >(`auth/teams/${event.teamId}/events/${event.id}/jobs`,
+                    {
+                        jobType: "SCORER"
+                    });
+            }
+
             setEvents((prev) => [...prev, convertedEvent]);
             return String(event.id);
         } catch (e) {

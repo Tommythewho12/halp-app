@@ -37,7 +37,7 @@ export default function VolunteerPicker(
                     <FlatList
                         data={volunteers}
                         renderItem={({ item }) =>
-                            <Button title={item.displayName} onPress={() => {
+                            <Button key={item.id} title={item.displayName} onPress={() => {
                                 assignVolunteerToJob(item.id);
                                 setModalVisible(false);
                             }} />

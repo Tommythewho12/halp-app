@@ -4,9 +4,10 @@ import { useEffect, useState } from 'react';
 
 import http from '@/services/http-common';
 import ManagedEventView from '@/views/ManagedEventView';
-import { DetailedManagedEventDto, DetailedManagedEvent, Event, Job, Volunteer } from '@/types';
-import { is2XXStatus, safeBooleanConverter } from '@/utils/Utils';
+import { DetailedManagedEvent, Event, Job, Volunteer } from '@/types';
+import { is2XXStatus } from '@/utils/Utils';
 import { useTeams } from '@/contexts/TeamsContext';
+import { components } from '@/external/schema';
 
 export default function ManagedEventController() {
     const { team_id: teamIdParameter, event_id: eventIdParameter } = useLocalSearchParams<{ team_id?: string, event_id?: string }>();
@@ -51,28 +52,31 @@ export default function ManagedEventController() {
         }
 
         try {
-            const response = await http.get<DetailedManagedEventDto>(`auth/teams/${teamIdParameter}/events/${eventIdParameter}`);
+            const response = await http.get<components["schemas"]["EventManagedSchema"]>(`auth/teams/${teamIdParameter}/events/${eventIdParameter}`);
+            console.debug('[ManagedEventController] response ', response);
             const volunteerss = new Map<String, Volunteer>();
             const jobss = new Map<String, Job>();
-            response.data.volunteers.forEach(volunteer => {
+            response.data.volunteers?.forEach(volunteer => {
                 volunteerss.set(volunteer.id, { id: volunteer.id, displayName: volunteer.displayName, assigned: false });
             });
-            response.data.jobs.forEach(job => {
-                jobss.set(job.id, { id: job.id, jobName: job.type, userId: job.assigneeId });
-                const assignedVolunteer = volunteerss.get(String(job.assigneeId))
-                if (assignedVolunteer != undefined) {
-                    assignedVolunteer.assigned = true;
+            response.data.jobs?.forEach(job => {
+                const assigneeId = job.assignee?.id ?? null;
+                jobss.set(job.id, { id: job.id, jobName: job.type, userId: assigneeId });
+                if (assigneeId != null) {
+                    const assignedVolunteer = volunteerss.get(String(assigneeId));
+                    if (assignedVolunteer !== undefined)
+                        assignedVolunteer.assigned = true;
                 }
             });
 
             const convertedEvent: Event = {
-                id: response.data.id,
-                name: response.data.name,
-                teamId: response.data.teamId,
-                description: response.data.description,
-                startDatetime: new Date(response.data.startDatetime * 1000),
-                setupComplete: safeBooleanConverter(response.data.complete),
-                teamName: getTeamName(response.data.teamId),
+                id: response.data.event.id,
+                name: response.data.event.name,
+                teamId: response.data.event.teamId,
+                description: response.data.event.description,
+                startDatetime: new Date(response.data.event.startDatetime * 1000),
+                // setupComplete: safeBooleanConverter(response.data.complete),
+                teamName: getTeamName(response.data.event.teamId),
                 isVolunteering: false,
                 isAssigned: false
             }
